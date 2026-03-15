@@ -6,7 +6,7 @@ export default function Home() {
   const router = useRouter();
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh" }}>
-      <h1 style={{ fontSize: "3rem", fontWeight: "bold" }}>Group 17 - WanderSync</h1>
+      <h1 style={{ fontSize: "3rem", fontWeight: "bold", color: "#000000" }}>Group 17 - WanderSync</h1>
       <Button
         type="primary"
         variant="solid"
