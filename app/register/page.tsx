@@ -8,7 +8,7 @@ const Register: React.FC = () => (
     subtitle="Join WanderSync to start planning"
     leftFooterText="Plan trips together, in real time. Your group is waiting."
   >
-    <AuthForm mode="register" />
+    <AuthForm mode="register"/>
   </AuthLayout>
 );
 
