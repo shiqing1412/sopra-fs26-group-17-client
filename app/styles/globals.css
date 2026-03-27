@@ -47,7 +47,7 @@ a {
 .login-container {
   display: flex;
   min-height: 100vh;
-  font-family: "'DM Sans', sans-serif";
+  font-family: 'DM Sans', sans-serif;
   background-color: #f6f4f2;
 }
 
