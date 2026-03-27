@@ -1,3 +1,6 @@
+/* import text styles*/
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -43,14 +46,72 @@ a {
 
 .login-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
-  background-color: rgb(41, 44, 59);
+  font-family: 'DM Sans', sans-serif;
+  background-color: #f6f4f2;
 }
 
 .login-button {
   width: 100%;
+  background-color: #C2603A !important;
+}
+
+.login-left {
+  width: 40%; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #1A1612;
+}
+
+.login-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/*username panel*/
+.ant-input {
+  background-color: #faecec !important;
+  border: 1.5px solid #ad3d3d !important;
+  color: #4A4340 !important;
+  
+}
+ /*password panel*/
+.ant-input-affix-wrapper {
+  background-color: #faecec !important;
+  border: 1.5px solid #ad3d3d !important;
+  box-shadow: none !important;
+}
+
+/*password inner part because invisibility creates double border*/
+.ant-input-affix-wrapper .ant-input { 
+  background-color: #faecec !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/*sign in labels*/
+.ant-form-item-label > label {
+  color: #4A4340 !important;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  font-size: 11px;
+}
+.ant-form-item .ant-form-item-label {
+  padding: 0 !important;
+}
+
+/*error messages*/
+.ant-form-item-explain-error {
+  color: #C24A3A !important;
+}
+
+/*no * shown for required fields*/
+.ant-form-item-required::before {
+  display: none !important;
 }
 
 .card-container {

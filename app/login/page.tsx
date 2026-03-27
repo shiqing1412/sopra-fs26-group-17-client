@@ -50,34 +50,47 @@ const Login: React.FC = () => {
 
   return (
     <div className="login-container">
-      <Form
-        form={form}
-        name="login"
-        size="large"
-        variant="outlined"
-        onFinish={handleLogin}
-        layout="vertical"
-      >
-        <Form.Item
-          name="username"
-          label="Username"
-          rules={[{ required: true, message: "Please input your username!" }]}
+      <div className="login-left"> {/* left side of the screen */}
+        <div style={{ display: "flex" }}>
+          <h1 style={{ marginTop: 70, marginLeft: 60, fontFamily: "'DM Serif Display', serif"}}>Wander</h1>
+          <h1 style={{ marginTop: 70, fontFamily: "'DM Serif Display', serif", color: "#da8360"}}>Sync</h1>
+        </div>
+        <p style={{ marginTop: "auto", marginLeft: 60, marginBottom: 100, color: "#8A7A6A", fontWeight: 300, lineHeight: 1.6, fontSize: 16 }}>Plan trips together, in real time.</p>
+      </div>
+      <div className="login-right"> {/* right side of the screen */}
+        <Form
+          form={form}
+          name="login"
+          size="large"
+          variant="outlined"
+          onFinish={handleLogin}
+          layout="vertical"
         >
-          <Input placeholder="Enter username" />
-        </Form.Item>
-        <Form.Item
-          name="name"
-          label="Name"
-          rules={[{ required: true, message: "Please input your name!" }]}
-        >
-          <Input placeholder="Enter name" />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" className="login-button">
-            Login
-          </Button>
-        </Form.Item>
-      </Form>
+          <h1 style={{ fontFamily: "'DM Serif Display', serif",color: "#1A1612" }}>Welcome back</h1>
+          <h4 style={{ color: "#4A4340", fontWeight: 300, lineHeight: 1.6 }}>Sign in to your shared itineraries</h4>
+          <Form.Item style={{ marginTop: 50 }}
+            name="username"
+            label="USERNAME"
+            rules={[{ required: true, message: "Please input your username" }]}
+          >
+            <Input placeholder="Enter username" />
+          </Form.Item>
+          <Form.Item style={{ marginTop: 40 }}
+            name="password"
+            label="PASSWORD"
+            rules={[{ required: true, message: "Please input your password"}]}
+          >
+            <Input.Password placeholder="Enter password" /> 
+          </Form.Item> {/* The Input.Password hides the input text */}
+          <Form.Item style={{ marginTop: 50, marginBottom: 10 }}>
+            <Button type="primary" htmlType="submit" className="login-button">
+              Sign in
+            </Button>
+          </Form.Item>
+          <p style={{ color: "#4A4340",  fontWeight: 300, fontSize: 15 }}>Don't have an account? <a href="/register" style={{ color: "#C2603A",  fontWeight: 300 }}>Create one</a> {/* clickable link */}
+          </p>
+        </Form>
+      </div>
     </div>
   );
 };
