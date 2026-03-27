@@ -98,8 +98,7 @@ const handleLogin = async (values: RegisterFields) => {
                 Create Account
                 </Button>
             </Form.Item>
-            <p style={{ color: "#4A4340",  fontWeight: 300, fontSize: 15 }}>Already have an account?
-                <a href="/login" style={{ color: "#C2603A",  fontWeight: 300 }}>Sign in</a>
+            <p style={{ color: "#4A4340",  fontWeight: 300, fontSize: 15 }}>Already have an account? <a href="/login" style={{ color: "#C2603A",  fontWeight: 300 }}>Sign in</a>
             </p>
             </Form>
         </div>
