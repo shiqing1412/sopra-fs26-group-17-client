@@ -7,7 +7,7 @@ import { User } from "@/types/user";
 import { Button, Form, Input } from "antd";
 
 interface AuthFormProps {
-  mode: "login" | "register";
+  readonly mode: "login" | "register";
 }
 
 export default function AuthForm({ mode }: AuthFormProps) {
