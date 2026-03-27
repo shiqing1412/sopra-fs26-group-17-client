@@ -87,8 +87,7 @@ const Login: React.FC = () => {
               Sign in
             </Button>
           </Form.Item>
-          <p style={{ color: "#4A4340",  fontWeight: 300, fontSize: 15 }}>Don't have an account? 
-            <a href="/register" style={{ color: "#C2603A",  fontWeight: 300 }}> Create one</a> {/* clickable link */}
+          <p style={{ color: "#4A4340",  fontWeight: 300, fontSize: 15 }}>Don't have an account? <a href="/register" style={{ color: "#C2603A",  fontWeight: 300 }}>Create one</a> {/* clickable link */}
           </p>
         </Form>
       </div>
