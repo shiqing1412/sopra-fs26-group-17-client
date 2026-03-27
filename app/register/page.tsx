@@ -14,7 +14,7 @@ interface RegisterFields {
   password_confirm: string;
 }
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
   const router = useRouter();
   const apiService = useApi();
   const [form] = Form.useForm();
@@ -53,25 +53,25 @@ const handleLogin = async (values: RegisterFields) => {
     };
 
     return (
-        <div className="register-container">
-        <div className="register-left">
-            <div style={{ display: "flex" }}>
-            <h1 style={{ marginTop: 70, marginLeft: 60, fontFamily: "'DM Serif Display', serif"}}>Wander</h1>
-            <h1 style={{ marginTop: 70, fontFamily: "'DM Serif Display', serif", color: "#da8360"}}>Sync</h1>
-            </div>
-            <p style={{ marginTop: "auto", marginLeft: 60, marginBottom: 100, color: "#8A7A6A", fontWeight: 300, lineHeight: 1.6, fontSize: 16 }}>Plan trips together, in real time.</p>
+      <div className="login-container">
+      <div className="login-left"> {/* left side of the screen */}
+        <div style={{ display: "flex" }}>
+          <h1 style={{ marginTop: 70, marginLeft: 60, fontFamily: "'DM Serif Display', serif"}}>Wander</h1>
+          <h1 style={{ marginTop: 70, fontFamily: "'DM Serif Display', serif", color: "#da8360"}}>Sync</h1>
         </div>
-        <div className="register-right">
-            <Form
-            form={form}
-            name="login"
-            size="large"
-            variant="outlined"
-            onFinish={handleLogin}
-            layout="vertical"
-            >
-            <h1 style={{ fontFamily: "'DM Serif Display', serif",color: "#1A1612" }}>Welcome back</h1>
-            <h4 style={{ color: "#4A4340", fontWeight: 300, lineHeight: 1.6 }}>Sign in to your shared itineraries</h4>
+        <p style={{ marginTop: "auto", marginLeft: 60, marginBottom: 100, color: "#8A7A6A", fontWeight: 300, lineHeight: 1.6, fontSize: 16 }}>Plan trips together, in real time.</p>
+      </div>
+      <div className="login-right"> {/* right side of the screen */}
+        <Form
+          form={form}
+          name="login"
+          size="large"
+          variant="outlined"
+          onFinish={handleLogin}
+          layout="vertical"
+        >
+          <h1 style={{ fontFamily: "'DM Serif Display', serif",color: "#1A1612" }}>Welcome back</h1>
+          <h4 style={{ color: "#4A4340", fontWeight: 300, lineHeight: 1.6 }}>Sign in to your shared itineraries</h4>
             <Form.Item style={{ marginTop: 50 }}
                 name="username"
                 label="USERNAME"
@@ -99,7 +99,7 @@ const handleLogin = async (values: RegisterFields) => {
                 </Button>
             </Form.Item>
             <p style={{ color: "#4A4340",  fontWeight: 300, fontSize: 15 }}>Already have an account?
-                <a href="/register" style={{ color: "#C2603A",  fontWeight: 300 }}>Sign in</a>
+                <a href="/login" style={{ color: "#C2603A",  fontWeight: 300 }}>Sign in</a>
             </p>
             </Form>
         </div>
@@ -107,4 +107,4 @@ const handleLogin = async (values: RegisterFields) => {
     );
     };
 
-export default Login;
+export default Register;
