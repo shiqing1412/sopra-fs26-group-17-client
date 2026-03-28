@@ -22,12 +22,16 @@ export default function AuthForm({ mode }: AuthFormProps) {
   const {
     set: setUserId
   } = useLocalStorage<string>("userId", "");
+  const {
+    set: setUser
+  } = useLocalStorage<User | null>("user", null);
   
   const handleLogin = async (values: { username: string; password: string; password_confirm?: string }) => {
     try {
       const response = await apiService.post<User>("/users", values);
       if (response.token) setToken(response.token);
       if (response.id) setUserId(String(response.id));
+      if (response) setUser(response);
       router.push("/trips");
     } catch (error) {
       if (error instanceof Error) alert(`Something went wrong:\n${error.message}`);
