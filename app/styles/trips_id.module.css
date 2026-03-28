@@ -1,0 +1,61 @@
+.page {
+  min-height: 100vh;
+  background-color: #f5f1ec;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+/* Main */
+
+.main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+  color: #1a1a1a;
+  letter-spacing: -0.5px;
+}
+
+/* Grid */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* User online status */
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.statusOnline {
+  background: #eafaf1;
+  color: #1e8449;
+}
+.statusActive .statusDot { background: #27ae60; }

@@ -25,7 +25,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
   const {
     set: setUser
   } = useLocalStorage<User | null>("user", null);
-  
+
   const handleLogin = async (values: { username: string; password: string; password_confirm?: string }) => {
     try{
       const response = await apiService.post<User>("/login", values);  
@@ -44,12 +44,47 @@ export default function AuthForm({ mode }: AuthFormProps) {
     }
   };
 
+  const handleRegister = async (values: { username: string; password: string; password_confirm?: string }) => {
+    // placeholder as backend is missing the check for now: password and password_confirm must match
+    if (values.password !== values.password_confirm) {
+      form.setFields([{ name: "password_confirm", errors: ["Passwords do not match."] }]);
+      return;
+    }
+    // placeholder end
+    
+    try{
+      const response = await apiService.post<User>("/users", values);  
+      if (!response.token) {
+        alert("Registration failed. Please try again.");
+        return;
+      }
+
+      setToken(response.token);
+      setUserId(String(response.id));
+      setUser(response);
+      router.push("/trips");
+    } catch (error:any) {
+        if (error.message.includes("Username already taken. Please choose a different one.")) {
+            form.setFields([{ name: "username", errors: ["Username already taken. Please choose a different one."] }]);
+          } else if(error.message.includes("Username is required.")) {
+            form.setFields([{ name: "username", errors: ["Username is required. Please input a username."]}])
+          } else if(error.message.includes("Password is required.")) {
+            form.setFields([{ name: "password", errors: ["Password is required. Please input a password."]}])
+          } else if(error.message.includes("Password must be at least 6 characters.")) {
+            form.setFields([{ name: "password", errors: ["Password must be at least 6 characters."] }]);
+            // missing error from backend: password and password_confirm must match
+          } else {
+        alert(`Something went wrong:\n${error.message}`);
+      }
+    }
+  };
+
   return (
     <Form
       form={form}
       name={mode}
       size="large"
-      onFinish={handleLogin}
+      onFinish={isRegister ? handleRegister : handleLogin}
       layout="vertical"
     >
       <Form.Item
