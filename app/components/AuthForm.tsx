@@ -27,14 +27,20 @@ export default function AuthForm({ mode }: AuthFormProps) {
   } = useLocalStorage<User | null>("user", null);
   
   const handleLogin = async (values: { username: string; password: string; password_confirm?: string }) => {
-    try {
-      const response = await apiService.post<User>("/users", values);
+    try{
+      const response = await apiService.post<User>("/login", values);  
       if (response.token) setToken(response.token);
       if (response.id) setUserId(String(response.id));
       if (response) setUser(response);
       router.push("/trips");
-    } catch (error) {
-      if (error instanceof Error) alert(`Something went wrong:\n${error.message}`);
+    } catch (error:any) {
+      if (error.message.includes("The username is not correct!")) {
+        form.setFields([{ name: "username", errors: ["Username does not exist. Please enter a valid username."] }]);
+      } else if (error.message.includes("The password is incorrect!")) {
+        form.setFields([{ name: "password", errors: ["Password is incorrect. Please try again."] }]);
+      } else {
+        alert(`Something went wrong:\n${error.message}`);
+      }
     }
   };
 
