@@ -52,10 +52,5 @@
   height: 6px;
   border-radius: 50%;
   display: inline-block;
-}
-
-.statusOnline {
-  background: #eafaf1;
   color: #1e8449;
 }
-.statusActive .statusDot { background: #27ae60; }
