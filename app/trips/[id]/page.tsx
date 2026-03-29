@@ -28,6 +28,10 @@ const Profile: React.FC = () => {
     clear: clearToken
   } = useLocalStorage<string>("token", "");
 
+  const handleLogout = (): void => {
+    // Yara TODO --------------------------------------------------------------
+  };
+
   return (
     <div className={styles.page}>
       <nav className={styles.nav}>
@@ -41,9 +45,12 @@ const Profile: React.FC = () => {
           <span className={styles.navUsername}>
             {user?.username ?? "Guest"}                      {/* username from localStorage */}
           </span>
+          <div className={styles.logoutBtn} onClick={handleLogout}>
+          Log out
+          </div>
         </div>
 
-        {/* TODO new trip card, new trip, display (no) existing trips, logout button */}
+        {/* TODO new trip card, new trip, display (no) existing trips */}
       </nav>
     </div>
   );

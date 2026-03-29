@@ -62,9 +62,12 @@ const Dashboard: React.FC = () => {
           <span className={styles.navUsername}>
             {user?.username ?? "Guest"}                      {/* username from localStorage */}
           </span>
+          <div className={styles.logoutBtn} onClick={handleLogout}>
+          Log out
+          </div>
         </div>
 
-        {/* TODO new trip card, new trip, display (no) existing trips, logout button */}
+        {/* TODO new trip card, new trip, display (no) existing trips */}
 
       </nav>
     </div>
