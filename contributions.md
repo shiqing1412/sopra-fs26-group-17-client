@@ -36,7 +36,7 @@ reason).
 | ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
 | **@shiqing1412** | 29 March   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/9959ccdb206791d68c72ceca0d78b688e43456fd | add home page with hero section, navigation, and styled background  | we need a home page |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
-| **@Raminminn** | 27 March   | [[Link to Commit 1]](https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/5bdbba155a4d8d75e57fabec4a5ac41e78ec1dba) | Created a register page with corresponding error messages and allows the user to register | the user needs to create an account to be able to use the web-app |
+| **@Raminminn** | 27 March   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/5bdbba155a4d8d75e57fabec4a5ac41e78ec1dba | Created a register page with corresponding error messages and allows the user to register | the user needs to create an account to be able to use the web-app |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **[@githubUser3]** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
