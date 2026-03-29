@@ -130,7 +130,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
         {isRegister ? (
           <>Already have an account? <a href="/login" style={{ color: "#C2603A", fontWeight: 300 }}>Sign in</a></>
         ) : (
-          <>Don't have an account? <a href="/register" style={{ color: "#C2603A", fontWeight: 300 }}>Create one</a></>
+          <>Don&apos;t have an account? <a href="/register" style={{ color: "#C2603A", fontWeight: 300 }}>Create one</a></>
         )}
       </p>
     </Form>
