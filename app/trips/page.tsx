@@ -51,9 +51,7 @@ const Dashboard: React.FC = () => {
   const { clear: clearToken } = useLocalStorage<string>("token", "");
 
   const handleLogout = (): void => {
-    clearToken();
-    clearUser();
-    router.push("/login");
+    //yara to do #34 
   };
 
   const handleNewTrip = (): void => {
