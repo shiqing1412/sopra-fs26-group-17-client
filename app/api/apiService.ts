@@ -14,7 +14,7 @@ export class ApiService {
   }
 
   private getHeaders(): HeadersInit {
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = globalThis.window === undefined ? null : localStorage.getItem("token");
     return token
       ? { ...this.defaultHeaders, Authorization: token }
       : { ...this.defaultHeaders };

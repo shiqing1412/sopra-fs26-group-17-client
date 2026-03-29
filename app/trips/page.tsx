@@ -15,7 +15,7 @@ const AVATAR_COLORS = ["#c0392b", "#2980b9", "#27ae60", "#8e44ad", "#d35400", "#
 
 function getIllustration(id: string | null): string {
   if (!id) return "🗺️";
-  const idx = parseInt(id, 10) % ILLUSTRATIONS.length;
+  const idx = Number.parseInt(id, 10) % ILLUSTRATIONS.length;
   return ILLUSTRATIONS[Math.abs(idx)];
 }
 
@@ -47,8 +47,8 @@ const Dashboard: React.FC = () => {
   const [creating, setCreating] = useState(false);
   const [form] = Form.useForm<NewTripValues>();
 
-  const { value: user, clear: clearUser } = useLocalStorage<User | null>("user", null);
-  const { clear: clearToken } = useLocalStorage<string>("token", "");
+  const { value: user } = useLocalStorage<User | null>("user", null);
+  useLocalStorage<string>("token", "");
 
   const handleLogout = (): void => {
     //yara to do #34 
@@ -125,24 +125,24 @@ const Dashboard: React.FC = () => {
         </div>
 
         <div className={styles.grid}>
-          {/* New Trip Card */}
-          <div className={styles.newCard} onClick={handleNewTrip}>
-            <div className={styles.newCardIcon}>+</div>
-            <div className={styles.newCardLabel}>New Trip</div>
-            <div className={styles.newCardSub}>Plan your next adventure</div>
-          </div>
-
           {/* Trip Cards */}
           {trips?.map((trip) => {
             const status = getStatus(trip.startDate, trip.endDate);
             const members = trip.collaborators
               ? trip.collaborators.split(",").filter(Boolean)
               : [];
+            const badgeClass = status === "active"
+              ? styles.badgeActive
+              : status === "upcoming"
+              ? styles.badgeUpcoming
+              : styles.badgePlanning;
             return (
-              <div
+              <button
+                type="button"
                 key={trip.id}
                 className={styles.card}
                 onClick={() => router.push(`/trips/${trip.id}`)}
+                style={{ border: "none", background: "none", width: "100%", cursor: "pointer", font: "inherit", textAlign: "left", padding: 0 }}
               >
                 <div className={styles.cardIllustration} style={{ background: "#f0ece6" }}>
                   {trip.illustration ?? getIllustration(trip.id)}
@@ -156,7 +156,7 @@ const Dashboard: React.FC = () => {
                     <div className={styles.avatarStack}>
                       {members.slice(0, 4).map((m, i) => (
                         <div
-                          key={i}
+                          key={m}
                           className={styles.avatar}
                           style={{ background: AVATAR_COLORS[i % AVATAR_COLORS.length] }}
                           title={m}
@@ -165,23 +165,23 @@ const Dashboard: React.FC = () => {
                         </div>
                       ))}
                     </div>
-                    <span
-                      className={`${styles.badge} ${
-                        status === "active"
-                          ? styles.badgeActive
-                          : status === "upcoming"
-                          ? styles.badgeUpcoming
-                          : styles.badgePlanning
-                      }`}
-                    >
+                    <span className={`${styles.badge} ${badgeClass}`}>
                       <span className={styles.badgeDot} />
                       {status.charAt(0).toUpperCase() + status.slice(1)}
                     </span>
                   </div>
                 </div>
-              </div>
+              </button>
             );
           })}
+
+          {/* New Trip Card — appar at last */}
+          <button type="button" className={styles.newCard} onClick={handleNewTrip}
+            style={{ border: "none", background: "none", width: "100%", cursor: "pointer", font: "inherit" }}>
+            <div className={styles.newCardIcon}>+</div>
+            <div className={styles.newCardLabel}>New trip</div>
+            <div className={styles.newCardSub}>Plan something new</div>
+          </button>
         </div>
       </main>
 
@@ -216,7 +216,7 @@ const Dashboard: React.FC = () => {
             <DatePicker.RangePicker
               style={{ width: "100%" }}
               format="MMM D, YYYY"
-              disabledDate={(d) => d && d.isBefore(dayjs().startOf("day"))}
+              disabledDate={(d) => d?.isBefore(dayjs().startOf("day")) ?? false}
             />
           </Form.Item>
 
