@@ -36,12 +36,17 @@ reason).
 | ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
 | **@shiqing1412** | 29 March   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/9959ccdb206791d68c72ceca0d78b688e43456fd | add home page with hero section, navigation, and styled background  | we need a home page |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
-| **[@githubUser2]** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
-| **[@githubUser3]** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
-| **[@githubUser4]** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@julituchi** | 26 March   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/62438c56a3b3427c457952662ea3b3a5b17e6b85 | Add POST /users endpoint with username and password validation | without it, no one can register |
+|                    | 28 March   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/e5694390c277126dd073caa38d41787a35739e8e | Hash password with BCrypt before persisting user | hashing with BCrypt ensures that even if the database is compromised, user passwords cannot be recovered |
+|                    | 29 March   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/d9c3fb8fc07ec9925f19f734bd647ac3d559b1ab | Validate password and passwordConfirm match in POST /users | Prevents users from accidentally registering with a mistyped password |
+| **@Raminminn** | 27 March   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/82c003b1bb361a505fd7e80b18d73d86c3501dbb | Created a register page with corresponding error messages and allows the user to register | the user needs to create an account to be able to use the web-app |
+|                    | 28 March   | https://github.com/shiqing1412/sopra-fs26-group-17-client/pull/18/changes/b599265511fff92402c7fd926b0067e913e38f18 | Added a basic page with the navigation bar at the top for the travel dashboard | We need the dashboard to display the user's trips and create a new trip |
+| **@yarablaser** | 26 March   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/24df8a45aabed5af067a665fe0f9f8867e105b67 | login page UI, general style for login/registration | registered users should be able to log back in, as content is user-specific |  
+|                    | 28 March   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/7712e928263adafc5d684b9bca70c499bd31c042 | login error handling | Without error messages, user won't know what went wrong during login |
+| **@dsgji4g4** | 27 March  | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/364639ffc05befbbf995d851099729f8de3d3c76 | Update: POST /login endpoint, validate credentials, issue session token  | Basic login function is the gate for users to retrieve relevant info and acquire the right access. |
+|                    | 27 March  | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/7356a9710ceb1a76307e16187a999b08f4aaa7b0 | POST /logout endpoint that invalidates session token | Flush and invalidate the token to ensure users' info won't be accessed after logout. |
+|                    | 29 March   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/20ceb861bb290617f8966f849b344c7ad4aa0bc1 | Add POST trip endpoint | Set endpoints for one of the main features: create a trip |en | Flush and invalidate the token to ensure users' info won't be accessed after logout. |
+
 
 ---
 
