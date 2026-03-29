@@ -33,13 +33,14 @@ export default function AuthForm({ mode }: AuthFormProps) {
       if (response.id) setUserId(String(response.id));
       if (response) setUser(response);
       router.push("/trips");
-    } catch (error:any) {
-      if (error.message.includes("The username is not correct!")) {
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      if (message.includes("The username is not correct!")) {
         form.setFields([{ name: "username", errors: ["Username does not exist. Please enter a valid username."] }]);
-      } else if (error.message.includes("The password is incorrect!")) {
+      } else if (message.includes("The password is incorrect!")) {
         form.setFields([{ name: "password", errors: ["Password is incorrect. Please try again."] }]);
       } else {
-        alert(`Something went wrong:\n${error.message}`);
+        alert(`Something went wrong:\n${message}`);
       }
     }
   };
@@ -95,7 +96,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
         {isRegister ? (
           <>Already have an account? <a href="/login" style={{ color: "#C2603A", fontWeight: 300 }}>Sign in</a></>
         ) : (
-          <>Don't have an account? <a href="/register" style={{ color: "#C2603A", fontWeight: 300 }}>Create one</a></>
+          <>Don&apos;t have an account? <a href="/register" style={{ color: "#C2603A", fontWeight: 300 }}>Create one</a></>
         )}
       </p>
     </Form>
