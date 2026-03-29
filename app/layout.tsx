@@ -56,6 +56,12 @@ export default function RootLayout({
                 labelColor: "#fff",
                 algorithm: theme.defaultAlgorithm, // specify a specifc algorithm instead of true/false
               },
+              DatePicker: {
+                colorBgContainer: "#ffffff",
+                colorText: "#1a1a1a",
+                colorTextPlaceholder: "#888888",
+                colorBgElevated: "#ffffff",
+              },
               Card: {},
             },
           }}
