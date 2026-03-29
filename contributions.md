@@ -41,8 +41,8 @@ reason).
 |                    | 29 March   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/d9c3fb8fc07ec9925f19f734bd647ac3d559b1ab | Validate password and passwordConfirm match in POST /users | Prevents users from accidentally registering with a mistyped password |
 | **@Raminminn** | 27 March   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/82c003b1bb361a505fd7e80b18d73d86c3501dbb | Created a register page with corresponding error messages and allows the user to register | the user needs to create an account to be able to use the web-app |
 |                    | 28 March   | https://github.com/shiqing1412/sopra-fs26-group-17-client/pull/18/changes/b599265511fff92402c7fd926b0067e913e38f18 | Added a basic page with the navigation bar at the top for the travel dashboard | We need the dashboard to display the user's trips and create a new trip |
-| **[@githubUser3]** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@yarablaser** | 26 March   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/24df8a45aabed5af067a665fe0f9f8867e105b67 | login page UI, general style for login/registration | registered users should be able to log back in, as content is user-specific |  
+|                    | 28 March   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/7712e928263adafc5d684b9bca70c499bd31c042 | login error handling | Without error messages, user won't know what went wrong during login |
 | **[@githubUser4]** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 
