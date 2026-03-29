@@ -39,8 +39,7 @@ reason).
 | **@julituchi** | 26 March   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/62438c56a3b3427c457952662ea3b3a5b17e6b85 | Add POST /users endpoint with username and password validation | without it, no one can register |
 |                    | 28 March   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/e5694390c277126dd073caa38d41787a35739e8e | Hash password with BCrypt before persisting user | hashing with BCrypt ensures that even if the database is compromised, user passwords cannot be recovered |
 |                    | 29 March   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/d9c3fb8fc07ec9925f19f734bd647ac3d559b1ab | Validate password and passwordConfirm match in POST /users | Prevents users from accidentally registering with a mistyped password |
-
-| **@Raminminn** | 27 March   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/5bdbba155a4d8d75e57fabec4a5ac41e78ec1dba | Created a register page with corresponding error messages and allows the user to register | the user needs to create an account to be able to use the web-app |
+| **@Raminminn** | 27 March   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/82c003b1bb361a505fd7e80b18d73d86c3501dbb | Created a register page with corresponding error messages and allows the user to register | the user needs to create an account to be able to use the web-app |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **[@githubUser3]** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
