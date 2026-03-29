@@ -65,22 +65,16 @@ export default function AuthForm({ mode }: AuthFormProps) {
       setUser(response);
       router.push("/trips");
     } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);  
-        if (message.includes("Username already taken. Please choose a different one.")) {
-          form.setFields([{ name: "username", errors: ["Username already taken. Please choose a different one."] }]);
-        } else if(message.includes("Username is required.")) {
-          form.setFields([{ name: "username", errors: ["Username is required. Please input a username."]}])
-        } else if(message.includes("Password is required.")) {
-          form.setFields([{ name: "password", errors: ["Password is required. Please input a password."]}])
-        } else if(message.includes("Password must be at least 6 characters.")) {
-          form.setFields([{ name: "password", errors: ["Password must be at least 6 characters."] }]);
+      const message = error instanceof Error ? error.message : String(error);  
+      if (message.includes("Username already taken. Please choose a different one.")) {
+        form.setFields([{ name: "username", errors: ["Username already taken. Please choose a different one."] }]);
+      } else if(message.includes("Username is required.")) {
+        form.setFields([{ name: "username", errors: ["Username is required. Please input a username."]}])
+      } else if(message.includes("Password is required.")) {
+        form.setFields([{ name: "password", errors: ["Password is required. Please input a password."]}])
+      } else if(message.includes("Password must be at least 6 characters.")) {
+        form.setFields([{ name: "password", errors: ["Password must be at least 6 characters."] }]);
           // missing error from backend: password and password_confirm must match
-        } else {
-      const message = error instanceof Error ? error.message : String(error);
-      if (message.includes("The username is not correct!")) {
-        form.setFields([{ name: "username", errors: ["Username does not exist. Please enter a valid username."] }]);
-      } else if (message.includes("The password is incorrect!")) {
-        form.setFields([{ name: "password", errors: ["Password is incorrect. Please try again."] }]);
       } else {
         alert(`Something went wrong:\n${message}`);
       }
