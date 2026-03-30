@@ -9,6 +9,7 @@ import useLocalStorage from "@/hooks/useLocalStorage";
 import { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
+import LogoutForm from "@/components/Logout";
 
 const ILLUSTRATIONS = ["🌍", "🗺️", "✈️", "🏖️", "🏔️", "🌴", "🗽", "🎡"];
 const AVATAR_COLORS = ["#c0392b", "#2980b9", "#27ae60", "#8e44ad", "#d35400", "#16a085"];
@@ -50,20 +51,7 @@ const Dashboard: React.FC = () => {
   const { value: user, clear: clearUser } = useLocalStorage<User | null>("user", null);
   const { value: token, clear: clearToken} = useLocalStorage<string>("token", "");
 
-  const handleLogout = async (): Promise<void> => {
-    try {
-      const cleanToken = token ? JSON.parse(token) : null;
-      if (cleanToken) { //logout by uniqe user token
-        await apiService.post<User>("/logout", { token: cleanToken });
-      }
-    } catch (error : any) {
-      alert(`Something went wrong during the logout:\n${error.message}`);
-    }  finally {
-      clearToken();
-      clearUser();
-      router.push("/login")
-    }
-  };
+  const { handleLogout } = LogoutForm();
 
   const handleNewTrip = (): void => {
     form.resetFields();
