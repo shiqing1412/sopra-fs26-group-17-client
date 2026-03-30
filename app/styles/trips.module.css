@@ -72,6 +72,26 @@
   color: #fff;
 }
 
+/* Navigation bar additions for /trips/id */
+/* TODO: settings -> leave trip button, export itinerary button */
+.shareLinkBtn {
+  padding: 6px 16px;
+  border-radius: 8px;
+  border: 1.5px solid #c0392b;
+  background: #c0392b;
+  color: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+
+.shareLinkBtn:hover {
+  background: #fff;
+  color: #c0392b;
+}
+
 /* Main */
 
 .main {
@@ -207,14 +227,14 @@
   font-weight: 600;
 }
 
-.badgeDot {
+.badgeDot {             /* can also be used for user status */
   width: 6px;
   height: 6px;
   border-radius: 50%;
   display: inline-block;
 }
 
-.badgeActive {
+.badgeActive {          /* can also be used for user status */
   background: #eafaf1;
   color: #1e8449;
 }
