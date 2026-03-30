@@ -60,9 +60,9 @@ const Dashboard: React.FC = () => {
     setCreating(true);
     try {
       const newTrip = await apiService.post<Trip>("/trips", {
-        title: values.title,
-        start_date: values.dateRange[0].format("YYYY-MM-DD"),
-        end_date: values.dateRange[1].format("YYYY-MM-DD"),
+        tripTitle: values.title,
+        startDate: values.dateRange[0].format("YYYY-MM-DD"),
+        endDate: values.dateRange[1].format("YYYY-MM-DD"),
       });
       setTrips((prev) => (prev ? [newTrip, ...prev] : [newTrip]));
       setModalOpen(false);
@@ -136,16 +136,16 @@ const Dashboard: React.FC = () => {
             return (
               <button
                 type="button"
-                key={trip.id}
+                key={trip.tripId}
                 className={styles.card}
-                onClick={() => router.push(`/trips/${trip.id}`)}
+                onClick={() => router.push(`/trips/${trip.tripId}`)}
                 style={{ border: "none", background: "none", width: "100%", cursor: "pointer", font: "inherit", textAlign: "left", padding: 0 }}
               >
                 <div className={styles.cardIllustration} style={{ background: "#f0ece6" }}>
-                  {trip.illustration ?? getIllustration(trip.id)}
+                  {trip.illustration ?? getIllustration(trip.tripId)}
                 </div>
                 <div className={styles.cardBody}>
-                  <div className={styles.cardTitle}>{trip.title ?? "Untitled Trip"}</div>
+                  <div className={styles.cardTitle}>{trip.tripTitle ?? "Untitled Trip"}</div>
                   <div className={styles.cardDate}>
                     {formatDateRange(trip.startDate, trip.endDate)}
                   </div>
