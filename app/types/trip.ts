@@ -2,8 +2,8 @@ import { User } from "./user";
 import { Event } from "./event";
  
 export interface Trip {
-  id: string | null;
-  title: string | null;
+  tripId: string | null;
+  tripTitle: string | null;
   startDate: string | null;
   endDate: string | null;
   shareCode: string | null;
