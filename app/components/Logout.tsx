@@ -3,12 +3,11 @@ import { useRouter } from "next/navigation";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { User } from "@/types/user";
 
-const { value: user, clear: clearUser } = useLocalStorage<User | null>("user", null);
-const { value: token, clear: clearToken} = useLocalStorage<string>("token", "");
-
 export default function Logout() {
     const router = useRouter();
     const apiService = useApi();
+    const { value: user, clear: clearUser } = useLocalStorage<User | null>("user", null);
+    const { value: token, clear: clearToken} = useLocalStorage<string>("token", "");
 
     const handleLogout = async (): Promise<void> => {
         try {
