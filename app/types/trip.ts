@@ -1,3 +1,6 @@
+import { User } from "./user";
+import { Event } from "./event";
+ 
 export interface Trip {
   id: string | null;
   title: string | null;
@@ -7,4 +10,6 @@ export interface Trip {
   status: string | null;
   collaborators: string | null;
   illustration: string | null;
+  owner: User | null;
+  events: Event[] | null;
 }
