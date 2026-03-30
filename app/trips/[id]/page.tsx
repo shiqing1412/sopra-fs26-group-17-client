@@ -39,13 +39,12 @@ const Profile: React.FC = () => {
           Log out
           </button>
         </div>
-
+      </nav>
         {/* calendar view */}
-        {trip && trip.startDate && trip.endDate && <TripCalendar trip={trip} />}
-      
+        {trip && <TripCalendar trip={trip} />}
+
         {/* TODO new trip card, new trip, display (no) existing trips */}
 
-      </nav>
     </div>
   );
 };

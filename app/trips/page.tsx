@@ -49,6 +49,7 @@ const Dashboard: React.FC = () => {
   const [form] = Form.useForm<NewTripValues>();
 
   const { value: user } = useLocalStorage<User | null>("user", null);
+  const { set: setStoredTrip } = useLocalStorage<Trip | null>("trip", null);
 
   const { handleLogout } = Logout();
 
@@ -138,8 +139,9 @@ const Dashboard: React.FC = () => {
                 type="button"
                 key={trip.tripId}
                 className={styles.card}
-                onClick={() => router.push(`/trips/${trip.tripId}`)}
-                style={{ border: "none", background: "none", width: "100%", cursor: "pointer", font: "inherit", textAlign: "left", padding: 0 }}
+                onClick={() => {setStoredTrip(trip);
+                  router.push(`/trips/${trip.tripId}`)}}
+                  style={{ border: "none", background: "none", width: "100%", cursor: "pointer", font: "inherit", textAlign: "left", padding: 0 }}
               >
                 <div className={styles.cardIllustration} style={{ background: "#f0ece6" }}>
                   {trip.illustration ?? getIllustration(trip.tripId)}

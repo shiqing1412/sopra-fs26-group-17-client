@@ -1,6 +1,6 @@
 import type { Trip } from "@/types/trip";
 import styles from "@/styles/trips.module.css";
- 
+
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"];
@@ -24,15 +24,15 @@ function getDaysBetween(start: string, end: string): Date[] {
  
 function DayColumn({ date, dayNumber }: { date: Date; dayNumber: number }) {
   return (
-    <div className={styles.dayColumn}>
-      <div className={styles.dayHeader}>
-        <span className={styles.dayLabel}>DAY {dayNumber}</span>
-        <span className={styles.dayNumber}>{date.getDate()}</span>
-        <span className={styles.dayName}>{DAY_NAMES[date.getDay()]}, {MONTH_NAMES[date.getMonth()]}</span>
+    <div className={styles.calendarDayColumn}>
+      <div className={styles.calendarDayHeader}>
+        <span className={styles.calendarDayLabel}>DAY {dayNumber}</span>
+        <span className={styles.calendarDayNumber}>{date.getDate()}</span>
+        <span className={styles.calendarDayName}>{DAY_NAMES[date.getDay()]}, {MONTH_NAMES[date.getMonth()]}</span>
       </div>
-      <div className={styles.dayStops}>
+      <div className={styles.calendarDayStops}>
         {/* event cards will go here */}
-        <button className={styles.addStopBtn} onClick={() => { /* add stop for this date */ }}>
+        <button className={styles.calendarAddStopBtn} onClick={() => { /* add stop for this date */ }}>
           + Add stop
         </button>
       </div>
@@ -42,12 +42,14 @@ function DayColumn({ date, dayNumber }: { date: Date; dayNumber: number }) {
  
 function TripCalendar({ trip }: TripCalendarValues) {
   const days = getDaysBetween(trip.startDate ?? "", trip.endDate ?? "");
- 
+
   return (
-    <div className={styles.grid}>
-      {days.map((date, i) => (
-        <DayColumn key={date.toISOString()} date={date} dayNumber={i + 1} />
-      ))}
+    <div className={styles.calendarScrollWrapper}>
+      <div className={styles.calendarGrid}>
+        {days.map((date, i) => (
+          <DayColumn key={date.toISOString()} date={date} dayNumber={i + 1} />
+        ))}
+      </div>
     </div>
   );
 }
