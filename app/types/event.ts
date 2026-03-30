@@ -2,7 +2,8 @@ import { User } from "./user";
 import { Location } from "./location";
  
 export interface Event {
-  eventId: number | null;
+  id: number | null;
+  title: string | null;
   date: Date | null;
   time: string | null; // "HH:mm" format
   notes: string | null;

@@ -4,9 +4,9 @@ import { Trip } from "./trip";
 export type MembershipRole = "owner" | "member";
  
 export interface Membership {
-  membershipId: number;
-  joinedAt: Date;
+  id: number | null;
+  joinedAt: Date | null;
   role: MembershipRole;
-  trip: Trip;
-  user: User;
+  trip: Trip | null;
+  user: User | null;
 }
