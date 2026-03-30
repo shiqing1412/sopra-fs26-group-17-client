@@ -53,7 +53,6 @@ const Dashboard: React.FC = () => {
   const { handleLogout } = Logout();
 
   const handleNewTrip = (): void => {
-    form.resetFields();
     setModalOpen(true);
   };
 
