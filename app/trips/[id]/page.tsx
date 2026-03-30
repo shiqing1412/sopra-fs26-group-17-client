@@ -21,15 +21,22 @@ const Profile: React.FC = () => {
   const apiService = useApi();
   const [trips, setTrips] = useState<Trip[] | null>(null);
    
-  const {
-    value: user
-  } = useLocalStorage<User | null>("user", null); // read logged-in user
-  const {
-    clear: clearToken
-  } = useLocalStorage<string>("token", "");
+  const { value: user, clear: clearUser } = useLocalStorage<User | null>("user", null);
+  const { value: token, clear: clearToken} = useLocalStorage<string>("token", "");
 
-  const handleLogout = (): void => {
-    // Yara TODO --------------------------------------------------------------
+  const handleLogout = async (): Promise<void> => {
+    try {
+      const cleanToken = token ? JSON.parse(token) : null;
+      if (cleanToken) { //logout by uniqe user token
+        await apiService.post<User>("/logout", { token: cleanToken });
+      }
+    } catch (error : any) {
+      alert(`Something went wrong during the logout:\n${error.message}`);
+    }  finally {
+      clearToken();
+      clearUser();
+      router.push("/login")
+    }
   };
 
   return (
