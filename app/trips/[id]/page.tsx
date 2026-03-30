@@ -1,12 +1,4 @@
-// your code here for S2 to display a single user profile after having clicked on it
-// each user has their own slug /[id] (/1, /2, /3, ...) and is displayed using this file
-// try to leverage the component library from antd by utilizing "Card" to display the individual user
-// import { Card } from "antd"; // similar to /app/users/page.tsx
-
 "use client";
-// For components that need React hooks and browser APIs,
-// SSR (server side rendering) has to be disabled.
-// Read more here: https://nextjs.org/docs/pages/building-your-application/rendering/server-side-rendering
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -16,14 +8,19 @@ import { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
 import Logout from "@/components/Logout";
+import TripCalendar from "@/components/TripCalendar";
+import { Trispace } from "next/font/google";
 
 const Profile: React.FC = () => {
   const router = useRouter();
   const apiService = useApi();
    
   const { value: user } = useLocalStorage<User | null>("user", null);
+  const { value: trip } = useLocalStorage<Trip | null>("trip", null);
 
   const { handleLogout } = Logout();
+  
+  {/* todo functions: addStop, editStop, leaveTrip */}
 
   return (
     <div className={styles.page}>
@@ -43,7 +40,11 @@ const Profile: React.FC = () => {
           </button>
         </div>
 
+        {/* calendar view */}
+        {trip && trip.startDate && trip.endDate && <TripCalendar trip={trip} />}
+        
         {/* TODO new trip card, new trip, display (no) existing trips */}
+
       </nav>
     </div>
   );

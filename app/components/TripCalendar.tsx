@@ -1,5 +1,5 @@
 import type { Trip } from "@/types/trip";
-import styles from "./TripCalendar.module.css";
+import styles from "./trips.module.css";
  
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
