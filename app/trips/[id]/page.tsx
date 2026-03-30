@@ -8,29 +8,22 @@
 // SSR (server side rendering) has to be disabled.
 // Read more here: https://nextjs.org/docs/pages/building-your-application/rendering/server-side-rendering
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
+import Logout from "@/components/Logout";
 
 const Profile: React.FC = () => {
   const router = useRouter();
   const apiService = useApi();
-  const [trips, setTrips] = useState<Trip[] | null>(null);
    
-  const {
-    value: user
-  } = useLocalStorage<User | null>("user", null); // read logged-in user
-  const {
-    clear: clearToken
-  } = useLocalStorage<string>("token", "");
+  const { value: user } = useLocalStorage<User | null>("user", null);
 
-  const handleLogout = (): void => {
-    // Yara TODO --------------------------------------------------------------
-  };
+  const { handleLogout } = Logout();
 
   return (
     <div className={styles.page}>

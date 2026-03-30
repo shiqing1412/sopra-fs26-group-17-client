@@ -9,6 +9,7 @@ import useLocalStorage from "@/hooks/useLocalStorage";
 import { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
+import Logout from "@/components/Logout";
 
 const ILLUSTRATIONS = ["🌍", "🗺️", "✈️", "🏖️", "🏔️", "🌴", "🗽", "🎡"];
 const AVATAR_COLORS = ["#c0392b", "#2980b9", "#27ae60", "#8e44ad", "#d35400", "#16a085"];
@@ -48,11 +49,8 @@ const Dashboard: React.FC = () => {
   const [form] = Form.useForm<NewTripValues>();
 
   const { value: user } = useLocalStorage<User | null>("user", null);
-  useLocalStorage<string>("token", "");
 
-  const handleLogout = (): void => {
-    //yara to do #34 
-  };
+  const { handleLogout } = Logout();
 
   const handleNewTrip = (): void => {
     form.resetFields();
