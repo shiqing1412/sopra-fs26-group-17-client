@@ -6,7 +6,7 @@ import { User } from "@/types/user";
 export default function Logout() {
     const router = useRouter();
     const apiService = useApi();
-    const { value: user, clear: clearUser } = useLocalStorage<User | null>("user", null);
+    const { clear: clearUser } = useLocalStorage<User | null>("user", null);
     const { value: token, clear: clearToken} = useLocalStorage<string>("token", "");
 
     const handleLogout = async (): Promise<void> => {
@@ -15,8 +15,9 @@ export default function Logout() {
         if (cleanToken) { //logout by uniqe user token
             await apiService.post<User>("/logout", { token: cleanToken });
         }
-        } catch (error : any) {
-        alert(`Something went wrong during the logout:\n${error.message}`);
+        } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            alert(`Something went wrong during the logout:\n${message}`);
         }  finally {
         clearToken();
         clearUser();

@@ -8,7 +8,7 @@
 // SSR (server side rendering) has to be disabled.
 // Read more here: https://nextjs.org/docs/pages/building-your-application/rendering/server-side-rendering
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
@@ -20,7 +20,6 @@ import Logout from "@/components/Logout";
 const Profile: React.FC = () => {
   const router = useRouter();
   const apiService = useApi();
-  const [trips, setTrips] = useState<Trip[] | null>(null);
    
   const { value: user } = useLocalStorage<User | null>("user", null);
 
