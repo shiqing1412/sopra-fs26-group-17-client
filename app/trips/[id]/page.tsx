@@ -42,7 +42,7 @@ const Profile: React.FC = () => {
 
         {/* calendar view */}
         {trip && trip.startDate && trip.endDate && <TripCalendar trip={trip} />}
-        
+      
         {/* TODO new trip card, new trip, display (no) existing trips */}
 
       </nav>

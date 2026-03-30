@@ -26,7 +26,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
     set: setUser
   } = useLocalStorage<User | null>("user", null);
 
-  const handleLogin = async (values: { username: string; password: string; password_confirm?: string }) => {
+  const handleLogin = async (values: { username: string; password: string; passwordConfirm?: string }) => {
     try{
       const response = await apiService.post<User>("/login", values);  
       if (response.token) setToken(response.token);
@@ -45,12 +45,12 @@ export default function AuthForm({ mode }: AuthFormProps) {
       }
   };
 
-  const handleRegister = async (values: { username: string; password: string; password_confirm?: string }) => {
-    // placeholder as backend is missing the check for now: password and password_confirm must match
-    if (values.password !== values.password_confirm) {
-      form.setFields([{ name: "password_confirm", errors: ["Passwords do not match."] }]);
-      return;
-    }
+  const handleRegister = async (values: { username: string; password: string; passwordConfirm?: string }) => {
+    // placeholder as backend is missing the check for now: password and passwordConfirm must match
+    // if (values.password !== values.passwordConfirm) {
+    //  form.setFields([{ name: "passwordConfirm", errors: ["Passwords do not match."] }]);
+    //  return;
+    // }
     // placeholder end
 
     try{
@@ -74,7 +74,9 @@ export default function AuthForm({ mode }: AuthFormProps) {
         form.setFields([{ name: "password", errors: ["Password is required. Please input a password."]}])
       } else if(message.includes("Password must be at least 6 characters.")) {
         form.setFields([{ name: "password", errors: ["Password must be at least 6 characters."] }]);
-          // missing error from backend: password and password_confirm must match
+          // missing error from backend: password and passwordConfirm must match
+      } else if(message.includes("The password is incorrect!")) {
+        form.setFields([{ name: "passwordConfirm", errors: ["Passwords do not match."] }]);
       } else {
         alert(`Something went wrong:\n${message}`);
       }
@@ -110,7 +112,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
       {isRegister && (
         <Form.Item
           style={{ marginTop: 0 }}
-          name="password_confirm"
+          name="passwordConfirm"
           label="CONFIRM PASSWORD"
           rules={[{ required: true, message: "Please confirm your password" }]}
         >
