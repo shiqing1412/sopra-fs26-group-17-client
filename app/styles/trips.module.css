@@ -76,7 +76,7 @@
 .subHeader {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
 }
 
 .tripTitle {
@@ -86,7 +86,7 @@
 }
 
 .dateRange {
-  font-size: 13px;
+  font-size: solid 11px;
   font-weight: 400;
   color: #888;
 }
