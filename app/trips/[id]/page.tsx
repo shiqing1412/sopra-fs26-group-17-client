@@ -10,6 +10,7 @@ import styles from "@/styles/trips.module.css";
 import Logout from "@/components/Logout";
 import TripCalendar from "@/components/TripCalendar";
 import { Trispace } from "next/font/google";
+import dayjs, { Dayjs } from "dayjs";
 
 const Profile: React.FC = () => {
   const router = useRouter();
@@ -23,8 +24,8 @@ const Profile: React.FC = () => {
   {/* todo functions: addStop, editStop, leaveTrip */}
 
   return (
-    <div className={styles.page}>
-      <nav className={styles.nav}>
+    <div className={styles.page}> 
+      <nav className={styles.nav}> {/* start header */}
         <div className={styles.logo}>
           Wander<span className={styles.logoAccent}>Sync</span>
         </div>
@@ -38,6 +39,12 @@ const Profile: React.FC = () => {
           <button className={styles.logoutBtn} onClick={handleLogout}>
           Log out
           </button>
+        </div>
+      </nav>
+      <nav className={styles.nav}> {/* start sub header */}
+        <div className={styles.subHeader}>
+          <span className={styles.tripTitle}>{trip?.tripTitle}</span>
+          <span className={styles.dateRange}>{dayjs(trip?.startDate).format("MMM D")} – {dayjs(trip?.endDate).format("MMM D, YYYY")}</span>
         </div>
       </nav>
         {/* calendar view */}

@@ -10,7 +10,7 @@
 
 .nav {
   background: #faf8f5;
-  border-bottom: 1px solid #ece8e1;
+  border-bottom: 1px solid #d4cdc6;
   padding: 0 32px;
   height: 60px;
   display: flex;
@@ -295,6 +295,25 @@
 .newCardSub {
   font-size: 12px;
   color: #9e9389;
+}
+
+/* trips/id subheader */
+.subHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tripTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.dateRange {
+  font-size: 13px;
+  font-weight: 400;
+  color: #888;
 }
 
 /* trips/id calendar --------------------------------------------------------------------- */
