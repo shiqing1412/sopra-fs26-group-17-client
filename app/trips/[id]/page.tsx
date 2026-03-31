@@ -11,10 +11,12 @@ import Logout from "@/components/Logout";
 import TripCalendar from "@/components/TripCalendar";
 import { Trispace } from "next/font/google";
 import dayjs, { Dayjs } from "dayjs";
+import { Modal } from "antd";
 
 const Profile: React.FC = () => {
   const router = useRouter();
   const apiService = useApi();
+  const [settingsOpen, setSettingsOpen] = useState(false);
    
   const { value: user } = useLocalStorage<User | null>("user", null);
   const { value: trip } = useLocalStorage<Trip | null>("trip", null);
@@ -47,7 +49,20 @@ const Profile: React.FC = () => {
           <span className={styles.tripTitle}>{trip?.tripTitle}</span>
           <span className={styles.dateRange}>{dayjs(trip?.startDate).format("MMM D")} – {dayjs(trip?.endDate).format("MMM D, YYYY")}</span>
         </div>
+        <div>
+          <button className={styles.settingsBtn} onClick={() => setSettingsOpen(true)}>
+            ⚙︎ Settings
+          </button>
+        </div>
       </nav>
+      <Modal
+        title="Trip Settings"
+        open={settingsOpen}
+        onCancel={() => setSettingsOpen(false)}
+        footer={null}
+      >
+      </Modal>
+
         {/* calendar view */}
         {trip && <TripCalendar trip={trip} />}
 
