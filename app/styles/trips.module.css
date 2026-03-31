@@ -10,7 +10,7 @@
 
 .nav {
   background: #faf8f5;
-  border-bottom: 1px solid #ece8e1;
+  border-bottom: 1px solid #d4cdc6;
   padding: 0 32px;
   height: 60px;
   display: flex;
@@ -73,6 +73,37 @@
 }
 
 /* Navigation bar additions for /trips/id */
+.subHeader {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.tripTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.dateRange {
+  font-size: solid 11px;
+  font-weight: 400;
+  color: #888;
+}
+
+.settingsBtn {
+  padding: 6px 16px;
+  border-radius: 8px;
+  border: 1.5px solid #c0392b;
+  background: #c0392b;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+
 /* TODO: settings -> leave trip button, export itinerary button */
 .shareLinkBtn {
   padding: 6px 16px;
