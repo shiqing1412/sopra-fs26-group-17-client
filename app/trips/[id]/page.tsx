@@ -43,6 +43,7 @@ const Profile: React.FC = () => {
       </nav>
       <nav className={styles.nav}> {/* start sub header */}
         <div className={styles.subHeader}>
+          <a href="/trips" style={{ color: "#444", fontWeight: 300 }}>← Trips</a>
           <span className={styles.tripTitle}>{trip?.tripTitle}</span>
           <span className={styles.dateRange}>{dayjs(trip?.startDate).format("MMM D")} – {dayjs(trip?.endDate).format("MMM D, YYYY")}</span>
         </div>
