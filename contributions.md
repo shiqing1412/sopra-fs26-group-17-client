@@ -69,7 +69,7 @@ reason).
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@yarablaser** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
-| **@dsgji4g4** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@dsgji4g4** | 2 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/d238235aafa2ff43cafc3802b64487ee623a3e71 | implemented the join function via a share link  | Key feature that binds users with a trip. New joiners are set to be "MEMBER". |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 
 ---
