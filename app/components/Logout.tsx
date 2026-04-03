@@ -21,7 +21,7 @@ export default function Logout() {
         }  finally {
         clearToken();
         clearUser();
-        router.push("/login")
+        router.replace("/login")
         }
     };
 
