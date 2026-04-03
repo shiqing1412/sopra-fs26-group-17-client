@@ -10,6 +10,7 @@ import { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
 import Logout from "@/components/Logout";
+import { useProtectedRoute } from "@/components/ProtectedRoute";
 
 const ILLUSTRATIONS = ["🌍", "🗺️", "✈️", "🏖️", "🏔️", "🌴", "🗽", "🎡"];
 const AVATAR_COLORS = ["#c0392b", "#2980b9", "#27ae60", "#8e44ad", "#d35400", "#16a085"];
@@ -41,6 +42,8 @@ interface NewTripValues {
 }
 
 const Dashboard: React.FC = () => {
+  const { isLoading } = useProtectedRoute();
+
   const router = useRouter();
   const apiService = useApi();
   const [trips, setTrips] = useState<Trip[] | null>(null);
@@ -94,6 +97,8 @@ const Dashboard: React.FC = () => {
 
     fetchTrips();
   }, [apiService, user]);
+
+  if (isLoading) return null;
 
   return (
     <div className={styles.page}>
