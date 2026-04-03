@@ -404,3 +404,7 @@
   color: #c2472a;
   background: #fff8f6;
 }
+
+::-webkit-scrollbar {
+  display: none;
+}
