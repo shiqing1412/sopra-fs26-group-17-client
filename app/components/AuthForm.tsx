@@ -75,7 +75,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
       } else if(message.includes("Password must be at least 6 characters.")) {
         form.setFields([{ name: "password", errors: ["Password must be at least 6 characters."] }]);
           // missing error from backend: password and passwordConfirm must match
-      } else if(message.includes("The password is incorrect!")) {
+      } else if(message.includes("Passwords do not match.")) {
         form.setFields([{ name: "passwordConfirm", errors: ["Passwords do not match."] }]);
       } else {
         alert(`Something went wrong:\n${message}`);
