@@ -13,8 +13,11 @@ import { Trispace } from "next/font/google";
 import dayjs, { Dayjs } from "dayjs";
 import { Modal } from "antd";
 import Link from "next/link";
+import { useProtectedRoute } from "@/components/ProtectedRoute";
 
 const Profile: React.FC = () => {
+  const { isLoading } = useProtectedRoute();
+  
   const router = useRouter();
   const apiService = useApi();
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -25,6 +28,7 @@ const Profile: React.FC = () => {
   const { handleLogout } = Logout();
   
   {/* todo functions: addStop, editStop, leaveTrip */}
+  if (isLoading) return null;
 
   return (
     <div className={styles.page}> 
