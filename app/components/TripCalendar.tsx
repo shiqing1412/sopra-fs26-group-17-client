@@ -33,7 +33,7 @@ function getDaysBetween(start: string, end: string): Date[] {
   return days;
 }
  
-function DayColumn({ date, dayNumber, onAddStopClick }: { date: Date; dayNumber: number; onAddStopClick: () => void }) {
+function DayColumn({ date, dayNumber, onAddStopClick }: Readonly<{ date: Date; dayNumber: number; onAddStopClick: () => void }>) {
   return (
     <div className={styles.calendarDayColumn}>
       <div className={styles.calendarDayHeader}>
@@ -94,7 +94,7 @@ function TripCalendar({ trip }: TripCalendarValues) {
                   style={{ flex: 1 }} 
                   needConfirm={false}
                   disabledTime={() => {
-                  const start = form.getFieldValue("startTime") as Dayjs | null;
+                  const start = form.getFieldValue("startTime");
                   if (!start) return {};
                   return {
                     disabledHours: () => Array.from({ length: start.hour() }, (_, i) => i),
