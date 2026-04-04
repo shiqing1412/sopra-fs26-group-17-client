@@ -68,20 +68,27 @@ function TripCalendar({ trip }: TripCalendarValues) {
         ))}
       </div>
       <Modal
-        title={<span style={{ color: "#000" }}>Add a stop for {selectedDate?.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}</span>}
+        title={
+          <div>
+            <div style={{ color: "#000", fontSize: 18, fontWeight: 600 }}>Add a Stop</div>
+            <div style={{ color: "#888", fontSize: 14, fontWeight: 400 }}>
+              {selectedDate?.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+            </div>
+          </div>
+        }
         open={selectedDate !== null}
         onCancel={() => setSelectedDate(null)}
         footer={null}
         destroyOnHidden
       >
         <Form form={form} layout="vertical" size="large" style={{ marginTop: 16 }}>
-          <Form.Item name="title" label="Title" rules={[{ required: true, message: "Please enter a title" }]}>
+          <Form.Item name="title" label="TITLE" rules={[{ required: true, message: "Please enter a title" }]}>
             <Input placeholder="e.g. Karaoke Night" />
           </Form.Item>
-          <Form.Item name="location" label="Location" rules={[{ required: true, message: "Please enter a location" }]}>
+          <Form.Item name="location" label="LOCATION" rules={[{ required: true, message: "Please enter a location" }]}>
             <Input placeholder="e.g. Home" />
           </Form.Item>
-          <Form.Item label="Time" rules={[{ required: true, message: "Please enter a time" }]}>
+          <Form.Item label="TIME" rules={[{ required: true, message: "Please enter a time" }]}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Form.Item name="startTime" noStyle>
                 <TimePicker format="HH:mm" placeholder="From" style={{ flex: 1 }} needConfirm={false} />
@@ -108,7 +115,7 @@ function TripCalendar({ trip }: TripCalendarValues) {
               </Form.Item>
             </div>
           </Form.Item>
-          <Form.Item name="notes" label="Notes (optional)">
+          <Form.Item name="notes" label="NOTES (optional)">
             <Input.TextArea placeholder="Reservations, tips, reminders…" rows={3} />
           </Form.Item>
           <Form.Item style={{ marginBottom: 0, marginTop: 8 }}>
