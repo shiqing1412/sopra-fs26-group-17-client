@@ -82,13 +82,13 @@ function TripCalendar({ trip }: TripCalendarValues) {
         destroyOnHidden
       >
         <Form form={form} layout="vertical" size="large" style={{ marginTop: 16 }}>
-          <Form.Item name="title" label="TITLE" rules={[{ required: true, message: "Please enter a title" }]}>
+          <Form.Item name="title" label="TITLE" rules={[{ required: true, message: "Please enter a title" }]} style={{ marginBottom: 12}}>
             <Input placeholder="e.g. Karaoke Night" />
           </Form.Item>
-          <Form.Item name="location" label="LOCATION" rules={[{ required: true, message: "Please enter a location" }]}>
+          <Form.Item name="location" label="LOCATION" rules={[{ required: true, message: "Please enter a location" }]} style={{ marginBottom: 12}}>
             <Input placeholder="e.g. Home" />
           </Form.Item>
-          <Form.Item label="TIME" rules={[{ required: true, message: "Please enter a time" }]}>
+          <Form.Item label="TIME" rules={[{ required: true, message: "Please enter a time" }]} style={{ marginBottom: 12}}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Form.Item name="startTime" noStyle>
                 <TimePicker format="HH:mm" placeholder="From" style={{ flex: 1 }} needConfirm={false} />
