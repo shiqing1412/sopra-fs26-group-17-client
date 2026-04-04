@@ -32,7 +32,7 @@ export default function RootLayout({
             algorithm: theme.defaultAlgorithm,
             token: {
               // general theme options are set in token, meaning all primary elements (button, menu, ...) will have this color
-              colorPrimary: "#22426b", // selected input field boarder will have this color as well
+              colorPrimary: "#c0392b", // selected input field boarder will have this color as well
               borderRadius: 8,
               colorText: "#fff",
               fontSize: 16,
@@ -43,7 +43,7 @@ export default function RootLayout({
             // if a component type needs special styling, setting here will override default options set in token
             components: {
               Button: {
-                colorPrimary: "#75bd9d", // this will color all buttons in #75bd9d, overriding the default primaryColor #22426b set in token line 35
+                colorPrimary: "#c0392b", // this will color all buttons in #c0392b, overriding the default primaryColor set in token line 35
                 algorithm: true, // enable algorithm (redundant with line 33 but here for demo purposes)
                 controlHeight: 38,
               },
@@ -61,6 +61,10 @@ export default function RootLayout({
                 colorText: "#1a1a1a",
                 colorTextPlaceholder: "#888888",
                 colorBgElevated: "#ffffff",
+                colorPrimary: "#c0392b",
+                colorPrimaryHover: "#c0392b",
+                colorLink: "#c0392b",
+                colorLinkHover: "#c0392b",
               },
               Card: {},
             },

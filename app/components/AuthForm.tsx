@@ -74,7 +74,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
         form.setFields([{ name: "password", errors: ["Password is required. Please input a password."]}])
       } else if(message.includes("Password must be at least 6 characters.")) {
         form.setFields([{ name: "password", errors: ["Password must be at least 6 characters."] }]);
-          // missing error from backend: password and passwordConfirm must match
       } else if(message.includes("Passwords do not match.")) {
         form.setFields([{ name: "passwordConfirm", errors: ["Passwords do not match."] }]);
       } else {
@@ -132,9 +131,9 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
       <p style={{ color: "#4A4340", fontWeight: 300, fontSize: 15 }}>
         {isRegister ? (
-          <>Already have an account? <a href="/login" style={{ color: "#C2603A", fontWeight: 300 }}>Sign in</a></>
+          <>Already have an account? <a href="/login" style={{ color: "#c0392b", fontWeight: 300 }}>Sign in</a></>
         ) : (
-          <>Don&apos;t have an account? <a href="/register" style={{ color: "#C2603A", fontWeight: 300 }}>Create one</a></>
+          <>Don&apos;t have an account? <a href="/register" style={{ color: "#c0392b", fontWeight: 300 }}>Create one</a></>
         )}
       </p>
     </Form>
