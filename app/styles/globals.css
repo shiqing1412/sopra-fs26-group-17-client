@@ -121,3 +121,8 @@ a {
   min-height: 100vh;
   background-color: rgb(41, 44, 59);
 }
+
+/*hide scrollbars*/
+::-webkit-scrollbar {
+  display: none;
+}

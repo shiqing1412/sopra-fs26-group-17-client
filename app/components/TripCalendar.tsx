@@ -108,7 +108,7 @@ function TripCalendar({ trip }: TripCalendarValues) {
               </Form.Item>
             </div>
           </Form.Item>
-          <Form.Item name="notes" label="Notes">
+          <Form.Item name="notes" label="Notes (optional)">
             <Input.TextArea placeholder="Reservations, tips, reminders…" rows={3} />
           </Form.Item>
           <Form.Item style={{ marginBottom: 0, marginTop: 8 }}>
