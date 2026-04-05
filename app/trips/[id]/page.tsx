@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
 import { message } from "antd";
 import { CopyFilled } from "@ant-design/icons";
+import ShareLink from "@/components/ShareLink";
 
 const Profile: React.FC = () => {
   const { isLoading } = useProtectedRoute();
@@ -73,41 +74,18 @@ const Profile: React.FC = () => {
           <button className={styles.shareLinkBtn} onClick={() => setShareLinkOpen(true)}>Share Link</button>
         </div>
       </Modal>
-      <Modal
-        title="Share Link"
+
+      {/* Share Link */}
+      <ShareLink
         open={shareLinkOpen}
-        onCancel={() => setShareLinkOpen(false)}
-        footer={null}
-      >
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px", paddingTop: "8px", textAlign: "center"}}>
-          <span className={styles.tripTitle}>{trip?.tripTitle}</span>
-          <span className={styles.dateRange}>{dayjs(trip?.startDate).format("MMM D")} – {dayjs(trip?.endDate).format("MMM D, YYYY")}</span>
-          
-        </div> 
-      </Modal>
+        onClose={() => setShareLinkOpen(false)}
+        trip={trip}
+      />
 
-      <Modal open={shareLinkOpen} onCancel={() => setShareLinkOpen(false)} footer={null} title="Share Link">
-        <div className={styles.shareLinkModal}>
-          <p>Copy this link to invite others:</p>
-          <div className={styles.shareLinkRow}>
-            <input className={styles.shareLinkInput} readOnly value={`https://wandersync.com/join/${trip?.tripId}`} />
-            <button
-              className={styles.shareLinkCopyBtn}
-              onClick={() => {
-                navigator.clipboard.writeText(`https://wandersync.com/join/${trip?.tripId}`);
-                message.success("Copied link");
-              }}
-            >
-              <CopyFilled/>
-            </button>  
-          </div>
-        </div>
-      </Modal>
+      {/* calendar view */}
+      {trip && <TripCalendar trip={trip} />}
 
-        {/* calendar view */}
-        {trip && <TripCalendar trip={trip} />}
-
-        {/* TODO new trip card, new trip, display (no) existing trips */}
+      {/* TODO new trip card, new trip, display (no) existing trips */}
 
     </div>
   );
