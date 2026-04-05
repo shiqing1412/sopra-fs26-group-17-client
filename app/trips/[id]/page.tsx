@@ -14,6 +14,8 @@ import dayjs, { Dayjs } from "dayjs";
 import { Modal } from "antd";
 import Link from "next/link";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
+import { message } from "antd";
+import { CopyFilled } from "@ant-design/icons";
 
 const Profile: React.FC = () => {
   const { isLoading } = useProtectedRoute();
@@ -21,7 +23,8 @@ const Profile: React.FC = () => {
   const router = useRouter();
   const apiService = useApi();
   const [settingsOpen, setSettingsOpen] = useState(false);
-   
+  const [shareLinkOpen, setShareLinkOpen] = useState(false);
+
   const { value: user } = useLocalStorage<User | null>("user", null);
   const { value: trip } = useLocalStorage<Trip | null>("trip", null);
 
@@ -66,6 +69,39 @@ const Profile: React.FC = () => {
         onCancel={() => setSettingsOpen(false)}
         footer={null}
       >
+        <div style={{ display: "flex", gap: "12px" }}>
+          <button className={styles.shareLinkBtn} onClick={() => setShareLinkOpen(true)}>Share Link</button>
+        </div>
+      </Modal>
+      <Modal
+        title="Share Link"
+        open={shareLinkOpen}
+        onCancel={() => setShareLinkOpen(false)}
+        footer={null}
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px", paddingTop: "8px", textAlign: "center"}}>
+          <span className={styles.tripTitle}>{trip?.tripTitle}</span>
+          <span className={styles.dateRange}>{dayjs(trip?.startDate).format("MMM D")} – {dayjs(trip?.endDate).format("MMM D, YYYY")}</span>
+          
+        </div> 
+      </Modal>
+
+      <Modal open={shareLinkOpen} onCancel={() => setShareLinkOpen(false)} footer={null} title="Share Link">
+        <div className={styles.shareLinkModal}>
+          <p>Copy this link to invite others:</p>
+          <div className={styles.shareLinkRow}>
+            <input className={styles.shareLinkInput} readOnly value={`https://wandersync.com/join/${trip?.tripId}`} />
+            <button
+              className={styles.shareLinkCopyBtn}
+              onClick={() => {
+                navigator.clipboard.writeText(`https://wandersync.com/join/${trip?.tripId}`);
+                message.success("Copied link");
+              }}
+            >
+              <CopyFilled/>
+            </button>  
+          </div>
+        </div>
       </Modal>
 
         {/* calendar view */}
