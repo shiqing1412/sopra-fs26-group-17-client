@@ -91,6 +91,7 @@
   color: #888;
 }
 
+/* Settings button */
 .settingsBtn {
   padding: 6px 16px;
   border-radius: 8px;
@@ -104,13 +105,13 @@
   transition: background 0.15s, color 0.15s;
 }
 
-/* TODO: settings -> leave trip button, export itinerary button */
+/* Share link */
 .shareLinkBtn {
   padding: 6px 16px;
   border-radius: 8px;
   border: 1.5px solid #c0392b;
   background: #c0392b;
-  color: transparent;
+  color: #fff;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -122,6 +123,58 @@
   background: #fff;
   color: #c0392b;
 }
+
+.shareLinkModal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.shareLinkModal p {
+  font-size: 14px;
+  color: #444;
+  margin: 0;
+}
+
+.shareLinkModal .shareLinkRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shareLinkModal .shareLinkInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1.5px solid #c0392b;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #444;
+  background: #f1f1f1;
+  outline: none;
+}
+
+.shareLinkModal .shareLinkCopyBtn {
+  padding: 8px 16px;
+  background: #c0392b;
+  color: #fff;
+  border: 1.5 solid #fff;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.shareLinkModal .shareLinkCopyBtn:hover {
+  background: #fff;
+  color: #c0392b;
+  border: 1.5px solid #c0392b;
+}
+
+.settingsText {
+  color: #c0392b;
+  font-family: inherit;
+}
+
+/* TODO: settings -> leave trip button, export itinerary button */
 
 /* Main */
 

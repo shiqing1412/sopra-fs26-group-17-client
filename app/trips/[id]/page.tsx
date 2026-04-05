@@ -14,6 +14,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { Modal } from "antd";
 import Link from "next/link";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
+import ShareLink from "@/components/ShareLink";
 
 const Profile: React.FC = () => {
   const { isLoading } = useProtectedRoute();
@@ -21,7 +22,8 @@ const Profile: React.FC = () => {
   const router = useRouter();
   const apiService = useApi();
   const [settingsOpen, setSettingsOpen] = useState(false);
-   
+  const [shareLinkOpen, setShareLinkOpen] = useState(false);
+
   const { value: user } = useLocalStorage<User | null>("user", null);
   const { value: trip } = useLocalStorage<Trip | null>("trip", null);
 
@@ -66,12 +68,22 @@ const Profile: React.FC = () => {
         onCancel={() => setSettingsOpen(false)}
         footer={null}
       >
+        <div style={{ display: "flex", gap: "12px" }}>
+          <button className={styles.shareLinkBtn} onClick={() => setShareLinkOpen(true)}>Share Link</button>
+        </div>
       </Modal>
 
-        {/* calendar view */}
-        {trip && <TripCalendar trip={trip} />}
+      {/* Share Link */}
+      <ShareLink
+        open={shareLinkOpen}
+        onClose={() => setShareLinkOpen(false)}
+        trip={trip}
+      />
 
-        {/* TODO new trip card, new trip, display (no) existing trips */}
+      {/* calendar view */}
+      {trip && <TripCalendar trip={trip} />}
+
+      {/* TODO new trip card, new trip, display (no) existing trips */}
 
     </div>
   );
