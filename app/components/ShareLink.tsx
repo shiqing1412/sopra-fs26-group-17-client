@@ -3,7 +3,6 @@ import { Modal, message } from "antd";
 import { CopyFilled } from "@ant-design/icons";
 import { Trip } from "@/types/trip";
 import styles from "@/styles/trips.module.css";
-import dayjs from "dayjs";
 
 interface ShareLinkProps {
   open: boolean;
