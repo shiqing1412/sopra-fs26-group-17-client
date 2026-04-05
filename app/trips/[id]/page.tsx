@@ -14,8 +14,6 @@ import dayjs, { Dayjs } from "dayjs";
 import { Modal } from "antd";
 import Link from "next/link";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
-import { message } from "antd";
-import { CopyFilled } from "@ant-design/icons";
 import ShareLink from "@/components/ShareLink";
 
 const Profile: React.FC = () => {
