@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { Trip } from "@/types/trip";
 import { User } from "@/types/user";
@@ -18,9 +16,7 @@ import LeaveTrip from "@/components/LeaveTrip";
 
 const Profile: React.FC = () => {
   const { isLoading } = useProtectedRoute();
-  
-  const router = useRouter();
-  const apiService = useApi();
+
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [shareLinkOpen, setShareLinkOpen] = useState(false);
   const [LeaveTripOpen, setLeaveTripOpen] = useState(false);
@@ -74,7 +70,7 @@ const Profile: React.FC = () => {
         </div>
         <Form.Item>
           <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "8px 0" }}>
-            <Button onClick={() => setLeaveTripOpen(true)}>
+            <Button type="primary" onClick={() => setLeaveTripOpen(true)}>
               Leave Trip
             </Button>
             { /* TODO: add options here */}
@@ -99,8 +95,6 @@ const Profile: React.FC = () => {
 
       {/* calendar view */}
       {trip && <TripCalendar trip={trip} />}
-
-      {/* TODO new trip card, new trip, display (no) existing trips */}
 
     </div>
   );

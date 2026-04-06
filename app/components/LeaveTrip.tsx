@@ -1,8 +1,4 @@
 import React from "react";
-import { useRouter } from "next/navigation";
-import { useApi } from "@/hooks/useApi";
-import useLocalStorage from "@/hooks/useLocalStorage";
-import { User } from "@/types/user";
 import { Button, Form, Modal } from "antd";
 import dayjs from "dayjs";
 import { Trip } from "@/types/trip";
@@ -22,9 +18,6 @@ interface LeaveTripProps {
 }
 
 const LeaveTrip: React.FC<LeaveTripProps> = ({ open, onClose, trip }) => {
-  const router = useRouter();
-  const apiService = useApi();
-  const { value: user } = useLocalStorage<User | null>("user", null);
 
   const handleLeaveTrip = async (): Promise<void> => {
     // TODO: implement leave trip functionality
