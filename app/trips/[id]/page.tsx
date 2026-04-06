@@ -9,21 +9,12 @@ import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
 import Logout from "@/components/Logout";
 import TripCalendar from "@/components/TripCalendar";
-import { Trispace } from "next/font/google";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { Form, Button, Modal } from "antd";
 import Link from "next/link";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
 import ShareLink from "@/components/ShareLink";
 import LeaveTrip from "@/components/LeaveTrip";
-
-const ILLUSTRATIONS = ["🌍", "🗺️", "✈️", "🏖️", "🏔️", "🌴", "🗽", "🎡"];
-
-function getIllustration(id: string | null): string {
-  if (!id) return "🗺️";
-  const idx = Number.parseInt(id, 10) % ILLUSTRATIONS.length;
-  return ILLUSTRATIONS[Math.abs(idx)];
-}
 
 const Profile: React.FC = () => {
   const { isLoading } = useProtectedRoute();
