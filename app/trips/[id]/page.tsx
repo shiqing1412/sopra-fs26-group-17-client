@@ -29,9 +29,6 @@ const Profile: React.FC = () => {
   const { value: trip } = useLocalStorage<Trip | null>("trip", null);
 
   const { handleLogout } = Logout();
-  
-  const handleLeaveTrip = async (): Promise<void> => {
-  };
 
   {/* todo functions: addStop, editStop */}
   if (isLoading) return null;
@@ -97,7 +94,6 @@ const Profile: React.FC = () => {
       <LeaveTrip
         open={LeaveTripOpen}
         onClose={() => setLeaveTripOpen(false)}
-        onLeave={handleLeaveTrip}
         trip={trip}
       />
 

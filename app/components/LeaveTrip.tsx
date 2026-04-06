@@ -1,4 +1,8 @@
 import React from "react";
+import { useRouter } from "next/navigation";
+import { useApi } from "@/hooks/useApi";
+import useLocalStorage from "@/hooks/useLocalStorage";
+import { User } from "@/types/user";
 import { Button, Form, Modal } from "antd";
 import dayjs from "dayjs";
 import { Trip } from "@/types/trip";
@@ -14,11 +18,19 @@ function getIllustration(id: string | null): string {
 interface LeaveTripProps {
   open: boolean;
   onClose: () => void;
-  onLeave: () => Promise<void>;
   trip: Trip | null;
 }
 
-const LeaveTrip: React.FC<LeaveTripProps> = ({ open, onClose, onLeave, trip }) => {
+const LeaveTrip: React.FC<LeaveTripProps> = ({ open, onClose, trip }) => {
+  const router = useRouter();
+  const apiService = useApi();
+  const { value: user } = useLocalStorage<User | null>("user", null);
+
+  const handleLeaveTrip = async (): Promise<void> => {
+    // TODO: implement leave trip functionality
+    onClose();
+  };
+
   return (
     <Modal
       title={
@@ -33,7 +45,7 @@ const LeaveTrip: React.FC<LeaveTripProps> = ({ open, onClose, onLeave, trip }) =
         <Form.Item key="leave-trip" style={{ marginBottom: 0, marginTop: 8 }}>
           <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
             <Button onClick={onClose} style={{ flex: 2 }}>Stay</Button>
-            <Button type="primary" onClick={onLeave} style={{ flex: 3 }}>Leave</Button>
+            <Button type="primary" onClick={handleLeaveTrip} style={{ flex: 3 }}>Leave</Button>
           </div>
         </Form.Item>
       ]}
