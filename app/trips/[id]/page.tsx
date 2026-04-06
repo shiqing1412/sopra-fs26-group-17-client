@@ -15,6 +15,7 @@ import { Form, Button, Modal } from "antd";
 import Link from "next/link";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
 import ShareLink from "@/components/ShareLink";
+import LeaveTrip from "@/components/LeaveTrip";
 
 const ILLUSTRATIONS = ["🌍", "🗺️", "✈️", "🏖️", "🏔️", "🌴", "🗽", "🎡"];
 
@@ -102,56 +103,12 @@ const Profile: React.FC = () => {
       />
 
       {/* Leave Trip */}
-      <Modal
-        title={
-          <div style={{ textAlign: "center", padding: "8px 0" }}>
-            <div style={{ fontSize: 40 }}>👋</div>
-            <div style={{ color: "#000", fontSize: 25, fontWeight: 600, marginTop: 8 }}>Leave this trip?</div>
-          </div>
-        }
+      <LeaveTrip
         open={LeaveTripOpen}
-        onCancel={() => setLeaveTripOpen(false)}
-        footer={[
-          <Form.Item key="leave-trip" style={{ marginBottom: 0, marginTop: 8 }}>
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
-              <Button onClick={() => setLeaveTripOpen(false)} style={{ flex: 2 }}>
-                Stay
-              </Button>
-              <Button type="primary" onClick={() => handleLeaveTrip()} style={{ flex: 3 }}>
-                Leave
-              </Button>
-            </div>
-          </Form.Item>
-        ]}
-      >
-        <div style={{ 
-          background: "#f5f5f5", 
-          borderRadius: 12, 
-          padding: "12px 16px", 
-          display: "flex", 
-          alignItems: "center", 
-          gap: 12,
-          margin: "16px 0"
-        }}>
-          <div style={{ 
-            width: 44, 
-            height: 44, 
-            display: "flex", 
-            alignItems: "center", 
-            justifyContent: "center", 
-            fontSize: 25
-          }}>
-            {trip?.illustration ?? getIllustration(trip?.tripId ?? null)}
-          </div>
-          <div>
-            <div style={{ fontWeight: 600, color: "#111", fontSize: 16 }}>{trip?.tripTitle}</div>
-            <div style={{ color: "#888", fontSize: 13 }}>
-              {dayjs(trip?.startDate).format("MMM D")} – {dayjs(trip?.endDate).format("MMM D, YYYY")}
-            </div>
-          </div>
-        </div>
-        <div style={{ textAlign: "center", color: "#888", fontSize: 15, fontWeight: 400, marginTop: 12, marginBottom: 25}}>The trip and all its events will remain visible to the other members.</div>
-      </Modal>
+        onClose={() => setLeaveTripOpen(false)}
+        onLeave={handleLeaveTrip}
+        trip={trip}
+      />
 
       {/* calendar view */}
       {trip && <TripCalendar trip={trip} />}
