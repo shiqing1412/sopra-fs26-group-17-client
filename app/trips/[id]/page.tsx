@@ -11,10 +11,18 @@ import Logout from "@/components/Logout";
 import TripCalendar from "@/components/TripCalendar";
 import { Trispace } from "next/font/google";
 import dayjs, { Dayjs } from "dayjs";
-import { Modal } from "antd";
+import { Form, Button, Modal } from "antd";
 import Link from "next/link";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
 import ShareLink from "@/components/ShareLink";
+
+const ILLUSTRATIONS = ["🌍", "🗺️", "✈️", "🏖️", "🏔️", "🌴", "🗽", "🎡"];
+
+function getIllustration(id: string | null): string {
+  if (!id) return "🗺️";
+  const idx = Number.parseInt(id, 10) % ILLUSTRATIONS.length;
+  return ILLUSTRATIONS[Math.abs(idx)];
+}
 
 const Profile: React.FC = () => {
   const { isLoading } = useProtectedRoute();
@@ -23,13 +31,17 @@ const Profile: React.FC = () => {
   const apiService = useApi();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [shareLinkOpen, setShareLinkOpen] = useState(false);
+  const [LeaveTripOpen, setLeaveTripOpen] = useState(false);
 
   const { value: user } = useLocalStorage<User | null>("user", null);
   const { value: trip } = useLocalStorage<Trip | null>("trip", null);
 
   const { handleLogout } = Logout();
   
-  {/* todo functions: addStop, editStop, leaveTrip */}
+  const handleLeaveTrip = async (): Promise<void> => {
+  };
+
+  {/* todo functions: addStop, editStop */}
   if (isLoading) return null;
 
   return (
@@ -63,7 +75,7 @@ const Profile: React.FC = () => {
         </div>
       </nav>
       <Modal
-        title="Trip Settings"
+        title={<span style={{ color: "black" }}>Trip Settings</span>}
         open={settingsOpen}
         onCancel={() => setSettingsOpen(false)}
         footer={null}
@@ -71,6 +83,15 @@ const Profile: React.FC = () => {
         <div style={{ display: "flex", gap: "12px" }}>
           <button className={styles.shareLinkBtn} onClick={() => setShareLinkOpen(true)}>Share Link</button>
         </div>
+        <Form.Item>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "8px 0" }}>
+            <Button onClick={() => setLeaveTripOpen(true)}>
+              Leave Trip
+            </Button>
+            { /* TODO: add options here */}
+          </div>
+        </Form.Item>
+
       </Modal>
 
       {/* Share Link */}
@@ -79,6 +100,58 @@ const Profile: React.FC = () => {
         onClose={() => setShareLinkOpen(false)}
         trip={trip}
       />
+
+      {/* Leave Trip */}
+      <Modal
+        title={
+          <div style={{ textAlign: "center", padding: "8px 0" }}>
+            <div style={{ fontSize: 40 }}>👋</div>
+            <div style={{ color: "#000", fontSize: 25, fontWeight: 600, marginTop: 8 }}>Leave this trip?</div>
+          </div>
+        }
+        open={LeaveTripOpen}
+        onCancel={() => setLeaveTripOpen(false)}
+        footer={[
+          <Form.Item key="leave-trip" style={{ marginBottom: 0, marginTop: 8 }}>
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+              <Button onClick={() => setLeaveTripOpen(false)} style={{ flex: 2 }}>
+                Stay
+              </Button>
+              <Button type="primary" onClick={() => handleLeaveTrip()} style={{ flex: 3 }}>
+                Leave
+              </Button>
+            </div>
+          </Form.Item>
+        ]}
+      >
+        <div style={{ 
+          background: "#f5f5f5", 
+          borderRadius: 12, 
+          padding: "12px 16px", 
+          display: "flex", 
+          alignItems: "center", 
+          gap: 12,
+          margin: "16px 0"
+        }}>
+          <div style={{ 
+            width: 44, 
+            height: 44, 
+            display: "flex", 
+            alignItems: "center", 
+            justifyContent: "center", 
+            fontSize: 25
+          }}>
+            {trip?.illustration ?? getIllustration(trip?.tripId ?? null)}
+          </div>
+          <div>
+            <div style={{ fontWeight: 600, color: "#111", fontSize: 16 }}>{trip?.tripTitle}</div>
+            <div style={{ color: "#888", fontSize: 13 }}>
+              {dayjs(trip?.startDate).format("MMM D")} – {dayjs(trip?.endDate).format("MMM D, YYYY")}
+            </div>
+          </div>
+        </div>
+        <div style={{ textAlign: "center", color: "#888", fontSize: 15, fontWeight: 400, marginTop: 12, marginBottom: 25}}>The trip and all its events will remain visible to the other members.</div>
+      </Modal>
 
       {/* calendar view */}
       {trip && <TripCalendar trip={trip} />}
