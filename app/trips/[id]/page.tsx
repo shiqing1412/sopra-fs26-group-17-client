@@ -1,35 +1,32 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
 import Logout from "@/components/Logout";
 import TripCalendar from "@/components/TripCalendar";
-import { Trispace } from "next/font/google";
-import dayjs, { Dayjs } from "dayjs";
-import { Modal } from "antd";
+import dayjs from "dayjs";
+import { Form, Button, Modal } from "antd";
 import Link from "next/link";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
 import ShareLink from "@/components/ShareLink";
+import LeaveTrip from "@/components/LeaveTrip";
 
 const Profile: React.FC = () => {
   const { isLoading } = useProtectedRoute();
-  
-  const router = useRouter();
-  const apiService = useApi();
+
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [shareLinkOpen, setShareLinkOpen] = useState(false);
+  const [LeaveTripOpen, setLeaveTripOpen] = useState(false);
 
   const { value: user } = useLocalStorage<User | null>("user", null);
   const { value: trip } = useLocalStorage<Trip | null>("trip", null);
 
   const { handleLogout } = Logout();
-  
-  {/* todo functions: addStop, editStop, leaveTrip */}
+
+  {/* todo functions: addStop, editStop */}
   if (isLoading) return null;
 
   return (
@@ -63,7 +60,7 @@ const Profile: React.FC = () => {
         </div>
       </nav>
       <Modal
-        title="Trip Settings"
+        title={<span style={{ color: "black" }}>Trip Settings</span>}
         open={settingsOpen}
         onCancel={() => setSettingsOpen(false)}
         footer={null}
@@ -71,6 +68,15 @@ const Profile: React.FC = () => {
         <div style={{ display: "flex", gap: "12px" }}>
           <button className={styles.shareLinkBtn} onClick={() => setShareLinkOpen(true)}>Share Link</button>
         </div>
+        <Form.Item>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "8px 0" }}>
+            <Button type="primary" onClick={() => setLeaveTripOpen(true)}>
+              Leave Trip
+            </Button>
+            { /* TODO: add options here */}
+          </div>
+        </Form.Item>
+
       </Modal>
 
       {/* Share Link */}
@@ -80,10 +86,15 @@ const Profile: React.FC = () => {
         trip={trip}
       />
 
+      {/* Leave Trip */}
+      <LeaveTrip
+        open={LeaveTripOpen}
+        onClose={() => setLeaveTripOpen(false)}
+        trip={trip}
+      />
+
       {/* calendar view */}
       {trip && <TripCalendar trip={trip} />}
-
-      {/* TODO new trip card, new trip, display (no) existing trips */}
 
     </div>
   );
