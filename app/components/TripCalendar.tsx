@@ -33,7 +33,7 @@ function getDaysBetween(start: string, end: string): Date[] {
   return days;
 }
  
-function DayColumn({ date, dayNumber, onAddStopClick }: Readonly<{ date: Date; dayNumber: number; onAddStopClick: () => void }>) {
+function DayColumn({ date, dayNumber, onAddStopClick, stops }: Readonly<{ date: Date; dayNumber: number; onAddStopClick: () => void; stops: (NewStopValues & { id: string })[] }>) {
   return (
     <div className={styles.calendarDayColumn}>
       <div className={styles.calendarDayHeader}>
@@ -42,7 +42,16 @@ function DayColumn({ date, dayNumber, onAddStopClick }: Readonly<{ date: Date; d
         <span className={styles.calendarDayName}>{DAY_NAMES[date.getDay()]}, {MONTH_NAMES[date.getMonth()]}</span>
       </div>
       <div className={styles.calendarDayStops}>
-        {/* event cards will go here */}
+        {stops.map(stop => (
+          <div key={stop.id} className={styles.calendarStopCard}>
+            <div className={styles.calendarStopTime}>
+              {stop.startTime?.format("HH:mm")} {stop.endTime ? `→ ${stop.endTime.format("HH:mm")}` : ""}
+            </div>
+            <div className={styles.calendarStopTitle}>{stop.title}</div>
+            <div className={styles.calendarStopLocation}>📍{stop.location}</div>
+            <div className={styles.calendarStopNotes}>{stop.notes}</div>
+          </div>
+        ))}
         <button className={styles.calendarAddStopBtn} onClick={onAddStopClick}>
           + Add stop
         </button>
@@ -55,6 +64,16 @@ function TripCalendar({ trip }: TripCalendarValues) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const days = getDaysBetween(trip.startDate ?? "", trip.endDate ?? "");
   const [form] = Form.useForm<NewStopValues>();
+  const [stops, setStops] = useState<Record<string, (NewStopValues & { id: string })[]>>({});
+
+  const handleAddStop = (values: NewStopValues) => {
+    if (!selectedDate) return;
+    const key = selectedDate.toISOString();
+    const newStop: NewStopValues & { id: string } = { ...values, id: crypto.randomUUID() };
+    setStops(prev => ({ ...prev, [key]: [...(prev[key] ?? []), newStop] })); // keeping existing stops, adding new stops
+    form.resetFields(); 
+    setSelectedDate(null); // close modal after adding stop
+  };
 
   return (
     <div className={styles.calendarScrollWrapper}>
@@ -64,7 +83,9 @@ function TripCalendar({ trip }: TripCalendarValues) {
             key={date.toISOString()} 
             date={date} 
             dayNumber={i + 1} 
-            onAddStopClick={() => setSelectedDate(date)} />
+            onAddStopClick={() => setSelectedDate(date)} 
+            stops={stops[date.toISOString()] ?? []} 
+          />
         ))}
       </div>
       <Modal
@@ -81,7 +102,7 @@ function TripCalendar({ trip }: TripCalendarValues) {
         footer={null}
         destroyOnHidden
       >
-        <Form form={form} layout="vertical" size="large" style={{ marginTop: 16 }}>
+        <Form form={form} layout="vertical" size="large" style={{ marginTop: 16 }} onFinish={handleAddStop}>
           <Form.Item name="title" label="TITLE" rules={[{ required: true, message: "Please enter a title" }]} style={{ marginBottom: 12}}>
             <Input placeholder="e.g. Karaoke Night" />
           </Form.Item>
