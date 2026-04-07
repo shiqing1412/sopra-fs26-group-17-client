@@ -67,8 +67,10 @@ reason).
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@Raminminn** | 5 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/237865674d24299ce4ed5dafd12199ff56dd3643 | Added a share link button which allows the user to copy the link to the trip to share with others | Allows users to join a trip via a link to co-edit a shared itinerary |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
-| **@yarablaser** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@yarablaser** | 03 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/8c1d5a126b2ab26985d9c2e64253bcb511c22a78 | adding protectedRoute component | preventing unauthorized access to user pages |
+|                    | 03 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/254fc931471ea6b5234d8bffcebad24894c0093c | addStop modal UI | user can add an event to the trip  |
+|                    | 06 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/fdfb2a2140237ca31878fb7514c74fa2692dbb9e | leaveTrip button and modal UI | user can leave a trip if they wish to no longer participate |
+|                    | 06 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/36a8f5515bc77c65f8aca12c8ef16ce248ec4646 | add stops to the calendar | user can see daily events planned |
 | **@dsgji4g4** | 2 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/d238235aafa2ff43cafc3802b64487ee623a3e71 | implemented the join function via a share link  | Key feature that binds users with a trip. New joiners are set to be "MEMBER". |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 
