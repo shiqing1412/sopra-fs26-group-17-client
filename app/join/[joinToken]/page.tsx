@@ -1,16 +1,49 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Button, Modal } from "antd";
+import { useApi } from "@/hooks/useApi";
+import useLocalStorage from "@/hooks/useLocalStorage";
 import styles from "./join.module.css";
 
-const JoinTripPage: React.FC = () => {
-  const router = useRouter();
-  const [modalOpen, setModalOpen] = useState(true);
+interface TripJoinResponse {
+  tripId: number;
+  tripTitle: string;
+  alreadyMember: boolean;
+}
 
-  const handleConfirm = () => {
-    // TODO: implement join logic (issue #103, #104)
+const JoinTripPage: React.FC = () => {
+  const { joinToken } = useParams<{ joinToken: string }>();
+  const router = useRouter();
+  const apiService = useApi();
+  const { value: token } = useLocalStorage<string>("token", "");
+
+  const [joining, setJoining] = useState(false);
+  const [modalOpen, setModalOpen] = useState(true);
+  const [alreadyMember, setAlreadyMember] = useState(false);
+
+  const handleConfirm = async () => {
+    if (!token) {
+      localStorage.setItem("joinRedirect", `/join/${joinToken}`);
+      router.push("/login");
+      return;
+    }
+
+    setJoining(true);
+    try {
+      const response = await apiService.post<TripJoinResponse>(`/trips/join/${joinToken}`, {});
+      if (response.alreadyMember) {
+        setAlreadyMember(true);
+      } else {
+        router.push(`/trips/${response.tripId}`);
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Something went wrong.";
+      alert(message);
+    } finally {
+      setJoining(false);
+    }
   };
 
   const handleCancel = () => {
@@ -31,25 +64,37 @@ const JoinTripPage: React.FC = () => {
         closable={false}
         width={440}
       >
-        <div className={styles.content}>
-          <div className={styles.icon}>✈️</div>
-          <h2 className={styles.title}>You&apos;ve Been Invited!</h2>
-          <p className={styles.subtitle}>
-            Join this trip and start planning together with your group.
-          </p>
-          <div className={styles.actions}>
-            <Button onClick={handleCancel} className={styles.cancelBtn}>
-              Cancel
-            </Button>
-            <Button
-              type="primary"
-              onClick={handleConfirm}
-              className={styles.confirmBtn}
-            >
-              Join Trip
+        {alreadyMember ? (
+          <div className={styles.content}>
+            <div className={styles.icon}>✓</div>
+            <h2 className={styles.title}>Already a Member</h2>
+            <p className={styles.subtitle}>You are already a member of this trip.</p>
+            <Button type="primary" className={styles.confirmBtn} onClick={() => router.push("/trips")}>
+              Go to My Trips
             </Button>
           </div>
-        </div>
+        ) : (
+          <div className={styles.content}>
+            <div className={styles.icon}>✈️</div>
+            <h2 className={styles.title}>You&apos;ve Been Invited!</h2>
+            <p className={styles.subtitle}>
+              Join this trip and start planning together with your group.
+            </p>
+            <div className={styles.actions}>
+              <Button onClick={handleCancel} className={styles.cancelBtn}>
+                Cancel
+              </Button>
+              <Button
+                type="primary"
+                loading={joining}
+                onClick={handleConfirm}
+                className={styles.confirmBtn}
+              >
+                Join Trip
+              </Button>
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   );
