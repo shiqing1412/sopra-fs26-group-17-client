@@ -24,7 +24,8 @@ const JoinTripPage: React.FC = () => {
 
   const handleConfirm = async () => {
     if (!token) {
-      // TODO: handle not logged in (issue #74)
+      localStorage.setItem("joinRedirect", `/join/${joinToken}`);
+      router.push("/login");
       return;
     }
 

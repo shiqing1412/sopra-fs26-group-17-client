@@ -32,7 +32,13 @@ export default function AuthForm({ mode }: AuthFormProps) {
       if (response.token) setToken(response.token);
       if (response.id) setUserId(String(response.id));
       if (response) setUser(response);
-      router.push("/trips");
+      const joinRedirect = localStorage.getItem("joinRedirect");
+      if (joinRedirect) {
+        localStorage.removeItem("joinRedirect");
+        router.push(joinRedirect);
+      } else {
+        router.push("/trips");
+      }
     } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         if (message.includes("The username is not correct!")) {
