@@ -21,6 +21,7 @@ const JoinTripPage: React.FC = () => {
 
   const [joining, setJoining] = useState(false);
   const [modalOpen, setModalOpen] = useState(true);
+  const [alreadyMember, setAlreadyMember] = useState(false);
 
   const handleConfirm = async () => {
     if (!token) {
@@ -32,7 +33,11 @@ const JoinTripPage: React.FC = () => {
     setJoining(true);
     try {
       const response = await apiService.post<TripJoinResponse>(`/trips/join/${joinToken}`, {});
-      router.push(`/trips/${response.tripId}`);
+      if (response.alreadyMember) {
+        setAlreadyMember(true);
+      } else {
+        router.push(`/trips/${response.tripId}`);
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : "Something went wrong.";
       alert(message);
@@ -59,26 +64,37 @@ const JoinTripPage: React.FC = () => {
         closable={false}
         width={440}
       >
-        <div className={styles.content}>
-          <div className={styles.icon}>✈️</div>
-          <h2 className={styles.title}>You&apos;ve Been Invited!</h2>
-          <p className={styles.subtitle}>
-            Join this trip and start planning together with your group.
-          </p>
-          <div className={styles.actions}>
-            <Button onClick={handleCancel} className={styles.cancelBtn}>
-              Cancel
-            </Button>
-            <Button
-              type="primary"
-              loading={joining}
-              onClick={handleConfirm}
-              className={styles.confirmBtn}
-            >
-              Join Trip
+        {alreadyMember ? (
+          <div className={styles.content}>
+            <div className={styles.icon}>✓</div>
+            <h2 className={styles.title}>Already a Member</h2>
+            <p className={styles.subtitle}>You are already a member of this trip.</p>
+            <Button type="primary" className={styles.confirmBtn} onClick={() => router.push("/trips")}>
+              Go to My Trips
             </Button>
           </div>
-        </div>
+        ) : (
+          <div className={styles.content}>
+            <div className={styles.icon}>✈️</div>
+            <h2 className={styles.title}>You&apos;ve Been Invited!</h2>
+            <p className={styles.subtitle}>
+              Join this trip and start planning together with your group.
+            </p>
+            <div className={styles.actions}>
+              <Button onClick={handleCancel} className={styles.cancelBtn}>
+                Cancel
+              </Button>
+              <Button
+                type="primary"
+                loading={joining}
+                onClick={handleConfirm}
+                className={styles.confirmBtn}
+              >
+                Join Trip
+              </Button>
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   );
