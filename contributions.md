@@ -61,8 +61,10 @@ reason).
 
 | **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
 | ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
-| **@shiqing1412** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@shiqing1412** | 6 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/b59f16c6f44732c91fba910a7cbd1e65bd74b989 | UI for join a trip via a link | main user story |
+|                    | 6 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/ed2063b55c6b8c494285e955cd87e6446de73508 | show already a member message if user is already in the trip | otherwise user will try to join repeatedly |
+|                    | 6 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/3e12c59c2c90b5136d692fd68fa01e837411c6f4 | if not loged in, redirect to login and complete join after authentication  | required by user story |
+|                    | 6 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/64e97abb6b16e7038f191ee9f142a9ab75b999af | call POST /trips/join/{joinToken} on confirm when logged in | required by user story |
 | **@julituchi** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@Raminminn** | 5 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/237865674d24299ce4ed5dafd12199ff56dd3643 | Added a share link button which allows the user to copy the link to the trip to share with others | Allows users to join a trip via a link to co-edit a shared itinerary |
