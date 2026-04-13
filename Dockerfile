@@ -31,11 +31,14 @@ RUN npm config set cache /app/.npm-cache --global
 # Copy node modules and app
 ##COPY --chown=node:node --from=build /app/node_modules /app/node_modules
 ##COPY --chown=node:node --from=build /app/build build
-COPY --from=build /app/package*.json ./
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/.next ./.next
-COPY --from=build /app/public ./public
-COPY --from=build /app/next.config.ts ./next.config.ts
+COPY --chown=node:node --from=build /app/package*.json ./
+COPY --chown=node:node --from=build /app/node_modules ./node_modules
+COPY --chown=node:node --from=build /app/.next ./.next
+COPY --chown=node:node --from=build /app/public ./public
+COPY --chown=node:node --from=build /app/next.config.ts ./next.config.ts
+
+# Switch to non-root user
+USER node
 
 # Expose port for serve
 EXPOSE 3000
