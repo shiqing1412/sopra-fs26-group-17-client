@@ -4,14 +4,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Input } from 'antd'
 
-type Place = {
-  displayName: string
-  formattedAddress: string
-  location: { lat: number; lng: number }
-}
-
 type Props = {
-  onPlaceSelect?: (place: Place) => void
+  onPlaceSelect?: (place: google.maps.places.Place) => void
   value?: string
   onChange?: (value: string) => void
 }
@@ -54,12 +48,11 @@ export default function PlaceAutocomplete({ onPlaceSelect, onChange, value }: Re
     if (!suggestion.placePrediction) return;
     const place = suggestion.placePrediction.toPlace()
     await place.fetchFields({ fields: ['displayName', 'formattedAddress', 'location'] })
-    const placeJSON = place.toJSON() as Place
-
-    setInputValue(placeJSON.displayName)
+   
+    setInputValue(place.displayName ?? '')
     setSuggestions([])
-    onChange?.(placeJSON.displayName)
-    onPlaceSelect?.(placeJSON)
+    onChange?.(place.displayName ?? '')
+    onPlaceSelect?.(place)
   }
 
     return (
