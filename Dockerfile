@@ -31,12 +31,12 @@ RUN npm config set cache /app/.npm-cache --global
 # Copy node modules and app
 ##COPY --chown=node:node --from=build /app/node_modules /app/node_modules
 ##COPY --chown=node:node --from=build /app/build build
-COPY --chown=node:node --from=build /app/package*.json ./
-COPY --chown=node:node --from=build /app/node_modules ./node_modules
-COPY --chown=node:node --from=build /app/.next ./.next
-COPY --chown=node:node --from=build /app/public ./public
-COPY --chown=node:node --from=build /app/next.config.ts ./next.config.ts
-RUN chmod -R 555 /app 
+COPY --chown=root:root --chmod=755 --from=build /app/package*.json ./
+COPY --chown=root:root --chmod=755 --from=build /app/node_modules ./node_modules
+COPY --chown=root:root --chmod=755 --from=build /app/.next ./.next
+COPY --chown=root:root --chmod=755 --from=build /app/public ./public
+COPY --chown=root:root --chmod=755 --from=build /app/next.config.ts ./next.config.ts
+
 
 # Switch to non-root user
 USER node
