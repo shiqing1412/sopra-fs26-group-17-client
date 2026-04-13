@@ -44,14 +44,14 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops }: Read
       </div>
       <div className={styles.calendarDayStops}>
         {stops.map(stop => (
-          <div key={stop.id} className={styles.calendarStopCard} onClick={() => onStopClick(stop)}>
+          <button key={stop.id} className={styles.calendarStopCard} onClick={() => onStopClick(stop)}>
             <div className={styles.calendarStopTime}>
               {stop.startTime?.format("HH:mm")} {stop.endTime ? `→ ${stop.endTime.format("HH:mm")}` : ""}
             </div>
             <div className={styles.calendarStopTitle}>{stop.title}</div>
             <div className={styles.calendarStopLocation}>📍{stop.location}</div>
             <div className={styles.calendarStopNotes}>{stop.notes}</div>
-          </div>
+          </button>
         ))}
         <button className={styles.calendarAddStopBtn} onClick={onAddStopClick}>
           + Add stop
