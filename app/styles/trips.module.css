@@ -106,24 +106,6 @@
 }
 
 /* Share link */
-.shareLinkBtn {
-  padding: 6px 16px;
-  border-radius: 8px;
-  border: 1.5px solid #c0392b;
-  background: #c0392b;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.15s, color 0.15s;
-}
-
-.shareLinkBtn:hover {
-  background: #fff;
-  color: #c0392b;
-}
-
 .shareLinkModal {
   display: flex;
   flex-direction: column;
@@ -173,8 +155,6 @@
   color: #c0392b;
   font-family: inherit;
 }
-
-/* TODO: settings -> leave trip button, export itinerary button */
 
 /* Main */
 
@@ -379,6 +359,17 @@
 .newCardSub {
   font-size: 12px;
   color: #9e9389;
+}
+
+/* new trip calendar month/year -> otherwise not visible */
+.datepicker :global(.ant-picker-month-btn),
+.datepicker :global(.ant-picker-year-btn) {
+  color: #c0392b !important;
+}
+
+.datepicker :global(.ant-picker-month-btn:hover),
+.datepicker :global(.ant-picker-year-btn:hover) {
+  color: #c0392b !important;
 }
 
 /* trips/id calendar --------------------------------------------------------------------- */

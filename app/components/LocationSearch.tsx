@@ -1,11 +1,12 @@
 /// <reference types="@types/google.maps" />
 'use client'
 
+
 import { useEffect, useRef, useState } from 'react'
 import { Input } from 'antd'
 
 type Props = {
-  onPlaceSelect?: (place: google.maps.places.Place) => void
+  onPlaceSelect: (place: google.maps.places.Place | null) => void;
   value?: string
   onChange?: (value: string) => void
 }
