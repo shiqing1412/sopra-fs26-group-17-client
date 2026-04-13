@@ -34,7 +34,7 @@ function getDaysBetween(start: string, end: string): Date[] {
   return days;
 }
  
-function DayColumn({ date, dayNumber, onAddStopClick, stops }: Readonly<{ date: Date; dayNumber: number; onAddStopClick: () => void; stops: (NewStopValues & { id: string })[] }>) {
+function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops }: Readonly<{ date: Date; dayNumber: number; onAddStopClick: () => void; onStopClick: (stop: NewStopValues & { id: string }) => void; stops: (NewStopValues & { id: string })[] }>) {
   return (
     <div className={styles.calendarDayColumn}>
       <div className={styles.calendarDayHeader}>
@@ -44,14 +44,14 @@ function DayColumn({ date, dayNumber, onAddStopClick, stops }: Readonly<{ date: 
       </div>
       <div className={styles.calendarDayStops}>
         {stops.map(stop => (
-          <div key={stop.id} className={styles.calendarStopCard}>
+          <button key={stop.id} className={styles.calendarStopCard} onClick={() => onStopClick(stop)}>
             <div className={styles.calendarStopTime}>
               {stop.startTime?.format("HH:mm")} {stop.endTime ? `→ ${stop.endTime.format("HH:mm")}` : ""}
             </div>
             <div className={styles.calendarStopTitle}>{stop.title}</div>
             <div className={styles.calendarStopLocation}>📍{stop.location}</div>
             <div className={styles.calendarStopNotes}>{stop.notes}</div>
-          </div>
+          </button>
         ))}
         <button className={styles.calendarAddStopBtn} onClick={onAddStopClick}>
           + Add stop
@@ -77,6 +77,7 @@ function TripCalendar({ trip }: TripCalendarValues) {
   };
 
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
+  const [viewingStop, setViewingStop] = useState<{ stop: NewStopValues & { id: string }; date: Date } | null>(null);
 
   return (
     <div className={styles.calendarScrollWrapper}>
@@ -88,6 +89,7 @@ function TripCalendar({ trip }: TripCalendarValues) {
             dayNumber={i + 1} 
             onAddStopClick={() => setSelectedDate(date)} 
             stops={stops[date.toISOString()] ?? []} 
+            onStopClick={(stop) => setViewingStop({ stop, date })}
           />
         ))}
       </div>
@@ -161,6 +163,49 @@ function TripCalendar({ trip }: TripCalendarValues) {
             </Form.Item>
           </Form>
         </Modal> 
+        <Modal
+          title={
+            <div>
+              <div style={{ color: "#000", fontSize: 18, fontWeight: 600 }}>
+                {viewingStop?.date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+              </div>
+            </div>
+          }
+          open={viewingStop !== null}
+          onCancel={() => setViewingStop(null)}
+          footer={null}
+        >
+          <Form form={form} layout="vertical" size="large" style={{ marginTop: 16 }} onFinish={handleAddStop}>
+            <Form.Item name="title" label="TITLE" rules={[{ required: true, message: "Please enter a title" }]} style={{ marginBottom: 12}}>
+              <Input placeholder={viewingStop?.stop.title} disabled />
+            </Form.Item>
+            <Form.Item name="location" label="LOCATION" rules={[{ required: true, message: "Please enter a location" }]} style={{ marginBottom: 12}}>
+              <Input placeholder={viewingStop?.stop.location} disabled />
+            </Form.Item>
+            <Form.Item label="TIME" rules={[{ required: true, message: "Please enter a time" }]} style={{ marginBottom: 12}}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <Form.Item name="startTime" noStyle>
+                  <Input placeholder={viewingStop?.stop.startTime?.format("HH:mm")} disabled />
+                </Form.Item>
+                <span style={{ color: "#c0392b" }}>→</span>
+                <Form.Item name="endTime" noStyle>
+                  <Input placeholder={viewingStop?.stop.endTime?.format("HH:mm")} disabled />
+                </Form.Item>
+              </div>
+            </Form.Item>
+            <Form.Item name="notes" label="NOTES">
+              <Input.TextArea placeholder={viewingStop?.stop.notes} rows={3} disabled />
+            </Form.Item>
+            <Form.Item style={{ marginBottom: 0, marginTop: 8 }}>
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+                <Button type="primary" >Edit</Button>
+                {/* Add Delete Button */}
+              </div>
+            </Form.Item>
+          </Form>
+        </Modal> 
+        
+        
       </ConfigProvider>
     </div>
   );

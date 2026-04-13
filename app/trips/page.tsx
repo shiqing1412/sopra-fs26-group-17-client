@@ -211,16 +211,15 @@ const Dashboard: React.FC = () => {
           >
             <Input placeholder="e.g. Summer in Europe" />
           </Form.Item>
-
+          <style>{`
+            .ant-picker-month-btn, .ant-picker-year-btn { color: #c0392b !important; }
+            .ant-picker-month-btn:hover, .ant-picker-year-btn:hover { color: #c0392b !important; }
+          `}</style>
           <Form.Item
             name="dateRange"
             label="Date Range"
             rules={[{ required: true, message: "Please select a start and end date" }]}
           >
-            <style>{`
-              .ant-picker-month-btn, .ant-picker-year-btn { color: #c0392b !important; }
-              .ant-picker-month-btn:hover, .ant-picker-year-btn:hover { color: #c0392b !important; }
-            `}</style>
             <DatePicker.RangePicker
               style={{ width: "100%" }}
               format="MMM D, YYYY"
