@@ -76,7 +76,7 @@ function TripCalendar({ trip }: TripCalendarValues) {
     setSelectedDate(null); // close modal after adding stop
   };
 
-  const [selectedPlace, setSelectedPlace] = useState<any>(null)
+  const [setSelectedPlace] = useState<any>(null)
 
   return (
     <div className={styles.calendarScrollWrapper}>

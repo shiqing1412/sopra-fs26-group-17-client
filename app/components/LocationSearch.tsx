@@ -16,7 +16,7 @@ type Props = {
   onChange?: (value: string) => void
 }
 
-export default function PlaceAutocomplete({ onPlaceSelect, onChange, value }: Props) {
+export default function PlaceAutocomplete({ onPlaceSelect, onChange, value }: Readonly<Props>) {
   const [suggestions, setSuggestions] = useState<any[]>([])
   const [inputValue, setInputValue] = useState(value ?? '')
   const sessionToken = useRef<any>(null)
@@ -77,15 +77,18 @@ export default function PlaceAutocomplete({ onPlaceSelect, onChange, value }: Pr
           zIndex: 1000,
           boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
         }}>
-          {suggestions.map((s: any, i: number) => (
+          {suggestions.map((s: any) => (
             <div
-              key={i}
+              key={s.placePrediction.placeId}
+              role="option"
+              tabIndex={0}
               onClick={() => handleSelect(s)}
+              onKeyDown={e => e.key === 'Enter' && handleSelect(s)}
               style={{
                 padding: '8px 12px',
                 cursor: 'pointer',
                 fontSize: 14,
-                borderBottom: i < suggestions.length - 1 ? '1px solid #f0f0f0' : 'none',
+                borderBottom: '1px solid #f0f0f0',
               }}
               onMouseEnter={e => (e.currentTarget.style.background = '#f7f6f6')}
               onMouseLeave={e => (e.currentTarget.style.background = '#fff')}
