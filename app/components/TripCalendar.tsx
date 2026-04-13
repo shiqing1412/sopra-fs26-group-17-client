@@ -1,8 +1,9 @@
 import type { Trip } from "@/types/trip";
 import styles from "@/styles/trips.module.css";
 import { useState } from "react";
-import { Button, Form, Input, Modal, TimePicker } from "antd";
+import { Button, ConfigProvider, Form, Input, Modal, TimePicker } from "antd";
 import { Dayjs } from "dayjs";
+import PlaceAutocomplete from "./LocationSearch";
 
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
@@ -75,6 +76,8 @@ function TripCalendar({ trip }: TripCalendarValues) {
     setSelectedDate(null); // close modal after adding stop
   };
 
+  const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null)
+
   return (
     <div className={styles.calendarScrollWrapper}>
       <div className={styles.calendarGrid}>
@@ -88,65 +91,77 @@ function TripCalendar({ trip }: TripCalendarValues) {
           />
         ))}
       </div>
-      <Modal
-        title={
-          <div>
-            <div style={{ color: "#000", fontSize: 18, fontWeight: 600 }}>Add a Stop</div>
-            <div style={{ color: "#888", fontSize: 14, fontWeight: 400 }}>
-              {selectedDate?.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
-            </div>
-          </div>
+      <ConfigProvider theme={{
+        token: {
+          colorText: '#000000',
+          colorBgContainer: '#ffffff',
+        },
+        components: {
+          Form: {
+            labelColor: '#000000',
+          }
         }
-        open={selectedDate !== null}
-        onCancel={() => setSelectedDate(null)}
-        footer={null}
-        destroyOnHidden
-      >
-        <Form form={form} layout="vertical" size="large" style={{ marginTop: 16 }} onFinish={handleAddStop}>
-          <Form.Item name="title" label="TITLE" rules={[{ required: true, message: "Please enter a title" }]} style={{ marginBottom: 12}}>
-            <Input placeholder="e.g. Karaoke Night" />
-          </Form.Item>
-          <Form.Item name="location" label="LOCATION" rules={[{ required: true, message: "Please enter a location" }]} style={{ marginBottom: 12}}>
-            <Input placeholder="e.g. Home" />
-          </Form.Item>
-          <Form.Item label="TIME" rules={[{ required: true, message: "Please enter a time" }]} style={{ marginBottom: 12}}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <Form.Item name="startTime" noStyle>
-                <TimePicker format="HH:mm" placeholder="From" style={{ flex: 1 }} needConfirm={false} />
-              </Form.Item>
-              <span style={{ color: "#c0392b" }}>→</span>
-              <Form.Item name="endTime" noStyle>
-                <TimePicker 
-                  format="HH:mm" 
-                  placeholder="To" 
-                  style={{ flex: 1 }} 
-                  needConfirm={false}
-                  disabledTime={() => {
-                  const start = form.getFieldValue("startTime");
-                  if (!start) return {};
-                  return {
-                    disabledHours: () => Array.from({ length: start.hour() }, (_, i) => i),
-                    disabledMinutes: (hour) =>
-                      hour === start.hour()
-                        ? Array.from({ length: start.minute() + 1 }, (_, i) => i)
-                        : [],
-                  };
-                  }} 
-                />
-              </Form.Item>
+      }}>
+        <Modal
+          title={
+            <div>
+              <div style={{ color: "#000", fontSize: 18, fontWeight: 600 }}>Add a Stop</div>
+              <div style={{ color: "#888", fontSize: 14, fontWeight: 400 }}>
+                {selectedDate?.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+              </div>
             </div>
-          </Form.Item>
-          <Form.Item name="notes" label="NOTES (optional)">
-            <Input.TextArea placeholder="Reservations, tips, reminders…" rows={3} />
-          </Form.Item>
-          <Form.Item style={{ marginBottom: 0, marginTop: 8 }}>
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
-              <Button onClick={() => setSelectedDate(null)}>Cancel</Button>
-              <Button type="primary" htmlType="submit">Add Stop</Button>
-            </div>
-          </Form.Item>
-        </Form>
-      </Modal> 
+          }
+          open={selectedDate !== null}
+          onCancel={() => setSelectedDate(null)}
+          footer={null}
+          destroyOnHidden
+        >
+          <Form form={form} layout="vertical" size="large" style={{ marginTop: 16 }} onFinish={handleAddStop}>
+            <Form.Item name="title" label="TITLE" rules={[{ required: true, message: "Please enter a title" }]} style={{ marginBottom: 12}}>
+              <Input placeholder="e.g. Karaoke Night" />
+            </Form.Item>
+            <Form.Item name="location" label="LOCATION" rules={[{ required: true, message: "Please enter a location" }]} style={{ marginBottom: 12}}>
+              <PlaceAutocomplete onPlaceSelect={setSelectedPlace} />
+            </Form.Item>
+            <Form.Item label="TIME" rules={[{ required: true, message: "Please enter a time" }]} style={{ marginBottom: 12}}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <Form.Item name="startTime" noStyle>
+                  <TimePicker format="HH:mm" placeholder="From" style={{ flex: 1 }} needConfirm={false} />
+                </Form.Item>
+                <span style={{ color: "#c0392b" }}>→</span>
+                <Form.Item name="endTime" noStyle>
+                  <TimePicker 
+                    format="HH:mm" 
+                    placeholder="To" 
+                    style={{ flex: 1 }} 
+                    needConfirm={false}
+                    disabledTime={() => {
+                    const start = form.getFieldValue("startTime");
+                    if (!start) return {};
+                    return {
+                      disabledHours: () => Array.from({ length: start.hour() }, (_, i) => i),
+                      disabledMinutes: (hour) =>
+                        hour === start.hour()
+                          ? Array.from({ length: start.minute() + 1 }, (_, i) => i)
+                          : [],
+                    };
+                    }} 
+                  />
+                </Form.Item>
+              </div>
+            </Form.Item>
+            <Form.Item name="notes" label="NOTES">
+              <Input.TextArea placeholder="Reservations, tips, reminders…" rows={3} />
+            </Form.Item>
+            <Form.Item style={{ marginBottom: 0, marginTop: 8 }}>
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+                <Button onClick={() => setSelectedDate(null)}>Cancel</Button>
+                <Button type="primary" htmlType="submit">Add Stop</Button>
+              </div>
+            </Form.Item>
+          </Form>
+        </Modal> 
+      </ConfigProvider>
     </div>
   );
 }

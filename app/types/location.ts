@@ -1,7 +1,14 @@
 export interface Location {
-  id: number | null;
-  placeId: string | null;
+  id: number | null; // database ID
+  placeId: string | null; // Google Place ID
   name: string | null;
   latitude: number | null;
   longitude: number | null;
+}
+
+// types/google-maps.d.ts
+declare global {
+  interface Window {
+    google: typeof google
+  }
 }
