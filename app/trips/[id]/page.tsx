@@ -65,15 +65,14 @@ const Profile: React.FC = () => {
         onCancel={() => setSettingsOpen(false)}
         footer={null}
       >
-        <div style={{ display: "flex", gap: "12px" }}>
-          <button className={styles.shareLinkBtn} onClick={() => setShareLinkOpen(true)}>Share Link</button>
-        </div>
         <Form.Item>
           <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "8px 0" }}>
+            <Button type="primary" onClick={() => setShareLinkOpen(true)}>
+              Share Link
+            </Button>
             <Button type="primary" onClick={() => setLeaveTripOpen(true)}>
               Leave Trip
             </Button>
-            { /* TODO: add options here */}
           </div>
         </Form.Item>
 

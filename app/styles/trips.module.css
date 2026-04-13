@@ -106,24 +106,6 @@
 }
 
 /* Share link */
-.shareLinkBtn {
-  padding: 6px 16px;
-  border-radius: 8px;
-  border: 1.5px solid #c0392b;
-  background: #c0392b;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.15s, color 0.15s;
-}
-
-.shareLinkBtn:hover {
-  background: #fff;
-  color: #c0392b;
-}
-
 .shareLinkModal {
   display: flex;
   flex-direction: column;
@@ -173,8 +155,6 @@
   color: #c0392b;
   font-family: inherit;
 }
-
-/* TODO: settings -> leave trip button, export itinerary button */
 
 /* Main */
 
