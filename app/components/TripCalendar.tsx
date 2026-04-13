@@ -76,7 +76,7 @@ function TripCalendar({ trip }: TripCalendarValues) {
     setSelectedDate(null); // close modal after adding stop
   };
 
-  const [setSelectedPlace] = useState<any>(null)
+  const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null)
 
   return (
     <div className={styles.calendarScrollWrapper}>

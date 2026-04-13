@@ -17,14 +17,14 @@ type Props = {
 }
 
 export default function PlaceAutocomplete({ onPlaceSelect, onChange, value }: Readonly<Props>) {
-  const [suggestions, setSuggestions] = useState<any[]>([])
+  const [suggestions, setSuggestions] = useState<google.maps.places.AutocompleteSuggestion[]>([])
   const [inputValue, setInputValue] = useState(value ?? '')
-  const sessionToken = useRef<any>(null)
+  const sessionToken = useRef<google.maps.places.AutocompleteSessionToken | null>(null)
 
   /* initialize session token. required for autocomplete and billing */
   useEffect(() => {
     const initToken = async () => {
-      const { AutocompleteSessionToken } = await google.maps.importLibrary('places') as any
+      const { AutocompleteSessionToken } = await google.maps.importLibrary('places') as google.maps.PlacesLibrary
       sessionToken.current = new AutocompleteSessionToken()
     }
     initToken()
@@ -37,7 +37,10 @@ export default function PlaceAutocomplete({ onPlaceSelect, onChange, value }: Re
 
     if (!val) return setSuggestions([])
 
-    const { AutocompleteSuggestion } = await google.maps.importLibrary('places') as any
+    const { AutocompleteSuggestion, AutocompleteSessionToken  } = await google.maps.importLibrary('places') as google.maps.PlacesLibrary
+    if (!sessionToken.current) {
+      sessionToken.current = new AutocompleteSessionToken()
+    }
     const { suggestions } = await AutocompleteSuggestion.fetchAutocompleteSuggestions({
       input: val,
       sessionToken: sessionToken.current,
@@ -47,7 +50,8 @@ export default function PlaceAutocomplete({ onPlaceSelect, onChange, value }: Re
   }
 
   /* handle suggestion selection, fetch place details */
-  const handleSelect = async (suggestion: any) => {
+  const handleSelect = async (suggestion: google.maps.places.AutocompleteSuggestion) => {
+    if (!suggestion.placePrediction) return;
     const place = suggestion.placePrediction.toPlace()
     await place.fetchFields({ fields: ['displayName', 'formattedAddress', 'location'] })
     const placeJSON = place.toJSON() as Place
@@ -77,25 +81,31 @@ export default function PlaceAutocomplete({ onPlaceSelect, onChange, value }: Re
           zIndex: 1000,
           boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
         }}>
-          {suggestions.map((s: any) => (
-            <div
-              key={s.placePrediction.placeId}
-              role="option"
-              tabIndex={0}
-              onClick={() => handleSelect(s)}
-              onKeyDown={e => e.key === 'Enter' && handleSelect(s)}
-              style={{
-                padding: '8px 12px',
-                cursor: 'pointer',
-                fontSize: 14,
-                borderBottom: '1px solid #f0f0f0',
-              }}
-              onMouseEnter={e => (e.currentTarget.style.background = '#f7f6f6')}
-              onMouseLeave={e => (e.currentTarget.style.background = '#fff')}
-            >
+          {suggestions.map((s: google.maps.places.AutocompleteSuggestion) => {
+            if (!s.placePrediction) return null;
+            return (
+              <button
+                key={s.placePrediction.placeId}
+                type="button"
+                onClick={() => handleSelect(s)}
+                onKeyDown={e => e.key === 'Enter' && handleSelect(s)}
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  textAlign: 'left',
+                  padding: '8px 12px',
+                  fontSize: 14,
+                  border: 'none',
+                  borderBottom: '1px solid #f0f0f0',
+                  background: '#fff',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.background = '#f7f6f6')}
+                onMouseLeave={e => (e.currentTarget.style.background = '#fff')}
+              >
               {s.placePrediction.text.toString()}
-            </div>
-          ))}
+              </button>
+            )
+          })}
         </div>
       )}
     </div>
