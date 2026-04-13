@@ -36,6 +36,7 @@ COPY --chown=node:node --from=build /app/node_modules ./node_modules
 COPY --chown=node:node --from=build /app/.next ./.next
 COPY --chown=node:node --from=build /app/public ./public
 COPY --chown=node:node --from=build /app/next.config.ts ./next.config.ts
+RUN chmod -R 555 /app 
 
 # Switch to non-root user
 USER node
