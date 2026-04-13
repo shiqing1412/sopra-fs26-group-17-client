@@ -381,6 +381,17 @@
   color: #9e9389;
 }
 
+/* new trip calendar month/year -> otherwise not visible */
+:global(.ant-picker-month-btn),
+:global(.ant-picker-year-btn) {
+  color: #c0392b !important;
+}
+
+:global(.ant-picker-month-btn:hover),
+:global(.ant-picker-year-btn:hover) {
+  color: #c0392b !important;
+}
+
 /* trips/id calendar --------------------------------------------------------------------- */
 .calendarScrollWrapper {
   overflow-x: auto;
