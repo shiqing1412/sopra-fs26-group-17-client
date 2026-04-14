@@ -197,9 +197,9 @@ function TripCalendar({ trip }: TripCalendarValues) {
               <Input.TextArea placeholder={viewingStop?.stop.notes} rows={3} disabled />
             </Form.Item>
             <Form.Item style={{ marginBottom: 0, marginTop: 8 }}>
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <Button danger>Delete</Button>
                 <Button type="primary" >Edit</Button>
-                {/* Add Delete Button */}
               </div>
             </Form.Item>
           </Form>
