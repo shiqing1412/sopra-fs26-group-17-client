@@ -57,7 +57,7 @@ reason).
 
 ---
 
-## Contributions Week 2 - [1 April] to [7 April]
+## Contributions Week 2 - [1 April] to [14 April]
 
 | **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
 | ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
@@ -68,7 +68,7 @@ reason).
 | **@julituchi** | 7 April  | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/6d41b1778fca52fae76bbaf270947b8cd004d909 | Implements a GET /trips/{id}/events endpoint that returns trip events grouped by day, along with supporting entities, repositories, DTOs, and auto-login on registration | Enables clients to fetch a structured daily event schedule for a trip with proper authorization checks, while also streamlining the registration flow by making the token immediately usable |
 |                    | 11 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/c979814840fb7aa64a76f9504410d27500759261 | Centralizes membership enforcement into a single checkMembership method in TripService, and updates TripController and EventService to use it | Eliminates duplicated authorization logic, making membership checks consistent and easier to maintain across all trip-related endpoints |
 | **@Raminminn** | 5 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/237865674d24299ce4ed5dafd12199ff56dd3643 | Added a share link button which allows the user to copy the link to the trip to share with others | Allows users to join a trip via a link to co-edit a shared itinerary |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+|                    | 14 April   | (https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/62b842ef56f0b9b786661e26ab02bbedb78d8b2b) | added online indicator for members | members of the trip are able to see who is co-editing/viewing the trip in real-time |
 | **@yarablaser** | 03 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/8c1d5a126b2ab26985d9c2e64253bcb511c22a78 | adding protectedRoute component | preventing unauthorized access to user pages |
 |                    | 03 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/254fc931471ea6b5234d8bffcebad24894c0093c | addStop modal UI | user can add an event to the trip  |
 |                    | 06 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/fdfb2a2140237ca31878fb7514c74fa2692dbb9e | leaveTrip button and modal UI | user can leave a trip if they wish to no longer participate |
@@ -78,7 +78,7 @@ reason).
 
 ---
 
-## Contributions Week 3 - [8 April] to [14 April]
+## Contributions Week 3 - [15 April] to [21 April]
 
 | **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
 | ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
