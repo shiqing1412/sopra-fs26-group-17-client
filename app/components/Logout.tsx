@@ -11,9 +11,8 @@ export default function Logout() {
 
     const handleLogout = async (): Promise<void> => {
         try {
-        const cleanToken = token ? JSON.parse(token) : null;
-        if (cleanToken) { //logout by uniqe user token
-            await apiService.post<User>("/logout", { token: cleanToken });
+        if (token) { //logout by uniqe user token
+            await apiService.post<User>("/logout", {});
         }
         } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
