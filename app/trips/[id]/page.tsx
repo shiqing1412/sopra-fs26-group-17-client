@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
 import ShareLink from "@/components/ShareLink";
 import LeaveTrip from "@/components/LeaveTrip";
+import MemberOnlineStatus from "@/components/MemberOnlineStatus";
 
 const Profile: React.FC = () => {
   const { isLoading } = useProtectedRoute();
@@ -53,7 +54,8 @@ const Profile: React.FC = () => {
           <span className={styles.tripTitle}>{trip?.tripTitle}</span>
           <span className={styles.dateRange}>{dayjs(trip?.startDate).format("MMM D")} – {dayjs(trip?.endDate).format("MMM D, YYYY")}</span>
         </div>
-        <div>
+        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <MemberOnlineStatus trip={trip} currentUser={user} />
           <button className={styles.settingsBtn} onClick={() => setSettingsOpen(true)}>
             ⚙︎ Settings
           </button>

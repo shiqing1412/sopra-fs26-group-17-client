@@ -291,14 +291,14 @@
   font-weight: 600;
 }
 
-.badgeDot {             /* can also be used for user status */
+.badgeDot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
   display: inline-block;
 }
 
-.badgeActive {          /* can also be used for user status */
+.badgeActive {
   background: #eafaf1;
   color: #1e8449;
 }
@@ -483,4 +483,38 @@
   font-size: 12px;
   color: #aaa;
   margin-top: 4px;
+}
+
+/* Member Online Status ---------------------------------------------------------------- */
+
+.onlineStatusContainer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.onlineBadgeWrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.onlineDot {
+  width: 10px;
+  height: 10px;
+  background-color: #27ae60;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.onlineStatusText {
+  font-size: 13px;
+  color: #27ae60;
+  font-weight: 500;
+}
+
+.avatarOverflow {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  border: 2px solid white;
 }
