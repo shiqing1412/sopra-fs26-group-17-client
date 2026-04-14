@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useApi } from "@/hooks/useApi";
+import React, { useState } from "react";
 import { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
@@ -23,9 +22,7 @@ const MemberOnlineStatus: React.FC<OnlineStatusProps> = ({
   allMembers,
   maxAvatars 
 }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const apiService = useApi();
+  const [isLoading] = useState<boolean>(true);
 
   if (isLoading) return null;
 
