@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { Trip } from "@/types/trip";
 import { User } from "@/types/user";
@@ -11,6 +11,7 @@ import dayjs from "dayjs";
 import { Form, Button, Modal } from "antd";
 import Link from "next/link";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
+import { useApi } from "@/hooks/useApi";
 import ShareLink from "@/components/ShareLink";
 import LeaveTrip from "@/components/LeaveTrip";
 import MemberOnlineStatus from "@/components/MemberOnlineStatus";
@@ -21,11 +22,30 @@ const Profile: React.FC = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [shareLinkOpen, setShareLinkOpen] = useState(false);
   const [LeaveTripOpen, setLeaveTripOpen] = useState(false);
+  const [allMembers, setAllMembers] = useState<string[]>([]);
 
   const { value: user } = useLocalStorage<User | null>("user", null);
   const { value: trip } = useLocalStorage<Trip | null>("trip", null);
 
+  const apiService = useApi();
+
   const { handleLogout } = Logout();
+
+  useEffect(() => {
+    if (!trip?.tripId) return;
+
+    const fetchMembers = async () => {
+      try {
+        // check for correctness when get members is implemented
+        const response = await apiService.get<{ members: string[] }>(`/trips/${trip.tripId}/members`);
+        setAllMembers(response.members || []);
+      } catch (error) {
+        console.error("Failed to fetch members", error);
+      }
+    };
+
+    fetchMembers();
+  }, [trip?.tripId]);
 
   {/* todo functions: addStop, editStop */}
   if (isLoading) return null;
@@ -52,10 +72,17 @@ const Profile: React.FC = () => {
         <div className={styles.subHeader}>
           <Link href="/trips" style={{ color: "#444", fontWeight: 300 }}>← Trips</Link>
           <span className={styles.tripTitle}>{trip?.tripTitle}</span>
-          <span className={styles.dateRange}>{dayjs(trip?.startDate).format("MMM D")} – {dayjs(trip?.endDate).format("MMM D, YYYY")}</span>
+          <span className={styles.dateRange}>{dayjs(trip?.startDate).format("MMM D")} – {dayjs(trip?.endDate).format("MMM D, YYYY")} · {allMembers.length} members</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <MemberOnlineStatus trip={trip} currentUser={user} />
+          
+          {/* Online indicator for trip members */}
+          <MemberOnlineStatus
+            trip={trip}
+            currentUser={user}
+            allMembers={allMembers}
+          />
+          
           <button className={styles.settingsBtn} onClick={() => setSettingsOpen(true)}>
             ⚙︎ Settings
           </button>
