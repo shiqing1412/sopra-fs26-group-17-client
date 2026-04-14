@@ -1,7 +1,8 @@
 import type { Trip } from "@/types/trip";
 import styles from "@/styles/trips.module.css";
 import { useState } from "react";
-import { Button, ConfigProvider, Form, Input, Modal, TimePicker } from "antd";
+import { Button, ConfigProvider, Form, Input, message, Modal, TimePicker } from "antd";
+import { ApiService } from "@/api/apiService";
 import { Dayjs } from "dayjs";
 import PlaceAutocomplete from "./LocationSearch";
 
@@ -79,6 +80,27 @@ function TripCalendar({ trip }: TripCalendarValues) {
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
   const [viewingStop, setViewingStop] = useState<{ stop: NewStopValues & { id: string }; date: Date } | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const handleDeleteStop = async () => {
+    if (!viewingStop) return;
+    const key = viewingStop.date.toISOString();
+    setDeleteLoading(true);
+    try {
+      const api = new ApiService();
+      await api.delete(`/trips/${trip.tripId}/events/${viewingStop.stop.id}`);
+      setStops(prev => ({
+        ...prev,
+        [key]: prev[key].filter(s => s.id !== viewingStop.stop.id),
+      }));
+      setConfirmingDelete(false);
+      setViewingStop(null);
+    } catch {
+      message.error("Failed to delete the stop. Please try again.");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
 
   return (
     <div className={styles.calendarScrollWrapper}>
@@ -220,7 +242,7 @@ function TripCalendar({ trip }: TripCalendarValues) {
             </div>
             <div style={{ display: "flex", justifyContent: "center", gap: 12 }}>
               <Button onClick={() => setConfirmingDelete(false)}>Cancel</Button>
-              <Button danger type="primary">Delete</Button>
+              <Button danger type="primary" loading={deleteLoading} onClick={handleDeleteStop}>Delete</Button>
             </div>
           </div>
         </Modal>
