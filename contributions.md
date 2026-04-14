@@ -80,7 +80,8 @@ reason).
 |                    | 12 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/634b58b9750099d7201c1a118e5c03fab1d4720d | connecting google places API | user can search for real places/restaurants/attractions to plan trip destinations |
 |                    | 13 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/ba992801d56d5ef80e7d491e9625de45b773a3c5 | view stop modal | user can see stop details and then choose to edit/delete from there |
 | **@dsgji4g4** | 2 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/d238235aafa2ff43cafc3802b64487ee623a3e71 | implemented the join function via a share link  | Key feature that binds users with a trip. New joiners are set to be "MEMBER". |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+|                    | 14 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/1acfb1b1e172d6f241d8e8e2114f2cfa96eecc50 | Implement endpoint of GET/trips | To enable users find all joined trip |
+|                    | 14 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/78e6787ec7fa37f81d22a0024dc0131fc2a5d49d | Retrieving all members of a trip | Enable to display the member list of a trip to users |
 
 ---
 
