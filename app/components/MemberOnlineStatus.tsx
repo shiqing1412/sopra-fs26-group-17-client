@@ -12,6 +12,7 @@ interface OnlineStatusProps {
   trip: Trip | null;
   currentUser?: User | null;
   onlineUsernames?: string[]; 
+  allMembers: string[];
   maxAvatars?: number; 
 }
 
@@ -19,40 +20,12 @@ const MemberOnlineStatus: React.FC<OnlineStatusProps> = ({
   trip, 
   currentUser,
   onlineUsernames = [], 
+  allMembers,
   maxAvatars 
 }) => {
-  const [allMembers, setAllMembers] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const apiService = useApi();
-
-  useEffect(() => {
-    // no tripId yet
-    if (!trip?.tripId) {
-      setIsLoading(false);
-      return;
-    }
-
-    const fetchTripMembers = async () => {
-      try {
-        setIsLoading(true);
-        
-        // todo: check again when backend has implemented get members api
-        const response = await apiService.get<{ members: string[] }>(`/trips/${trip.tripId}/members`);
-        setAllMembers(response.members || []); 
-        
-      } catch (error) {
-        // todo: check with backend when implemented
-        // const message = error instanceof Error ? error.message : String(error);
-        // if (message.includes("")) {
-        //  setErrorMessage("");}
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchTripMembers();
-  }, [trip?.tripId]);
 
   if (isLoading) return null;
 
