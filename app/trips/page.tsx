@@ -84,7 +84,7 @@ const Dashboard: React.FC = () => {
 
     const fetchTrips = async () => {
       try {
-        const fetchedTrips = await apiService.get<Trip[]>(`/users/${user.id}/trips`);
+        const fetchedTrips = await apiService.get<Trip[]>(`/trips`);
         setTrips(fetchedTrips ?? []);
       } catch (error) {
         if (error instanceof Error) {
