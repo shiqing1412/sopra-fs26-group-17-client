@@ -3,6 +3,7 @@ import { Event } from "./event";
  
 export interface Trip {
   tripId: string | null;
+  joinToken: string;
   tripTitle: string | null;
   startDate: string | null;
   endDate: string | null;
