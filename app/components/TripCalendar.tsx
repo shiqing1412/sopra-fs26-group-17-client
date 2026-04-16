@@ -80,7 +80,7 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops }: Read
   );
 }
  
-function TripCalendar({ trip, currentUser }: TripCalendarValues) {
+function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const days = getDaysBetween(trip.startDate ?? "", trip.endDate ?? "");
   const [form] = Form.useForm<NewStopValues>();
