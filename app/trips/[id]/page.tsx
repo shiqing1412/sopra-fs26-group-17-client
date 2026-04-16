@@ -15,6 +15,7 @@ import { useApi } from "@/hooks/useApi";
 import ShareLink from "@/components/ShareLink";
 import LeaveTrip from "@/components/LeaveTrip";
 import MemberOnlineStatus from "@/components/MemberOnlineStatus";
+import { getAvatarColor } from "@/utils/avatarColors";
 
 const Profile: React.FC = () => {
   const { isLoading } = useProtectedRoute();
@@ -57,7 +58,9 @@ const Profile: React.FC = () => {
           Wander<span className={styles.logoAccent}>Sync</span>
         </div>
         <div className={styles.navUser}>
-          <div className={styles.navAvatar}>
+          <div
+            className={styles.navAvatar}
+            style={{ background: getAvatarColor(user?.username ?? null) }}>
             {user?.username?.[0]?.toUpperCase() ?? "?"}      {/* initial of username */}
           </div>
           <span className={styles.navUsername}>
@@ -122,7 +125,7 @@ const Profile: React.FC = () => {
       />
 
       {/* calendar view */}
-      {trip && <TripCalendar trip={trip} />}
+      {trip && <TripCalendar trip={trip} currentUser={user} />}
 
     </div>
   );
