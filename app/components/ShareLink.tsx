@@ -15,7 +15,7 @@ const ShareLink: React.FC<ShareLinkProps> = ({ open, onClose, trip }) => {
   // copied is false by default 
   const [copied, setCopied] = useState(false);
 
-  const shareUrl = `https://wandersync.com/join/${trip?.joinToken}`;
+  const shareUrl = `https://sopra-fs26-group-17-client.vercel.app/join/${trip?.shareCode}`;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(shareUrl);
