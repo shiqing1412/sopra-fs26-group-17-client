@@ -1,10 +1,10 @@
 import type { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, ConfigProvider, Form, Input, message, Modal, TimePicker } from "antd";
 import { ApiService } from "@/api/apiService";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import PlaceAutocomplete from "./LocationSearch";
 import { getAvatarColor } from "@/utils/avatarColors";
 
@@ -22,6 +22,11 @@ interface EventGetDTO {
   lat: number;
   lng: number;
   createdBy: string;
+}
+
+interface DayDTO {
+  date: string;
+  events: EventGetDTO[];
 }
  
 interface TripCalendarValues {
@@ -135,6 +140,38 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    if (!trip?.tripId) return;
+
+    const fetchEvents = async () => {
+      try {
+        const api = new ApiService();
+        const days = await api.get<DayDTO[]>(`/trips/${trip.tripId}/events`);
+
+        const fetched: Record<string, (NewStopValues & { id: string })[]> = {};
+        for (const day of days) {
+          const date = new Date(day.date + "T00:00:00");
+          date.setHours(0, 0, 0, 0);
+          const key = date.toISOString();
+          fetched[key] = day.events.map(event => ({
+            id: String(event.eventId),
+            title: event.eventTitle,
+            location: event.placeName ?? "",
+            startTime: event.time ? dayjs(event.time, "HH:mm:ss") : null,
+            endTime: null,
+            notes: event.notes ?? "",
+            createdBy: { username: event.createdBy } as User,
+          }));
+        }
+        setStops(fetched);
+      } catch (error) {
+        console.error("Failed to fetch events", error);
+      }
+    };
+
+    fetchEvents();
+  }, [trip.tripId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
   const [viewingStop, setViewingStop] = useState<{ stop: NewStopValues & { id: string }; date: Date } | null>(null);
