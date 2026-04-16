@@ -11,6 +11,18 @@ import { getAvatarColor } from "@/utils/avatarColors";
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"];
+
+interface EventGetDTO {
+  eventId: number;
+  eventTitle: string;
+  date: string;
+  time: string;
+  notes: string;
+  placeName: string;
+  lat: number;
+  lng: number;
+  createdBy: string;
+}
  
 interface TripCalendarValues {
   trip: Trip;
@@ -86,13 +98,42 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
   const [form] = Form.useForm<NewStopValues>();
   const [stops, setStops] = useState<Record<string, (NewStopValues & { id: string })[]>>({});
 
-  const handleAddStop = (values: NewStopValues) => {
+  const handleAddStop = async (values: NewStopValues) => {
     if (!selectedDate) return;
     const key = selectedDate.toISOString();
-    const newStop: NewStopValues & { id: string } = { ...values, id: crypto.randomUUID(), createdBy: currentUser };
-    setStops(prev => ({ ...prev, [key]: [...(prev[key] ?? []), newStop] })); // keeping existing stops, adding new stops
-    form.resetFields(); 
-    setSelectedDate(null); // close modal after adding stop
+
+    try {
+      const api = new ApiService();
+      const eventPostDTO = {
+        eventTitle: values.title,
+        dayDate: selectedDate.toISOString().split("T")[0],
+        time: values.startTime?.format("HH:mm:ss") ?? null,
+        notes: values.notes ?? "",
+        placeId: selectedPlace?.id ?? null,
+        placeName: selectedPlace?.displayName ?? values.location,
+        lat: selectedPlace?.location?.lat() ?? null,
+        lng: selectedPlace?.location?.lng() ?? null,
+      };
+
+      const response = await api.post<EventGetDTO>(`/trips/${trip.tripId}/events`, eventPostDTO);
+
+      const newStop: NewStopValues & { id: string } = {
+        id: String(response.eventId),
+        title: response.eventTitle,
+        location: response.placeName ?? values.location,
+        startTime: values.startTime,
+        endTime: values.endTime,
+        notes: response.notes ?? "",
+        createdBy: currentUser,
+      };
+
+      setStops(prev => ({ ...prev, [key]: [...(prev[key] ?? []), newStop] }));
+      form.resetFields();
+      setSelectedDate(null);
+    } catch (error) {
+      message.error("Failed to add stop. Please try again.");
+      console.error(error);
+    }
   };
 
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
