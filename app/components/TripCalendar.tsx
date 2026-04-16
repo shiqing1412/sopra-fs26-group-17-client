@@ -1,10 +1,12 @@
 import type { Trip } from "@/types/trip";
+import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
 import { useState } from "react";
 import { Button, ConfigProvider, Form, Input, message, Modal, TimePicker } from "antd";
 import { ApiService } from "@/api/apiService";
 import { Dayjs } from "dayjs";
 import PlaceAutocomplete from "./LocationSearch";
+import { getAvatarColor } from "@/utils/avatarColors";
 
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
@@ -12,6 +14,7 @@ const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
  
 interface TripCalendarValues {
   trip: Trip;
+  currentUser: User | null;
 }
 
 interface NewStopValues {
@@ -20,6 +23,7 @@ interface NewStopValues {
   startTime: Dayjs | null;
   endTime: Dayjs | null;
   notes: string;
+  createdBy: User | null;
 }
 
 function getDaysBetween(start: string, end: string): Date[] {
@@ -36,6 +40,13 @@ function getDaysBetween(start: string, end: string): Date[] {
 }
  
 function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops }: Readonly<{ date: Date; dayNumber: number; onAddStopClick: () => void; onStopClick: (stop: NewStopValues & { id: string }) => void; stops: (NewStopValues & { id: string })[] }>) {
+  const sortedStops = [...stops].sort((a, b) => {
+    const timeA = a.startTime?.valueOf() ?? 0;
+    const timeB = b.startTime?.valueOf() ?? 0;
+    return timeA - timeB;
+  });
+
+  
   return (
     <div className={styles.calendarDayColumn}>
       <div className={styles.calendarDayHeader}>
@@ -44,10 +55,17 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops }: Read
         <span className={styles.calendarDayName}>{DAY_NAMES[date.getDay()]}, {MONTH_NAMES[date.getMonth()]}</span>
       </div>
       <div className={styles.calendarDayStops}>
-        {stops.map(stop => (
+        {sortedStops.map(stop => (
           <button key={stop.id} className={styles.calendarStopCard} onClick={() => onStopClick(stop)}>
             <div className={styles.calendarStopTime}>
               {stop.startTime?.format("HH:mm")} {stop.endTime ? `→ ${stop.endTime.format("HH:mm")}` : ""}
+            </div>
+            <div 
+              className={styles.calendarStopAvatars} 
+              title={stop.createdBy?.username ?? ""}
+              style={{ backgroundColor: getAvatarColor(stop.createdBy?.username ?? null) }}
+            >
+              {stop.createdBy?.username?.[0]?.toUpperCase() ?? "?"}
             </div>
             <div className={styles.calendarStopTitle}>{stop.title}</div>
             <div className={styles.calendarStopLocation}>📍{stop.location}</div>
@@ -62,7 +80,7 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops }: Read
   );
 }
  
-function TripCalendar({ trip }: TripCalendarValues) {
+function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const days = getDaysBetween(trip.startDate ?? "", trip.endDate ?? "");
   const [form] = Form.useForm<NewStopValues>();
@@ -71,7 +89,7 @@ function TripCalendar({ trip }: TripCalendarValues) {
   const handleAddStop = (values: NewStopValues) => {
     if (!selectedDate) return;
     const key = selectedDate.toISOString();
-    const newStop: NewStopValues & { id: string } = { ...values, id: crypto.randomUUID() };
+    const newStop: NewStopValues & { id: string } = { ...values, id: crypto.randomUUID(), createdBy: currentUser };
     setStops(prev => ({ ...prev, [key]: [...(prev[key] ?? []), newStop] })); // keeping existing stops, adding new stops
     form.resetFields(); 
     setSelectedDate(null); // close modal after adding stop

@@ -11,9 +11,9 @@ import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
 import Logout from "@/components/Logout";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
+import { getAvatarColor } from "@/utils/avatarColors";
 
 const ILLUSTRATIONS = ["🌍", "🗺️", "✈️", "🏖️", "🏔️", "🌴", "🗽", "🎡"];
-const AVATAR_COLORS = ["#c0392b", "#2980b9", "#27ae60", "#8e44ad", "#d35400", "#16a085"];
 
 function getIllustration(id: string | null): string {
   if (!id) return "🗺️";
@@ -108,7 +108,9 @@ const Dashboard: React.FC = () => {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <div className={styles.navUser}>
-            <div className={styles.navAvatar}>
+            <div
+              className={styles.navAvatar}
+              style={{ backgroundColor: getAvatarColor(user?.username ?? null) }}>
               {user?.username?.[0]?.toUpperCase() ?? "?"}
             </div>
             <span className={styles.navUsername}>{user?.username ?? "Guest"}</span>
@@ -133,7 +135,7 @@ const Dashboard: React.FC = () => {
             const status = getStatus(trip.startDate, trip.endDate);
             const members = trip.collaborators
               ? trip.collaborators.split(",").filter(Boolean)
-              : [];
+              : [user?.username ?? ""].filter(Boolean);              
             const badgeClass = status === "active"
               ? styles.badgeActive
               : status === "upcoming"
@@ -162,7 +164,7 @@ const Dashboard: React.FC = () => {
                         <div
                           key={m}
                           className={styles.avatar}
-                          style={{ background: AVATAR_COLORS[i % AVATAR_COLORS.length] }}
+                          style={{ background: getAvatarColor(m ?? null) }}
                           title={m}
                         >
                           {m[0]?.toUpperCase()}
