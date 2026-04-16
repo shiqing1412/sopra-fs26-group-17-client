@@ -111,7 +111,7 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
       const api = new ApiService();
       const eventPostDTO = {
         eventTitle: values.title,
-        dayDate: selectedDate.toISOString().split("T")[0],
+        dayDate: `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`,
         time: values.startTime?.format("HH:mm:ss") ?? null,
         notes: values.notes ?? "",
         placeId: selectedPlace?.id ?? null,
@@ -136,7 +136,8 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
       form.resetFields();
       setSelectedDate(null);
     } catch (error) {
-      message.error("Failed to add stop. Please try again.");
+      const msg = error instanceof Error ? error.message : "Unknown error";
+      message.error(`Failed to add stop: ${msg}`);
       console.error(error);
     }
   };
