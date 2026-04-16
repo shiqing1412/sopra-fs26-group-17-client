@@ -46,7 +46,7 @@ const Profile: React.FC = () => {
     };
 
     fetchMembers();
-  }, [trip?.tripId]);
+  }, [trip?.tripId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   {/* todo functions: addStop, editStop */}
   if (isLoading) return null;

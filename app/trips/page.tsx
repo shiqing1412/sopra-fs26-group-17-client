@@ -160,7 +160,7 @@ const Dashboard: React.FC = () => {
                   </div>
                   <div className={styles.cardFooter}>
                     <div className={styles.avatarStack}>
-                      {members.slice(0, 4).map((m, i) => (
+                      {members.slice(0, 4).map((m) => (
                         <div
                           key={m}
                           className={styles.avatar}
