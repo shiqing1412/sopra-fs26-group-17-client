@@ -16,7 +16,7 @@ interface StopModalProps {
   } | null;
   selectedDate: Date | null;
   form: FormInstance<StopFormValues>; 
-  setSelectedPlace: (place: any) => void;
+  setSelectedPlace: (place: google.maps.places.Place | null) => void;
 }
 
 const StopModal: React.FC<StopModalProps> = ({ 
