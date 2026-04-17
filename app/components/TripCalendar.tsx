@@ -2,7 +2,7 @@ import type { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
 import { useState, useEffect } from "react";
-import { Button, ConfigProvider, Form, Input, message, Modal, TimePicker } from "antd";
+import { Button, ConfigProvider, Form, FormInstance, Input, message, Modal, TimePicker } from "antd";
 import { ApiService } from "@/api/apiService";
 import dayjs, { Dayjs } from "dayjs";
 import PlaceAutocomplete from "./LocationSearch";
@@ -342,41 +342,29 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
           onCancel={() => setViewingStop(null)}
           footer={null}
         >
-          <Form form={form} layout="vertical" size="large" style={{ marginTop: 16 }} onFinish={handleAddStop}>
-            <Form.Item name="title" label="TITLE" rules={[{ required: true, message: "Please enter a title" }]} style={{ marginBottom: 12}}>
-              <Input placeholder={viewingStop?.stop.title} disabled />
-            </Form.Item>
-            <Form.Item name="location" label="LOCATION" rules={[{ required: true, message: "Please enter a location" }]} style={{ marginBottom: 12}}>
-              <Input placeholder={viewingStop?.stop.location} disabled />
-            </Form.Item>
-            <Form.Item label="TIME" rules={[{ required: true, message: "Please enter a time" }]} style={{ marginBottom: 12}}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Form.Item name="startTime" noStyle>
-                  <Input placeholder={viewingStop?.stop.startTime?.format("HH:mm")} disabled />
-                </Form.Item>
-                <span style={{ color: "#c0392b" }}>→</span>
-                <Form.Item name="endTime" noStyle>
-                  <Input placeholder={viewingStop?.stop.endTime?.format("HH:mm")} disabled />
-                </Form.Item>
-              </div>
-            </Form.Item>
-            <Form.Item name="notes" label="NOTES">
-              <Input.TextArea placeholder={viewingStop?.stop.notes} rows={3} disabled />
-            </Form.Item>
-            <Form.Item style={{ marginBottom: 0, marginTop: 8 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Button danger onClick={() => setConfirmingDelete(true)}>Delete</Button>
-                <Button type="primary" onClick={() => {
-                  if (viewingStop) form.setFieldsValue({
-                    ...viewingStop.stop,
-                    startTime: viewingStop.stop.startTime ? dayjs(viewingStop.stop.startTime) : null,
-                    endTime: viewingStop.stop.endTime ? dayjs(viewingStop.stop.endTime) : null,
-                  });
-                  setEditingStop(viewingStop); 
-                  setViewingStop(null)}}>Edit</Button>
-              </div>
-            </Form.Item>
-          </Form>
+          <div className={styles.calendarDayStops}>
+              <button className={styles.calendarStopCard}>
+                <div className={styles.calendarStopTime}>
+                    {viewingStop?.stop.startTime?.format("HH:mm")} {viewingStop?.stop.endTime ? `→ ${viewingStop?.stop.endTime.format("HH:mm")}` : ""}
+                </div>
+                <div className={styles.calendarStopTitle}>{viewingStop?.stop.title}</div>
+                <div className={styles.calendarStopLocation}>📍{viewingStop?.stop.location}</div>
+                <div className={styles.calendarStopNotes}>{viewingStop?.stop.notes}</div>
+              </button>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <Button danger onClick={() => setConfirmingDelete(true)}>Delete</Button>
+              <Button type="primary" onClick={() => {
+                if (viewingStop) form.setFieldsValue({
+                  ...viewingStop.stop,
+                  startTime: viewingStop.stop.startTime ? dayjs(viewingStop.stop.startTime) : null,
+                  endTime: viewingStop.stop.endTime ? dayjs(viewingStop.stop.endTime) : null,
+                });
+                setEditingStop(viewingStop); 
+                setViewingStop(null)}}>
+                  Edit
+                </Button>
+            </div>
+          </div>
         </Modal>
 
         {/* Delete Stop Modal */}
