@@ -178,6 +178,7 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
   const [viewingStop, setViewingStop] = useState<{ stop: NewStopValues & { id: string }; date: Date } | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [editingStop, setEditingStop] = useState<{ stop: NewStopValues & { id: string }; date: Date } | null>(null);
 
   const handleDeleteStop = async () => {
     if (!viewingStop) return;
@@ -199,6 +200,10 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
     }
   };
 
+  const handleEditStop = async (values: NewStopValues) => {
+  };
+
+  console.log(editingStop?.stop.location)
   return (
     <div className={styles.calendarScrollWrapper}>
       <div className={styles.calendarGrid}>
@@ -224,6 +229,8 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
           }
         }
       }}>
+
+        {/* Add Stop Modal */}
         <Modal
           title={
             <div>
@@ -283,6 +290,8 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
             </Form.Item>
           </Form>
         </Modal> 
+
+        {/* View Stop Modal */}
         <Modal
           title={
             <div>
@@ -319,11 +328,20 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
             <Form.Item style={{ marginBottom: 0, marginTop: 8 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <Button danger onClick={() => setConfirmingDelete(true)}>Delete</Button>
-                <Button type="primary" >Edit</Button>
+                <Button type="primary" onClick={() => {
+                  if (viewingStop) form.setFieldsValue({
+                    ...viewingStop.stop,
+                    startTime: viewingStop.stop.startTime ? dayjs(viewingStop.stop.startTime) : null,
+                    endTime: viewingStop.stop.endTime ? dayjs(viewingStop.stop.endTime) : null,
+                  });
+                  setEditingStop(viewingStop); 
+                  setViewingStop(null)}}>Edit</Button>
               </div>
             </Form.Item>
           </Form>
         </Modal>
+
+        {/* Delete Stop Modal */}
         <Modal
           open={confirmingDelete}
           onCancel={() => setConfirmingDelete(false)}
@@ -342,6 +360,69 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
               <Button danger type="primary" loading={deleteLoading} onClick={handleDeleteStop}>Delete</Button>
             </div>
           </div>
+        </Modal>
+
+        {/* Edit Stop Modal */}
+        <Modal
+          title={
+            <div>
+              <div style={{ color: "#000", fontSize: 18, fontWeight: 600 }}>
+                {editingStop?.date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+              </div>
+            </div>
+          }
+          open={!!editingStop}
+          onCancel={() => { setEditingStop(null); form.resetFields(); }}
+          footer={null}
+        >
+          <Form form={form} layout="vertical" size="large" style={{ marginTop: 16 }} onFinish={handleEditStop}>
+            <Form.Item name="title" label="TITLE" rules={[{ required: true, message: "Please enter a title" }]} style={{ marginBottom: 12}}>
+              <Input placeholder={editingStop?.stop.title} />
+            </Form.Item>
+            <Form.Item name="location" label="LOCATION" rules={[{ required: true, message: "Please enter a location" }]} style={{ marginBottom: 12}}>
+              <PlaceAutocomplete 
+                key={editingStop?.stop.location}
+                onPlaceSelect={setSelectedPlace}
+                value={editingStop?.stop.location}
+              />
+            </Form.Item>
+            <Form.Item label="TIME" rules={[{ required: true, message: "Please enter a time" }]} style={{ marginBottom: 12}}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <Form.Item name="startTime" noStyle>
+                  <TimePicker format="HH:mm" placeholder="From" style={{ flex: 1 }} needConfirm={false} />
+                </Form.Item>
+                <span style={{ color: "#c0392b" }}>→</span>
+                <Form.Item name="endTime" noStyle>
+                  <TimePicker 
+                    format="HH:mm" 
+                    placeholder="To" 
+                    style={{ flex: 1 }} 
+                    needConfirm={false}
+                    disabledTime={() => {
+                    const start = form.getFieldValue("startTime");
+                    if (!start) return {};
+                    return {
+                      disabledHours: () => Array.from({ length: start.hour() }, (_, i) => i),
+                      disabledMinutes: (hour) =>
+                        hour === start.hour()
+                          ? Array.from({ length: start.minute() + 1 }, (_, i) => i)
+                          : [],
+                    };
+                    }} 
+                  />
+                </Form.Item>
+              </div>
+            </Form.Item>
+            <Form.Item name="notes" label="NOTES">
+              <Input.TextArea placeholder={editingStop?.stop.notes} rows={3} />
+            </Form.Item>
+            <Form.Item style={{ marginBottom: 0, marginTop: 8 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <Button onClick={() => {setEditingStop(null); form.resetFields();}}>Cancel</Button>
+                <Button type="primary" htmlType="submit">Save</Button>
+              </div>
+            </Form.Item>
+          </Form>
         </Modal>
       </ConfigProvider>
     </div>
