@@ -2,11 +2,11 @@ import type { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
 import { useState, useEffect } from "react";
-import { Button, ConfigProvider, Form, Input, message, Modal, TimePicker } from "antd";
+import { Button, ConfigProvider, Form, message, Modal } from "antd";
 import { ApiService } from "@/api/apiService";
 import dayjs, { Dayjs } from "dayjs";
-import PlaceAutocomplete from "./LocationSearch";
 import { getAvatarColor } from "@/utils/avatarColors";
+import StopModal, { StopFormValues } from "./StopModal";
 
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
@@ -34,7 +34,8 @@ interface TripCalendarValues {
   currentUser: User | null;
 }
 
-interface NewStopValues {
+export interface NewStopValues {
+  id: string;
   title: string;
   location: string;
   startTime: Dayjs | null;
@@ -100,10 +101,10 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops }: Read
 function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const days = getDaysBetween(trip.startDate ?? "", trip.endDate ?? "");
-  const [form] = Form.useForm<NewStopValues>();
-  const [stops, setStops] = useState<Record<string, (NewStopValues & { id: string })[]>>({});
+  const [form] = Form.useForm<StopFormValues>();
+  const [stops, setStops] = useState<Record<string, (NewStopValues)[]>>({});
 
-  const handleAddStop = async (values: NewStopValues) => {
+  const handleAddStop = async (values: Partial<NewStopValues>) => {
     if (!selectedDate) return;
     const key = selectedDate.toISOString();
 
@@ -122,19 +123,18 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
 
       const response = await api.post<EventGetDTO>(`/trips/${trip.tripId}/events`, eventPostDTO);
 
-      const newStop: NewStopValues & { id: string } = {
+      const newStop: NewStopValues = {
         id: String(response.eventId),
         title: response.eventTitle,
         location: response.placeName ?? values.location,
-        startTime: values.startTime,
-        endTime: values.endTime,
+        startTime: values.startTime ?? null,
+        endTime: values.endTime ?? null,
         notes: response.notes ?? "",
         createdBy: currentUser,
       };
 
       setStops(prev => ({ ...prev, [key]: [...(prev[key] ?? []), newStop] }));
-      form.resetFields();
-      setSelectedDate(null);
+      setSelectedPlace(null);
     } catch (error) {
       const msg = error instanceof Error ? error.message : "Unknown error";
       message.error(`Failed to add stop: ${msg}`);
@@ -175,9 +175,10 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
   }, [trip.tripId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
-  const [viewingStop, setViewingStop] = useState<{ stop: NewStopValues & { id: string }; date: Date } | null>(null);
+  const [viewingStop, setViewingStop] = useState<{ stop: NewStopValues; date: Date } | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [editingStop, setEditingStop] = useState<{ stop: NewStopValues; date: Date } | null>(null);
 
   const handleDeleteStop = async () => {
     if (!viewingStop) return;
@@ -197,6 +198,66 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
     } finally {
       setDeleteLoading(false);
     }
+  };
+
+  const handleEditStop = async (values: NewStopValues) => {
+    if (!editingStop) return;
+
+    try {
+      const api = new ApiService();
+      const key = editingStop.date.toISOString();
+      const eventPutDTO = {
+        eventTitle: values.title,
+        dayDate: `${editingStop.date.getFullYear()}-${String(editingStop.date.getMonth() + 1).padStart(2, "0")}-${String(editingStop.date.getDate()).padStart(2, "0")}`,
+        time: values.startTime?.format("HH:mm:ss") ?? null,
+        notes: values.notes ?? "",
+        placeId: selectedPlace?.id ?? null,
+        placeName: selectedPlace?.displayName ?? values.location,
+        lat: selectedPlace?.location?.lat() ?? null,
+        lng: selectedPlace?.location?.lng() ?? null,
+      };
+
+      const response = await api.put<EventGetDTO>(`/trips/${trip.tripId}/events/${editingStop.stop.id}`, eventPutDTO);
+
+      const updatedStop: NewStopValues = {
+        id: String(response.eventId),
+        title: response.eventTitle,
+        location: response.placeName,
+        startTime: values.startTime,
+        endTime: values.endTime,
+        notes: response.notes ?? "",
+        createdBy: editingStop.stop.createdBy,
+      };
+
+      setStops(prev => ({
+        ...prev,
+        [key]: (prev[key] ?? []).map(s => s.id === editingStop.stop.id ? updatedStop : s),
+      }));
+      setEditingStop(null);
+
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : "Unknown error";
+      alert(`Failed to edit stop: ${msg}`);
+    }
+  };
+
+  const handleFinish = async (values: StopFormValues) => {
+    try {
+    if (editingStop) {
+      const updatedStop: NewStopValues = {
+        ...values,
+        id: editingStop.stop.id,
+        createdBy: editingStop.stop.createdBy,
+      };
+      await handleEditStop(updatedStop);
+      setEditingStop(null);
+    } else {
+      await handleAddStop(values);
+      setSelectedDate(null);
+    }
+  } catch (error) {
+    console.error("Failed to save stop:", error);
+  }
   };
 
   return (
@@ -224,65 +285,22 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
           }
         }
       }}>
-        <Modal
-          title={
-            <div>
-              <div style={{ color: "#000", fontSize: 18, fontWeight: 600 }}>Add a Stop</div>
-              <div style={{ color: "#888", fontSize: 14, fontWeight: 400 }}>
-                {selectedDate?.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
-              </div>
-            </div>
-          }
-          open={selectedDate !== null}
-          onCancel={() => setSelectedDate(null)}
-          footer={null}
-          destroyOnHidden
-        >
-          <Form form={form} layout="vertical" size="large" style={{ marginTop: 16 }} onFinish={handleAddStop}>
-            <Form.Item name="title" label="TITLE" rules={[{ required: true, message: "Please enter a title" }]} style={{ marginBottom: 12}}>
-              <Input placeholder="e.g. Karaoke Night" />
-            </Form.Item>
-            <Form.Item name="location" label="LOCATION" rules={[{ required: true, message: "Please enter a location" }]} style={{ marginBottom: 12}}>
-              <PlaceAutocomplete onPlaceSelect={setSelectedPlace} />
-            </Form.Item>
-            <Form.Item label="TIME" rules={[{ required: true, message: "Please enter a time" }]} style={{ marginBottom: 12}}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Form.Item name="startTime" noStyle>
-                  <TimePicker format="HH:mm" placeholder="From" style={{ flex: 1 }} needConfirm={false} />
-                </Form.Item>
-                <span style={{ color: "#c0392b" }}>→</span>
-                <Form.Item name="endTime" noStyle>
-                  <TimePicker 
-                    format="HH:mm" 
-                    placeholder="To" 
-                    style={{ flex: 1 }} 
-                    needConfirm={false}
-                    disabledTime={() => {
-                    const start = form.getFieldValue("startTime");
-                    if (!start) return {};
-                    return {
-                      disabledHours: () => Array.from({ length: start.hour() }, (_, i) => i),
-                      disabledMinutes: (hour) =>
-                        hour === start.hour()
-                          ? Array.from({ length: start.minute() + 1 }, (_, i) => i)
-                          : [],
-                    };
-                    }} 
-                  />
-                </Form.Item>
-              </div>
-            </Form.Item>
-            <Form.Item name="notes" label="NOTES">
-              <Input.TextArea placeholder="Reservations, tips, reminders…" rows={3} />
-            </Form.Item>
-            <Form.Item style={{ marginBottom: 0, marginTop: 8 }}>
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
-                <Button onClick={() => setSelectedDate(null)}>Cancel</Button>
-                <Button type="primary" htmlType="submit">Add Stop</Button>
-              </div>
-            </Form.Item>
-          </Form>
-        </Modal> 
+
+        {/* Add/Edit Stop Modal */}
+        <StopModal 
+          isOpen={selectedDate !== null || !!editingStop}
+          onClose={() => {
+            setSelectedDate(null);
+            setEditingStop(null);
+          }}
+          onFinish={handleFinish}
+          initialData={editingStop} 
+          selectedDate={selectedDate}
+          form={form}
+          setSelectedPlace={setSelectedPlace}
+        />
+
+        {/* View Stop Modal */}
         <Modal
           title={
             <div>
@@ -295,35 +313,32 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
           onCancel={() => setViewingStop(null)}
           footer={null}
         >
-          <Form form={form} layout="vertical" size="large" style={{ marginTop: 16 }} onFinish={handleAddStop}>
-            <Form.Item name="title" label="TITLE" rules={[{ required: true, message: "Please enter a title" }]} style={{ marginBottom: 12}}>
-              <Input placeholder={viewingStop?.stop.title} disabled />
-            </Form.Item>
-            <Form.Item name="location" label="LOCATION" rules={[{ required: true, message: "Please enter a location" }]} style={{ marginBottom: 12}}>
-              <Input placeholder={viewingStop?.stop.location} disabled />
-            </Form.Item>
-            <Form.Item label="TIME" rules={[{ required: true, message: "Please enter a time" }]} style={{ marginBottom: 12}}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Form.Item name="startTime" noStyle>
-                  <Input placeholder={viewingStop?.stop.startTime?.format("HH:mm")} disabled />
-                </Form.Item>
-                <span style={{ color: "#c0392b" }}>→</span>
-                <Form.Item name="endTime" noStyle>
-                  <Input placeholder={viewingStop?.stop.endTime?.format("HH:mm")} disabled />
-                </Form.Item>
-              </div>
-            </Form.Item>
-            <Form.Item name="notes" label="NOTES">
-              <Input.TextArea placeholder={viewingStop?.stop.notes} rows={3} disabled />
-            </Form.Item>
-            <Form.Item style={{ marginBottom: 0, marginTop: 8 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Button danger onClick={() => setConfirmingDelete(true)}>Delete</Button>
-                <Button type="primary" >Edit</Button>
-              </div>
-            </Form.Item>
-          </Form>
+          <div className={styles.calendarDayStops}>
+              <button className={styles.calendarStopCard}>
+                <div className={styles.calendarStopTime}>
+                    {viewingStop?.stop.startTime?.format("HH:mm")} {viewingStop?.stop.endTime ? `→ ${viewingStop?.stop.endTime.format("HH:mm")}` : ""}
+                </div>
+                <div className={styles.calendarStopTitle}>{viewingStop?.stop.title}</div>
+                <div className={styles.calendarStopLocation}>📍{viewingStop?.stop.location}</div>
+                <div className={styles.calendarStopNotes}>{viewingStop?.stop.notes}</div>
+              </button>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <Button danger onClick={() => setConfirmingDelete(true)}>Delete</Button>
+              <Button type="primary" onClick={() => {
+                if (viewingStop) form.setFieldsValue({
+                  ...viewingStop.stop,
+                  startTime: viewingStop.stop.startTime ? dayjs(viewingStop.stop.startTime) : null,
+                  endTime: viewingStop.stop.endTime ? dayjs(viewingStop.stop.endTime) : null,
+                });
+                setEditingStop(viewingStop); 
+                setViewingStop(null)}}>
+                  Edit
+                </Button>
+            </div>
+          </div>
         </Modal>
+
+        {/* Delete Stop Modal */}
         <Modal
           open={confirmingDelete}
           onCancel={() => setConfirmingDelete(false)}
@@ -343,6 +358,7 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
             </div>
           </div>
         </Modal>
+
       </ConfigProvider>
     </div>
   );
