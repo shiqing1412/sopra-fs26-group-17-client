@@ -35,6 +35,7 @@ interface TripCalendarValues {
 }
 
 interface NewStopValues {
+  id: string;
   title: string;
   location: string;
   startTime: Dayjs | null;
@@ -101,7 +102,7 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const days = getDaysBetween(trip.startDate ?? "", trip.endDate ?? "");
   const [form] = Form.useForm<NewStopValues>();
-  const [stops, setStops] = useState<Record<string, (NewStopValues & { id: string })[]>>({});
+  const [stops, setStops] = useState<Record<string, (NewStopValues)[]>>({});
 
   const handleAddStop = async (values: NewStopValues) => {
     if (!selectedDate) return;
@@ -122,7 +123,7 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
 
       const response = await api.post<EventGetDTO>(`/trips/${trip.tripId}/events`, eventPostDTO);
 
-      const newStop: NewStopValues & { id: string } = {
+      const newStop: NewStopValues = {
         id: String(response.eventId),
         title: response.eventTitle,
         location: response.placeName ?? values.location,
@@ -201,9 +202,46 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
   };
 
   const handleEditStop = async (values: NewStopValues) => {
+    if (!editingStop) return;
+
+    try {
+      const api = new ApiService();
+      const key = editingStop.date.toISOString();
+      const eventPutDTO = {
+        eventTitle: values.title,
+        dayDate: `${editingStop.date.getFullYear()}-${String(editingStop.date.getMonth() + 1).padStart(2, "0")}-${String(editingStop.date.getDate()).padStart(2, "0")}`,
+        time: values.startTime?.format("HH:mm:ss") ?? null,
+        notes: values.notes ?? "",
+        placeId: selectedPlace?.id ?? null,
+        placeName: selectedPlace?.displayName ?? values.location,
+        lat: selectedPlace?.location?.lat() ?? null,
+        lng: selectedPlace?.location?.lng() ?? null,
+      };
+
+      const response = await api.put<EventGetDTO>(`/trips/${trip.tripId}/events/${editingStop.stop.id}`, eventPutDTO);
+
+      const updatedStop: NewStopValues = {
+        id: String(response.eventId),
+        title: response.eventTitle,
+        location: response.placeName,
+        startTime: values.startTime,
+        endTime: values.endTime,
+        notes: response.notes ?? "",
+        createdBy: editingStop.stop.createdBy,
+      };
+
+      setStops(prev => ({
+        ...prev,
+        [key]: (prev[key] ?? []).map(s => s.id === editingStop.stop.id ? updatedStop : s),
+      }));
+      setEditingStop(null);
+
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : "Unknown error";
+      alert(`Failed to edit stop: ${msg}`);
+    }
   };
 
-  console.log(editingStop?.stop.location)
   return (
     <div className={styles.calendarScrollWrapper}>
       <div className={styles.calendarGrid}>
