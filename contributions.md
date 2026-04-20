@@ -97,6 +97,8 @@ reason).
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@dsgji4g4** | 16 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/90ce257a62108b3aa6d54aec01ee6bb175496251 | Implement "edit an event" function | Critical function |
 |                    | 16 April  | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/7f575a905f40d6526f27a858828dcccda88813be | Implement "delete an event" function | Critical function |
+|                    | 19 April  | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/7f575a905f40d6526f27a858828dcccda88813be | UserServiceTest | Create tests to en hance robustness of UserService |
+|                    | 20 April  | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/7f575a905f40d6526f27a858828dcccda88813be | TripServiceTest | Create tests to enhance robustness of TestService |
 
 ---
 
