@@ -58,6 +58,12 @@ export class ApiService {
       error.status = res.status;
       throw error;
     }
+    
+    // handle 204 No Content or responses without Content-Type header by returning null
+    if (res.status === 204 || !res.headers.get("Content-Type")) {
+      return Promise.resolve(null as T);
+    }
+
     return res.headers.get("Content-Type")?.includes("application/json")
       ? (res.json() as Promise<T>)
       : Promise.resolve(res as T);

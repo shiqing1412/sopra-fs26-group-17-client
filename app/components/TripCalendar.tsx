@@ -103,16 +103,18 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
   const days = getDaysBetween(trip.startDate ?? "", trip.endDate ?? "");
   const [form] = Form.useForm<StopFormValues>();
   const [stops, setStops] = useState<Record<string, (NewStopValues)[]>>({});
+  const dateKey = (date: Date) =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
   const handleAddStop = async (values: Partial<NewStopValues>) => {
     if (!selectedDate) return;
-    const key = selectedDate.toISOString();
+    const key = dateKey(selectedDate);
 
     try {
       const api = new ApiService();
       const eventPostDTO = {
         eventTitle: values.title,
-        dayDate: `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`,
+        date: key,
         time: values.startTime?.format("HH:mm:ss") ?? null,
         notes: values.notes ?? "",
         placeId: selectedPlace?.id ?? null,
@@ -147,6 +149,7 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
 
     const fetchEvents = async () => {
       try {
+        
         const api = new ApiService();
         const days = await api.get<DayDTO[]>(`/trips/${trip.tripId}/events`);
 
@@ -154,7 +157,7 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
         for (const day of days) {
           const date = new Date(day.date + "T00:00:00");
           date.setHours(0, 0, 0, 0);
-          const key = date.toISOString();
+          const key = day.date;
           fetched[key] = day.events.map(event => ({
             id: String(event.eventId),
             title: event.eventTitle,
@@ -166,6 +169,8 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
           }));
         }
         setStops(fetched);
+        console.log("fetched keys:", Object.keys(fetched));
+        console.log("stops keys after set:", Object.keys(stops));
       } catch (error) {
         console.error("Failed to fetch events", error);
       }
@@ -182,7 +187,7 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
 
   const handleDeleteStop = async () => {
     if (!viewingStop) return;
-    const key = viewingStop.date.toISOString();
+    const key = dateKey(viewingStop.date);
     setDeleteLoading(true);
     try {
       const api = new ApiService();
@@ -205,10 +210,10 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
 
     try {
       const api = new ApiService();
-      const key = editingStop.date.toISOString();
+      const key = dateKey(editingStop.date);
       const eventPutDTO = {
         eventTitle: values.title,
-        dayDate: `${editingStop.date.getFullYear()}-${String(editingStop.date.getMonth() + 1).padStart(2, "0")}-${String(editingStop.date.getDate()).padStart(2, "0")}`,
+        date: key,
         time: values.startTime?.format("HH:mm:ss") ?? null,
         notes: values.notes ?? "",
         placeId: selectedPlace?.id ?? null,
@@ -217,15 +222,16 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
         lng: selectedPlace?.location?.lng() ?? null,
       };
 
-      const response = await api.put<EventGetDTO>(`/trips/${trip.tripId}/events/${editingStop.stop.id}`, eventPutDTO);
+      await api.put<void>(`/trips/${trip.tripId}/events/${editingStop.stop.id}`, eventPutDTO);
+      console.log("put succeeded");
 
       const updatedStop: NewStopValues = {
-        id: String(response.eventId),
-        title: response.eventTitle,
-        location: response.placeName,
+        id: editingStop.stop.id,
+        title: values.title,
+        location: selectedPlace?.displayName ?? values.location,
         startTime: values.startTime,
         endTime: values.endTime,
-        notes: response.notes ?? "",
+        notes: values.notes ?? "",
         createdBy: editingStop.stop.createdBy,
       };
 
@@ -243,21 +249,21 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
 
   const handleFinish = async (values: StopFormValues) => {
     try {
-    if (editingStop) {
-      const updatedStop: NewStopValues = {
-        ...values,
-        id: editingStop.stop.id,
-        createdBy: editingStop.stop.createdBy,
-      };
-      await handleEditStop(updatedStop);
-      setEditingStop(null);
-    } else {
-      await handleAddStop(values);
-      setSelectedDate(null);
+      if (editingStop) {
+        const updatedStop: NewStopValues = {
+          ...values,
+          id: editingStop.stop.id,
+          createdBy: editingStop.stop.createdBy,
+        };
+        await handleEditStop(updatedStop);
+        setEditingStop(null);
+      } else {
+        await handleAddStop(values);
+        setSelectedDate(null);
+      }
+    } catch (error) {
+      console.error("Failed to save stop:", error);
     }
-  } catch (error) {
-    console.error("Failed to save stop:", error);
-  }
   };
 
   return (
@@ -265,11 +271,11 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
       <div className={styles.calendarGrid}>
         {days.map((date, i) => (
           <DayColumn 
-            key={date.toISOString()} 
+            key={dateKey(date)} 
             date={date} 
             dayNumber={i + 1} 
             onAddStopClick={() => setSelectedDate(date)} 
-            stops={stops[date.toISOString()] ?? []} 
+            stops={stops[dateKey(date)] ?? []} 
             onStopClick={(stop) => setViewingStop({ stop, date })}
           />
         ))}
