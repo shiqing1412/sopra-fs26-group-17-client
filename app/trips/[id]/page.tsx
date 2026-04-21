@@ -48,16 +48,22 @@ const Profile: React.FC = () => {
   useEffect(() => {
     if (!trip?.tripId) return;
 
-    const fetchMembers = async () => {
+    const fetchData = async () => {
       try {
-        const response = await apiService.get<{ members: string[] }>(`/trips/${trip.tripId}/members`);
-        setAllMembers(response.members || []);
+        const memberResponse = await apiService.get<{ members: string[] }>(`/trips/${trip.tripId}/members`);
+        setAllMembers(memberResponse.members || []);
+
+        const tripResponse = await apiService.get<Trip>(`/trips/${trip.tripId}`)
+        setTrip(tripResponse || []);
       } catch (error) {
         console.error("Failed to fetch members", error);
       }
     };
 
-    fetchMembers();
+    fetchData();
+    const intervalId = setInterval(fetchData, 5000); // polls every 5sec
+
+    return () => clearInterval(intervalId);
   }, [trip?.tripId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   {/* todo functions: addStop, editStop */}
