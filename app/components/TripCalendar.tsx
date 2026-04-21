@@ -169,8 +169,6 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
           }));
         }
         setStops(fetched);
-        console.log("fetched keys:", Object.keys(fetched));
-        console.log("stops keys after set:", Object.keys(stops));
       } catch (error) {
         console.error("Failed to fetch events", error);
       }
@@ -223,7 +221,6 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
       };
 
       await api.put<void>(`/trips/${trip.tripId}/events/${editingStop.stop.id}`, eventPutDTO);
-      console.log("put succeeded");
 
       const updatedStop: NewStopValues = {
         id: editingStop.stop.id,
