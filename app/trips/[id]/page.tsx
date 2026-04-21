@@ -26,6 +26,7 @@ const Profile: React.FC = () => {
   const [shareLinkOpen, setShareLinkOpen] = useState(false);
   const [LeaveTripOpen, setLeaveTripOpen] = useState(false);
   const [allMembers, setAllMembers] = useState<string[]>([]);
+  const [onlineMembers, setOnlineMembers] = useState<string[]>([]);
   const [trip, setTrip] = useState<Trip | null>(null);
 
   const { value: user } = useLocalStorage<User | null>("user", null);
@@ -50,8 +51,9 @@ const Profile: React.FC = () => {
 
     const fetchMembers = async () => {
       try {
-        const response = await apiService.get<{ members: string[] }>(`/trips/${trip.tripId}/members`);
-        setAllMembers(response.members || []);
+        const response = await apiService.get<{ userId: number; username: string; role: string; status: string }[]>(`/trips/${trip.tripId}/members`);
+        setAllMembers(response.map((m) => m.username));
+        setOnlineMembers(response.filter((m) => m.status === "ONLINE").map((m) => m.username));
       } catch (error) {
         console.error("Failed to fetch members", error);
       }
@@ -60,7 +62,6 @@ const Profile: React.FC = () => {
     fetchMembers();
   }, [trip?.tripId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  {/* todo functions: addStop, editStop */}
   if (isLoading) return null;
 
   return (
@@ -93,9 +94,8 @@ const Profile: React.FC = () => {
           
           {/* Online indicator for trip members */}
           <MemberOnlineStatus
-            trip={trip}
-            currentUser={user}
             allMembers={allMembers}
+            onlineUsernames={onlineMembers}
           />
           
           <button className={styles.settingsBtn} onClick={() => setSettingsOpen(true)}>

@@ -1,81 +1,61 @@
 "use client";
 
-import React, { useState } from "react";
-import { Trip } from "@/types/trip";
-import { User } from "@/types/user";
+import React from "react";
 import styles from "@/styles/trips.module.css";
 
 const AVATAR_COLORS = ["#c0392b", "#2980b9", "#27ae60", "#8e44ad", "#d35400", "#16a085"];
 
 interface OnlineStatusProps {
-  trip: Trip | null;
-  currentUser?: User | null;
-  onlineUsernames?: string[]; 
   allMembers: string[];
-  maxAvatars?: number; 
+  onlineUsernames?: string[];
 }
 
-const MemberOnlineStatus: React.FC<OnlineStatusProps> = ({ 
-  trip, 
-  currentUser,
-  onlineUsernames = [], 
+const MemberOnlineStatus: React.FC<OnlineStatusProps> = ({
   allMembers,
-  maxAvatars 
+  onlineUsernames = [],
 }) => {
-  const [isLoading] = useState<boolean>(true);
-
-  if (isLoading) return null;
-
   const displayMax = 5;
-  // online members excluding current user
-  const onlineMembers = allMembers.filter(
-    (username) => onlineUsernames.includes(username) && username !== currentUser?.username
-  );
-  const onlineCount = onlineMembers.length;
-  if (onlineCount === 0) return null;
-  const shownAvatars = onlineMembers.slice(0, displayMax);
-  const overflowCount = onlineCount - shownAvatars.length;
+
+  if (allMembers.length === 0) return null;
+
+  const shownAvatars = allMembers.slice(0, displayMax);
+  const overflowCount = allMembers.length - shownAvatars.length;
 
   return (
-    <div className={styles.onlineStatusContainer}>
-      
-      {/* online badge and text */}
-      <div className={styles.onlineBadgeWrapper}>
-        <span className={styles.onlineDot}></span>
-        <span className={styles.onlineStatusText}>
-          {onlineCount} online
-        </span>
-      </div>
-
-      {/* overlapping avatars */}
-      <div className={styles.avatarStack}>
-        {shownAvatars.map((username) => {
-          const colorIndex = allMembers.indexOf(username);
-          const color = AVATAR_COLORS[colorIndex % AVATAR_COLORS.length];
-          const initials = username.substring(0, 2).toUpperCase();
-
-          return (
-            <div
-              key={username}
-              className={styles.avatar}
-              style={{ backgroundColor: color }}
-              title={username}
-            >
-              {initials}
-            </div>
-          );
-        })}
-        
-        {/* +N avatar bubbles */}
-        {overflowCount > 0 && (
-          <div 
-            className={`${styles.avatar} ${styles.avatarOverflow}`}
-            title={`+ ${overflowCount}`}
+    <div className={styles.avatarStack}>
+      {shownAvatars.map((username, index) => {
+        const isOnline = onlineUsernames.includes(username);
+        return (
+          <div
+            key={username}
+            className={styles.avatar}
+            style={{ backgroundColor: AVATAR_COLORS[index % AVATAR_COLORS.length], position: "relative" }}
+            title={`${username} ${isOnline ? "(online)" : "(offline)"}`}
           >
-            +{overflowCount}
+            {username.substring(0, 2).toUpperCase()}
+            {isOnline && (
+              <span style={{
+                position: "absolute",
+                bottom: 1,
+                right: 1,
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                backgroundColor: "#2ecc71",
+                border: "1.5px solid white",
+              }} />
+            )}
           </div>
-        )}
-      </div>
+        );
+      })}
+      {overflowCount > 0 && (
+        <div
+          className={`${styles.avatar} ${styles.avatarOverflow}`}
+          title={`+${overflowCount} more`}
+        >
+          +{overflowCount}
+        </div>
+      )}
     </div>
   );
 };
