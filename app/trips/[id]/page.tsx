@@ -16,28 +16,40 @@ import ShareLink from "@/components/ShareLink";
 import LeaveTrip from "@/components/LeaveTrip";
 import MemberOnlineStatus from "@/components/MemberOnlineStatus";
 import { getAvatarColor } from "@/utils/avatarColors";
+import { useParams } from "next/navigation";
 
 const Profile: React.FC = () => {
   const { isLoading } = useProtectedRoute();
+  const { id } = useParams<{ id: string }>();
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [shareLinkOpen, setShareLinkOpen] = useState(false);
   const [LeaveTripOpen, setLeaveTripOpen] = useState(false);
   const [allMembers, setAllMembers] = useState<string[]>([]);
+  const [trip, setTrip] = useState<Trip | null>(null);
 
   const { value: user } = useLocalStorage<User | null>("user", null);
-  const { value: trip } = useLocalStorage<Trip | null>("trip", null);
+  const { value: storedTrip } = useLocalStorage<Trip | null>("trip", null);
 
   const apiService = useApi();
 
   const { handleLogout } = Logout();
 
   useEffect(() => {
+    if (storedTrip && String(storedTrip.tripId) === id) {
+      setTrip(storedTrip);
+    } else {
+      apiService.get<Trip>(`/trips/${id}`)
+        .then(setTrip)
+        .catch((err) => console.error("Failed to fetch trip", err));
+    }
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
     if (!trip?.tripId) return;
 
     const fetchMembers = async () => {
       try {
-        // check for correctness when get members is implemented
         const response = await apiService.get<{ members: string[] }>(`/trips/${trip.tripId}/members`);
         setAllMembers(response.members || []);
       } catch (error) {

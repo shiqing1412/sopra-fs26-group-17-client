@@ -69,7 +69,13 @@ export default function AuthForm({ mode }: AuthFormProps) {
       setToken(response.token);
       setUserId(String(response.id));
       setUser(response);
-      router.push("/trips");
+      const joinRedirect = localStorage.getItem("joinRedirect");
+      if (joinRedirect) {
+        localStorage.removeItem("joinRedirect");
+        router.push(joinRedirect);
+      } else {
+        router.push("/trips");
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);  
       if (message.includes("Username already taken. Please choose a different one.")) {

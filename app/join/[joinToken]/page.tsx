@@ -40,6 +40,11 @@ const JoinTripPage: React.FC = () => {
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : "Something went wrong.";
+      if (message.includes("401") || message.toLowerCase().includes("unauthorized") || message.toLowerCase().includes("invalid token")) {
+        localStorage.setItem("joinRedirect", `/join/${joinToken}`);
+        router.push("/login");
+        return;
+      }
       alert(message);
     } finally {
       setJoining(false);
