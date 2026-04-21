@@ -50,13 +50,25 @@ const Profile: React.FC = () => {
 
     const fetchData = async () => {
       try {
-        const memberResponse = await apiService.get<{ members: string[] }>(`/trips/${trip.tripId}/members`);
-        setAllMembers(memberResponse.members || []);
+        const [memberResponse, tripResponse] = await Promise.all([ // use promise to load simultaneously
+        apiService.get<{ members: string[] }>(`/trips/${trip.tripId}/members`),
+        apiService.get<Trip>(`/trips/${trip.tripId}`)
+      ]);
 
-        const tripResponse = await apiService.get<Trip>(`/trips/${trip.tripId}`)
-        setTrip(tripResponse || []);
+        setAllMembers(prev => {
+          const next = memberResponse.members ?? [];
+          if (JSON.stringify(prev) === JSON.stringify(next)) return prev;
+          return next;
+        });
+
+        setTrip(prev => {
+          if (!prev) return tripResponse;  // trip is null (first load)
+          if (JSON.stringify(prev) === JSON.stringify(tripResponse)) return prev;
+          return { ...prev, ...tripResponse }; // merge instead of replacing
+        });
+
       } catch (error) {
-        console.error("Failed to fetch members", error);
+        console.error("Failed to poll", error);
       }
     };
 
