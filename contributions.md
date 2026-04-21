@@ -87,8 +87,10 @@ reason).
 
 | **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
 | ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
-| **@shiqing1412** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@shiqing1412** | 21 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/e3937540a0c1b963c79ba89afca1d8a9f9e458d2 | fix share link join for unauthenticated users and direct navigation | Before the fix it would throw an error |
+|                    | 21 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/b7fdf6df0e1ef2d6fd8a8af87ee4b0562a39e5f7 | fix member and avatar diaplay of a trip | Before the fix the member always shows 0
+|                    | 16 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/4ffa42b27d812373be80cf94d0f822644fdedaa6 | integration with backend - Post Events | we need persistence layer  for events|
+|                    | 16 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/cec1644bd9a4206150f27b9302d8254ad00a025b | integration with backend - Get Events  | we need persistence layer  for events |
 | **@julituchi** | 16 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/4b3fc25cbe7fd8c58cda81a336c6c93747faa317 | Implements the ability for trip members to create events with Google Places location data via a new validated and authorized POST endpoint. | This is relevant because it ensures authorized users can add consistent, location-aware events within a trip |
 |                    | 16 April  | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/577b4847fedb2fa77d1c4b5e70442dedb485b6fc | Adds input validation to the event creation flow to ensure all required fields are present and valid | It prevents incomplete or invalid data from being stored. |
 |                    | 20 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/93fe0c5bb6547e6a75ac117c63077b26b72f7a51 | Adds unit tests for EventService, covering all public methods and private validation helpers | Test coverage, helped in finding a bug in the code |
