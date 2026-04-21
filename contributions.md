@@ -89,8 +89,9 @@ reason).
 | ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
 | **@shiqing1412** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
-| **@julituchi** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@julituchi** | 16 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/4b3fc25cbe7fd8c58cda81a336c6c93747faa317 | Implements the ability for trip members to create events with Google Places location data via a new validated and authorized POST endpoint. | This is relevant because it ensures authorized users can add consistent, location-aware events within a trip |
+|                    | 16 April  | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/577b4847fedb2fa77d1c4b5e70442dedb485b6fc | Adds input validation to the event creation flow to ensure all required fields are present and valid | It prevents incomplete or invalid data from being stored. |
+|                    | 20 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/93fe0c5bb6547e6a75ac117c63077b26b72f7a51 | Adds unit tests for EventService, covering all public methods and private validation helpers | Test coverage, helped in finding a bug in the code |
 | **@Raminminn** | 16 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/c5000d00d67d8c026c7726626c6dd3a0b81e53ec | event cards in chronological order and avatar of person who created the event | better overview of all events in the itinerary as it's sorted by time. allows members to see who created the trip for better organization. |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@yarablaser** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
