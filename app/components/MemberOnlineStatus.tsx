@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
@@ -22,10 +22,6 @@ const MemberOnlineStatus: React.FC<OnlineStatusProps> = ({
   allMembers,
   maxAvatars 
 }) => {
-  const [isLoading] = useState<boolean>(true);
-
-  if (isLoading) return null;
-
   const displayMax = 5;
   // online members excluding current user
   const onlineMembers = allMembers.filter(
