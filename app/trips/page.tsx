@@ -51,6 +51,12 @@ const Dashboard: React.FC = () => {
   const [creating, setCreating] = useState(false);
   const [form] = Form.useForm<NewTripValues>();
 
+  useEffect(() => {
+    if (modalOpen) {
+      form.resetFields();
+    }
+  }, [modalOpen]);
+
   const { value: user } = useLocalStorage<User | null>("user", null);
   const { set: setStoredTrip } = useLocalStorage<Trip | null>("trip", null);
 
@@ -193,7 +199,7 @@ const Dashboard: React.FC = () => {
 
       {/* New Trip Modal */}
       <Modal
-        title="Create a New Trip"
+        title={<span style={{ color: '#000' }}>Create a New Trip</span>}
         open={modalOpen}
         onCancel={() => setModalOpen(false)}
         footer={null}
