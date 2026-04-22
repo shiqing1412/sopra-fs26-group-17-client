@@ -18,6 +18,7 @@ interface EventGetDTO {
   date: string;
   time: string;
   notes: string;
+  placeId: string;
   placeName: string;
   lat: number;
   lng: number;
@@ -38,6 +39,9 @@ export interface NewStopValues {
   id: string;
   title: string;
   location: string;
+  placeId: string | null;
+  lat: number | null;
+  lng: number | null;
   startTime: Dayjs | null;
   endTime: Dayjs | null;
   notes: string;
@@ -129,6 +133,9 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
         id: String(response.eventId),
         title: response.eventTitle,
         location: response.placeName ?? values.location,
+        placeId: response.placeId ?? null,
+        lat: response.lat ?? null,
+        lng: response.lng ?? null,
         startTime: values.startTime ?? null,
         endTime: values.endTime ?? null,
         notes: response.notes ?? "",
@@ -162,6 +169,9 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
             id: String(event.eventId),
             title: event.eventTitle,
             location: event.placeName ?? "",
+            placeId: event.placeId ?? null,
+            lat: event.lat ?? null,
+            lng: event.lng ?? null,
             startTime: event.time ? dayjs(event.time, "HH:mm:ss") : null,
             endTime: null,
             notes: event.notes ?? "",
@@ -214,10 +224,10 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
         date: key,
         time: values.startTime?.format("HH:mm:ss") ?? null,
         notes: values.notes ?? "",
-        placeId: selectedPlace?.id ?? null,
+        placeId: selectedPlace?.id ?? editingStop.stop.placeId,
         placeName: selectedPlace?.displayName ?? values.location,
-        lat: selectedPlace?.location?.lat() ?? null,
-        lng: selectedPlace?.location?.lng() ?? null,
+        lat: selectedPlace?.location?.lat() ?? editingStop.stop.lat,
+        lng: selectedPlace?.location?.lng() ?? editingStop.stop.lng,
       };
 
       await api.put<void>(`/trips/${trip.tripId}/events/${editingStop.stop.id}`, eventPutDTO);
@@ -226,6 +236,9 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
         id: editingStop.stop.id,
         title: values.title,
         location: selectedPlace?.displayName ?? values.location,
+        placeId: selectedPlace?.id ?? editingStop.stop.placeId,
+        lat: selectedPlace?.location?.lat() ?? editingStop.stop.lat,
+        lng: selectedPlace?.location?.lng() ?? editingStop.stop.lng,
         startTime: values.startTime,
         endTime: values.endTime,
         notes: values.notes ?? "",
