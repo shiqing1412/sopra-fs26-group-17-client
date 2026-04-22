@@ -28,6 +28,7 @@ const Profile: React.FC = () => {
   const [allMembers, setAllMembers] = useState<string[]>([]);
   const [onlineMembers, setOnlineMembers] = useState<string[]>([]);
   const [trip, setTrip] = useState<Trip | null>(null);
+  const [eventRefetchTrigger, setEventRefetchTrigger] = useState(0);
 
   const { value: user } = useLocalStorage<User | null>("user", null);
   const { value: storedTrip } = useLocalStorage<Trip | null>("trip", null);
@@ -77,6 +78,7 @@ const Profile: React.FC = () => {
       } catch (error) {
         console.error("Failed to poll", error);
       }
+      setEventRefetchTrigger(prev => prev + 1);
     };
 
     fetchData();
@@ -163,7 +165,7 @@ const Profile: React.FC = () => {
       />
 
       {/* calendar view */}
-      {trip && <TripCalendar trip={trip} currentUser={user} />}
+      {trip && <TripCalendar trip={trip} currentUser={user} refetchTrigger={eventRefetchTrigger} />}
 
     </div>
   );

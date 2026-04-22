@@ -33,6 +33,7 @@ interface DayDTO {
 interface TripCalendarValues {
   trip: Trip;
   currentUser: User | null;
+  refetchTrigger?: number;
 }
 
 export interface NewStopValues {
@@ -103,7 +104,7 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops }: Read
   );
 }
  
-function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
+function TripCalendar({ trip, currentUser, refetchTrigger }: Readonly<TripCalendarValues>) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const days = getDaysBetween(trip.startDate ?? "", trip.endDate ?? "");
   const [form] = Form.useForm<StopFormValues>();
@@ -186,7 +187,7 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
     };
 
     fetchEvents();
-  }, [trip.tripId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [trip.tripId, refetchTrigger]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
   const [viewingStop, setViewingStop] = useState<{ stop: NewStopValues; date: Date } | null>(null);
