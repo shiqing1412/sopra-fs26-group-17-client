@@ -26,6 +26,7 @@ const Profile: React.FC = () => {
   const [shareLinkOpen, setShareLinkOpen] = useState(false);
   const [LeaveTripOpen, setLeaveTripOpen] = useState(false);
   const [allMembers, setAllMembers] = useState<string[]>([]);
+  const [onlineMembers, setOnlineMembers] = useState<string[]>([]);
   const [trip, setTrip] = useState<Trip | null>(null);
 
   const { value: user } = useLocalStorage<User | null>("user", null);
@@ -50,15 +51,21 @@ const Profile: React.FC = () => {
 
     const fetchData = async () => {
       try {
-        const [memberResponse, tripResponse] = await Promise.all([ // use promise to load simultaneously
-        apiService.get<{ members: string[] }>(`/trips/${trip.tripId}/members`),
+        const [memberResponse, tripResponse] = await Promise.all([
+        apiService.get<{ userId: number; username: string; role: string; status: string }[]>(`/trips/${trip.tripId}/members`),
         apiService.get<Trip>(`/trips/${trip.tripId}`)
       ]);
 
+        const usernames = memberResponse.map((m) => m.username);
+        const online = memberResponse.filter((m) => m.status === "ONLINE").map((m) => m.username);
+
         setAllMembers(prev => {
-          const next = memberResponse.members ?? [];
-          if (JSON.stringify(prev) === JSON.stringify(next)) return prev;
-          return next;
+          if (JSON.stringify(prev) === JSON.stringify(usernames)) return prev;
+          return usernames;
+        });
+        setOnlineMembers(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(online)) return prev;
+          return online;
         });
 
         setTrip(prev => {
@@ -114,6 +121,7 @@ const Profile: React.FC = () => {
             trip={trip}
             currentUser={user}
             allMembers={allMembers}
+            onlineUsernames={onlineMembers}
           />
           
           <button className={styles.settingsBtn} onClick={() => setSettingsOpen(true)}>
