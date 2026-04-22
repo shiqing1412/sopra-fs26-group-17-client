@@ -18,8 +18,8 @@ interface EventGetDTO {
   date: string;
   time: string;
   notes: string;
-  placeId: string;
   placeName: string;
+  placeId: string | null;
   lat: number;
   lng: number;
   createdBy: string;
@@ -38,6 +38,7 @@ interface TripCalendarValues {
 export interface NewStopValues {
   id: string;
   title: string;
+  pickedDate?: Dayjs;
   location: string;
   placeId: string | null;
   lat: number | null;
@@ -218,16 +219,18 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
 
     try {
       const api = new ApiService();
-      const key = dateKey(editingStop.date);
+      const oldKey = dateKey(editingStop.date);
+      const newKey = values.pickedDate ? values.pickedDate.format("YYYY-MM-DD") : oldKey;
       const eventPutDTO = {
+        eventId: editingStop.stop.id,
         eventTitle: values.title,
-        date: key,
+        date: newKey,
         time: values.startTime?.format("HH:mm:ss") ?? null,
         notes: values.notes ?? "",
-        placeId: selectedPlace?.id ?? editingStop.stop.placeId,
+        placeId: selectedPlace?.id ?? editingStop.stop.placeId ?? null,
         placeName: selectedPlace?.displayName ?? values.location,
-        lat: selectedPlace?.location?.lat() ?? editingStop.stop.lat,
-        lng: selectedPlace?.location?.lng() ?? editingStop.stop.lng,
+        lat: selectedPlace?.location?.lat() ?? editingStop.stop.lat ?? null,
+        lng: selectedPlace?.location?.lng() ?? editingStop.stop.lng ?? null,
       };
 
       await api.put<void>(`/trips/${trip.tripId}/events/${editingStop.stop.id}`, eventPutDTO);
@@ -236,19 +239,21 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
         id: editingStop.stop.id,
         title: values.title,
         location: selectedPlace?.displayName ?? values.location,
-        placeId: selectedPlace?.id ?? editingStop.stop.placeId,
-        lat: selectedPlace?.location?.lat() ?? editingStop.stop.lat,
-        lng: selectedPlace?.location?.lng() ?? editingStop.stop.lng,
         startTime: values.startTime,
         endTime: values.endTime,
         notes: values.notes ?? "",
+        placeId: selectedPlace?.id ?? editingStop.stop.placeId ?? null,
+        lat: selectedPlace?.location?.lat() ?? editingStop.stop.lat ?? null,
+        lng: selectedPlace?.location?.lng() ?? editingStop.stop.lng ?? null,
         createdBy: editingStop.stop.createdBy,
       };
 
-      setStops(prev => ({
-        ...prev,
-        [key]: (prev[key] ?? []).map(s => s.id === editingStop.stop.id ? updatedStop : s),
-      }));
+      setStops(prev => {
+        const next = { ...prev };
+        next[oldKey] = (next[oldKey] ?? []).filter(s => s.id !== editingStop.stop.id);
+        next[newKey] = [...(next[newKey] ?? []), updatedStop];
+        return next;
+      });
       setEditingStop(null);
 
     } catch (error) {
@@ -312,6 +317,8 @@ function TripCalendar({ trip, currentUser }: Readonly<TripCalendarValues>) {
           onFinish={handleFinish}
           initialData={editingStop} 
           selectedDate={selectedDate}
+          tripStartDate={trip.startDate}
+          tripEndDate={trip.endDate}
           form={form}
           setSelectedPlace={setSelectedPlace}
         />

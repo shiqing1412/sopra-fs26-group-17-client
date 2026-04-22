@@ -1,10 +1,12 @@
-import { Modal, Form, Input, TimePicker, Button, FormInstance } from "antd";
+import { Modal, Form, Input, TimePicker, Button, FormInstance, DatePicker } from "antd";
 import { useEffect } from "react";
 import dayjs from "dayjs";
 import PlaceAutocomplete from "./LocationSearch";
 import { NewStopValues } from "./TripCalendar";
 
-export type StopFormValues = Omit<NewStopValues, 'id' | 'createdBy'>;
+export type StopFormValues = Omit<NewStopValues, 'id' | 'createdBy'> & {
+    date?: dayjs.Dayjs;
+};
 
 interface StopModalProps {
   isOpen: boolean;
@@ -15,6 +17,8 @@ interface StopModalProps {
     date: Date;
   } | null;
   selectedDate: Date | null;
+  tripStartDate: string | null;
+  tripEndDate: string | null;
   form: FormInstance<StopFormValues>; 
   setSelectedPlace: (place: google.maps.places.Place | null) => void;
 }
@@ -25,6 +29,8 @@ const StopModal: React.FC<StopModalProps> = ({
   onFinish, 
   initialData, 
   selectedDate, 
+  tripStartDate,
+  tripEndDate,
   form, 
   setSelectedPlace 
 }) => {
@@ -35,6 +41,7 @@ const StopModal: React.FC<StopModalProps> = ({
     if (isOpen) {
       if (isEditMode && initialData.stop) {
         form.setFieldsValue({
+          pickedDate: dayjs(initialData.date),
           title: initialData.stop.title,
           location: initialData.stop.location,
           startTime: initialData.stop.startTime ? dayjs(initialData.stop.startTime) : null,
@@ -77,6 +84,19 @@ const StopModal: React.FC<StopModalProps> = ({
         style={{ marginTop: 16 }} 
         onFinish={onFinish}
       >
+        {isEditMode && (
+          <Form.Item name="pickedDate" label="DATE">
+            <DatePicker
+              format="dddd, MMMM D"
+              style={{ width: "100%" }}
+              allowClear={false}
+              disabledDate={(d) =>
+                (tripStartDate ? d.isBefore(dayjs(tripStartDate.toString()).startOf("day")) : false) ||
+                (tripEndDate ? d.isAfter(dayjs(tripEndDate.toString()).endOf("day")) : false)
+              }
+            />
+          </Form.Item>
+        )}
         <Form.Item 
           name="title" 
           label="TITLE" 
