@@ -4,8 +4,7 @@ import React from "react";
 import { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
-
-const AVATAR_COLORS = ["#c0392b", "#2980b9", "#27ae60", "#8e44ad", "#d35400", "#16a085"];
+import { getAvatarColor } from "@/utils/avatarColors";
 
 interface OnlineStatusProps {
   trip: Trip | null;
@@ -46,18 +45,14 @@ const MemberOnlineStatus: React.FC<OnlineStatusProps> = ({
       {/* overlapping avatars */}
       <div className={styles.avatarStack}>
         {shownAvatars.map((username) => {
-          const colorIndex = allMembers.indexOf(username);
-          const color = AVATAR_COLORS[colorIndex % AVATAR_COLORS.length];
-          const initials = username.substring(0, 2).toUpperCase();
-
           return (
             <div
               key={username}
               className={styles.avatar}
-              style={{ backgroundColor: color }}
+              style={{ background: getAvatarColor(username ?? null) }}
               title={username}
             >
-              {initials}
+              {username?.[0]?.toUpperCase() ?? "?"}
             </div>
           );
         })}
