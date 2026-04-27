@@ -17,6 +17,7 @@ import LeaveTrip from "@/components/LeaveTrip";
 import MemberOnlineStatus from "@/components/MemberOnlineStatus";
 import { getAvatarColor } from "@/utils/avatarColors";
 import { useParams } from "next/navigation";
+import TripLeft from "@/components/TripLeft";
 
 const Profile: React.FC = () => {
   const { isLoading } = useProtectedRoute();
@@ -164,8 +165,15 @@ const Profile: React.FC = () => {
         trip={trip}
       />
 
-      {/* calendar view */}
-      {trip && <TripCalendar trip={trip} currentUser={user} refetchTrigger={eventRefetchTrigger} />}
+      {/* left side */}
+      <div className={styles.tripBody}>
+        <TripLeft mapComponent={undefined} membersComponent={undefined}/>
+
+        {/* trip calendar */}
+        {trip && (
+          <TripCalendar trip={trip} currentUser={user} refetchTrigger={eventRefetchTrigger}/>
+        )}
+      </div>
 
     </div>
   );
