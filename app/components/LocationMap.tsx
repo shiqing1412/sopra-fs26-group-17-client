@@ -86,6 +86,18 @@ export default function LocationMap({
       });
       markerInstancesRef.current.push(marker);
     });
+
+    // adjust map to fit all markers
+    if (markers.length === 0) return;
+    if (markers.length === 1) {
+      map.setCenter(markers[0].position);
+      map.setZoom(13);
+    } else {
+      const bounds = new window.google.maps.LatLngBounds();
+      markers.forEach(({ position }) => bounds.extend(position));
+      map.fitBounds(bounds);
+    }
+
   }, [markers, isLoaded]);
   if (error) return <div style={style}>Map failed to load.</div>;
 
