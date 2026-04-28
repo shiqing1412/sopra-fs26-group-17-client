@@ -6,7 +6,7 @@ import { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
 import Logout from "@/components/Logout";
-import TripCalendar from "@/components/TripCalendar";
+import TripCalendar, { NewStopValues } from "@/components/TripCalendar";
 import dayjs from "dayjs";
 import { Form, Button, Modal } from "antd";
 import Link from "next/link";
@@ -30,6 +30,7 @@ const Profile: React.FC = () => {
   const [onlineMembers, setOnlineMembers] = useState<string[]>([]);
   const [trip, setTrip] = useState<Trip | null>(null);
   const [eventRefetchTrigger, setEventRefetchTrigger] = useState(0);
+  const [stops, setStops] = useState<Record<string, NewStopValues[]>>({});
 
   const { value: user } = useLocalStorage<User | null>("user", null);
   const { value: storedTrip } = useLocalStorage<Trip | null>("trip", null);
@@ -167,11 +168,11 @@ const Profile: React.FC = () => {
 
       {/* left side */}
       <div className={styles.tripBody}>
-        <TripLeft mapComponent={undefined} membersComponent={undefined}/>
+        <TripLeft stops={stops} membersComponent={undefined}/>
 
         {/* trip calendar */}
         {trip && (
-          <TripCalendar trip={trip} currentUser={user} refetchTrigger={eventRefetchTrigger}/>
+          <TripCalendar stops={stops}  setStops={setStops} trip={trip} currentUser={user} refetchTrigger={eventRefetchTrigger}/>
         )}
       </div>
 

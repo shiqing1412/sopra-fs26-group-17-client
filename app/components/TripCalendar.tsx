@@ -31,6 +31,8 @@ interface DayDTO {
 }
  
 interface TripCalendarValues {
+  stops: Record<string, NewStopValues[]>;
+  setStops: React.Dispatch<React.SetStateAction<Record<string, NewStopValues[]>>>;
   trip: Trip;
   currentUser: User | null;
   refetchTrigger?: number;
@@ -104,11 +106,10 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops }: Read
   );
 }
  
-function TripCalendar({ trip, currentUser, refetchTrigger }: Readonly<TripCalendarValues>) {
+function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops }: Readonly<TripCalendarValues>) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const days = getDaysBetween(trip.startDate ?? "", trip.endDate ?? "");
   const [form] = Form.useForm<StopFormValues>();
-  const [stops, setStops] = useState<Record<string, (NewStopValues)[]>>({});
   const dateKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 

@@ -11,13 +11,16 @@ export default function LocationMap({
   center = { lat: 47.36667, lng: 8.55 },
   zoom = 13,
   style,
+  markers = [],
 }: {
   center?: LatLng;
   zoom?: number;
   style?: React.CSSProperties;
+  markers?: Array<{ position: LatLng; title?: string }>;
 }) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<google.maps.Map | null>(null);
+  const markerInstancesRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,6 +41,7 @@ export default function LocationMap({
       mapInstanceRef.current = new window.google.maps.Map(mapRef.current, {
         center,
         zoom,
+        mapId: "ad75625746e20fc2519442a1",
         fullscreenControl: true,
         zoomControl: true,
         streetViewControl: false,
@@ -58,6 +62,31 @@ export default function LocationMap({
     map.setZoom(zoom);
   }, [center, zoom]);
 
+  // Sync markers
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map) return;
+
+    // Clear existing markers
+    markerInstancesRef.current.forEach((m) => m.map = null);
+    markerInstancesRef.current = [];
+
+    // Add new markers
+    markers.forEach(({ position, title }) => {
+      const pin = document.createElement("div");
+      pin.textContent = "📍";
+      pin.style.fontSize = "2rem";
+      pin.style.cursor = "pointer";
+
+      const marker = new window.google.maps.marker.AdvancedMarkerElement({
+        position,
+        map,
+        title,
+        content: pin,
+      });
+      markerInstancesRef.current.push(marker);
+    });
+  }, [markers, isLoaded]);
   if (error) return <div style={style}>Map failed to load.</div>;
 
   return (
