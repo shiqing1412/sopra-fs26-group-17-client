@@ -14,11 +14,11 @@ export default function LocationMap({
   markers = [],
   onMarkerClick,
 }: {
-  center?: LatLng;
-  zoom?: number;
-  style?: React.CSSProperties;
-  markers?: Array<{ id:string, position: LatLng; title?: string }>;
-  onMarkerClick?: (id: string) => void;
+  readonly center?: LatLng;
+  readonly zoom?: number;
+  readonly style?: React.CSSProperties;
+  readonly markers?: ReadonlyArray<{ readonly id:string, readonly position: LatLng; readonly title?: string }>;
+  readonly onMarkerClick?: (id: string) => void;
 }) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<google.maps.Map | null>(null);
@@ -30,9 +30,9 @@ export default function LocationMap({
 
   // load google maps script
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof globalThis.window === "undefined") return;
     const check = () => {
-      if (window.google?.maps) setIsLoaded(true);
+      if (globalThis.window.google?.maps) setIsLoaded(true);
       else setTimeout(check, 100);
     };
     check();
@@ -42,7 +42,7 @@ export default function LocationMap({
   useEffect(() => {
     if (!isLoaded || !mapRef.current) return;
     try {
-      mapInstanceRef.current = new window.google.maps.Map(mapRef.current, {
+      mapInstanceRef.current = new globalThis.window.google.maps.Map(mapRef.current, {
         center,
         zoom,
         mapId: "ad75625746e20fc2519442a1",
@@ -86,7 +86,7 @@ export default function LocationMap({
       pin.style.cursor = "pointer";
       pin.addEventListener("click", () => { onMarkerClick?.(id); });
 
-      const marker = new window.google.maps.marker.AdvancedMarkerElement({
+      const marker = new globalThis.window.google.maps.marker.AdvancedMarkerElement({
         position,
         map,
         title,
@@ -102,7 +102,7 @@ export default function LocationMap({
         map.setCenter(markers[0].position);
         map.setZoom(13);
       } else {
-        const bounds = new window.google.maps.LatLngBounds();
+        const bounds = new globalThis.window.google.maps.LatLngBounds();
         markers.forEach(({ position }) => bounds.extend(position));
         map.fitBounds(bounds);
       }
