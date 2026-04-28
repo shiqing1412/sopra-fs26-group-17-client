@@ -570,3 +570,8 @@
   height: 350px;
   width: 100%;
 }
+
+.calendarStopCardHighlighted {
+  border: 2px solid #c0392b;
+  box-shadow: 0 0 8px #c0392b;
+}

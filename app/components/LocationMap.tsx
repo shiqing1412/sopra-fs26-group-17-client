@@ -12,11 +12,13 @@ export default function LocationMap({
   zoom = 13,
   style,
   markers = [],
+  onMarkerClick,
 }: {
   center?: LatLng;
   zoom?: number;
   style?: React.CSSProperties;
-  markers?: Array<{ position: LatLng; title?: string }>;
+  markers?: Array<{ id:string, position: LatLng; title?: string }>;
+  onMarkerClick?: (id: string) => void;
 }) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<google.maps.Map | null>(null);
@@ -47,7 +49,6 @@ export default function LocationMap({
         streetViewControl: false,
         cameraControl: false,
         mapTypeControl: false,
-        styles: [{ featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] }],
       });
     } catch {
       setError("Failed to initialize Google Maps.");
@@ -72,11 +73,12 @@ export default function LocationMap({
     markerInstancesRef.current = [];
 
     // Add new markers
-    markers.forEach(({ position, title }) => {
+    markers.forEach(({ id, position, title }) => {
       const pin = document.createElement("div");
       pin.textContent = "📍";
       pin.style.fontSize = "2rem";
       pin.style.cursor = "pointer";
+      pin.addEventListener("click", () => { onMarkerClick?.(id); });
 
       const marker = new window.google.maps.marker.AdvancedMarkerElement({
         position,

@@ -31,6 +31,7 @@ const Profile: React.FC = () => {
   const [trip, setTrip] = useState<Trip | null>(null);
   const [eventRefetchTrigger, setEventRefetchTrigger] = useState(0);
   const [stops, setStops] = useState<Record<string, NewStopValues[]>>({});
+  const [highlightedStopId, setHighlightedStopId] = useState<string | null>(null);
 
   const { value: user } = useLocalStorage<User | null>("user", null);
   const { value: storedTrip } = useLocalStorage<Trip | null>("trip", null);
@@ -47,7 +48,7 @@ const Profile: React.FC = () => {
         .then(setTrip)
         .catch((err) => console.error("Failed to fetch trip", err));
     }
-  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [id]);
 
   useEffect(() => {
     if (!trip?.tripId) return;
@@ -89,7 +90,6 @@ const Profile: React.FC = () => {
     return () => clearInterval(intervalId);
   }, [trip?.tripId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  {/* todo functions: addStop, editStop */}
   if (isLoading) return null;
 
   return (
@@ -166,13 +166,25 @@ const Profile: React.FC = () => {
         trip={trip}
       />
 
-      {/* left side */}
       <div className={styles.tripBody}>
-        <TripLeft stops={stops} membersComponent={undefined}/>
+        {/* left side */}
+        <TripLeft 
+          stops={stops} 
+          highlightedStopId={highlightedStopId} 
+          setHighlightedStopId={setHighlightedStopId} 
+          membersComponent={undefined}
+          />
 
         {/* trip calendar */}
         {trip && (
-          <TripCalendar stops={stops}  setStops={setStops} trip={trip} currentUser={user} refetchTrigger={eventRefetchTrigger}/>
+          <TripCalendar 
+            stops={stops}  
+            setStops={setStops} 
+            trip={trip} 
+            currentUser={user} 
+            refetchTrigger={eventRefetchTrigger} 
+            highlightedStopId={highlightedStopId}
+            />
         )}
       </div>
 
