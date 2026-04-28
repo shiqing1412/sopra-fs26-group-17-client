@@ -5,3 +5,7 @@ export function getAvatarColor(username: string | null): string {
   const index = (username.codePointAt(0) ?? 0) % AVATAR_COLORS.length;
   return AVATAR_COLORS[index];
 }
+
+export function getAvatarInitial(username: string | null | undefined): string {
+  return username?.[0]?.toUpperCase() ?? "?";
+}
