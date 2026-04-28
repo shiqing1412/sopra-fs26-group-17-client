@@ -15,7 +15,7 @@ import { useApi } from "@/hooks/useApi";
 import ShareLink from "@/components/ShareLink";
 import LeaveTrip from "@/components/LeaveTrip";
 import MemberOnlineStatus from "@/components/MemberOnlineStatus";
-import { getAvatarColor } from "@/utils/avatarColors";
+import { getAvatarColor, getAvatarInitial } from "@/utils/avatarColors";
 import { useParams } from "next/navigation";
 import TripLeft from "@/components/TripLeft";
 
@@ -46,7 +46,7 @@ const Profile: React.FC = () => {
         .then(setTrip)
         .catch((err) => console.error("Failed to fetch trip", err));
     }
-  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [id]);
 
   useEffect(() => {
     if (!trip?.tripId) return;
@@ -101,7 +101,7 @@ const Profile: React.FC = () => {
           <div
             className={styles.navAvatar}
             style={{ background: getAvatarColor(user?.username ?? null) }}>
-            {user?.username?.[0]?.toUpperCase() ?? "?"}      {/* initial of username */}
+            {getAvatarInitial(user?.username)}      {/* initial of username */}
           </div>
           <span className={styles.navUsername}>
             {user?.username ?? "Guest"}                      {/* username from localStorage */}
@@ -167,7 +167,7 @@ const Profile: React.FC = () => {
 
       {/* left side */}
       <div className={styles.tripBody}>
-        <TripLeft mapComponent={undefined} membersComponent={undefined}/>
+        <TripLeft tripId={trip?.tripId}/>
 
         {/* trip calendar */}
         {trip && (
