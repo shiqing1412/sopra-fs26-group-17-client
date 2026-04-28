@@ -31,9 +31,12 @@ interface DayDTO {
 }
  
 interface TripCalendarValues {
+  stops: Record<string, NewStopValues[]>;
+  setStops: React.Dispatch<React.SetStateAction<Record<string, NewStopValues[]>>>;
   trip: Trip;
   currentUser: User | null;
   refetchTrigger?: number;
+  highlightedStopId: string | null;
 }
 
 export interface NewStopValues {
@@ -63,7 +66,14 @@ function getDaysBetween(start: string, end: string): Date[] {
   return days;
 }
  
-function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops }: Readonly<{ date: Date; dayNumber: number; onAddStopClick: () => void; onStopClick: (stop: NewStopValues & { id: string }) => void; stops: (NewStopValues & { id: string })[] }>) {
+function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops, highlightedStopId }: Readonly<{ 
+  date: Date; 
+  dayNumber: number; 
+  onAddStopClick: () => void; 
+  onStopClick: (stop: NewStopValues & { id: string }) => void; 
+  stops: (NewStopValues & { id: string })[];
+  highlightedStopId: string | null;
+  }>) {
   const sortedStops = [...stops].sort((a, b) => {
     const timeA = a.startTime?.valueOf() ?? 0;
     const timeB = b.startTime?.valueOf() ?? 0;
@@ -80,7 +90,11 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops }: Read
       </div>
       <div className={styles.calendarDayStops}>
         {sortedStops.map(stop => (
-          <button key={stop.id} className={styles.calendarStopCard} onClick={() => onStopClick(stop)}>
+          <button 
+            key={stop.id} 
+            className={`${styles.calendarStopCard} ${highlightedStopId === stop.id ? styles.calendarStopCardHighlighted : ""}`}
+            onClick={() => onStopClick(stop)}
+          >
             <div className={styles.calendarStopTime}>
               {stop.startTime?.format("HH:mm")} {stop.endTime ? `→ ${stop.endTime.format("HH:mm")}` : ""}
             </div>
@@ -104,11 +118,10 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops }: Read
   );
 }
  
-function TripCalendar({ trip, currentUser, refetchTrigger }: Readonly<TripCalendarValues>) {
+function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, highlightedStopId  }: Readonly<TripCalendarValues>) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const days = getDaysBetween(trip.startDate ?? "", trip.endDate ?? "");
   const [form] = Form.useForm<StopFormValues>();
-  const [stops, setStops] = useState<Record<string, (NewStopValues)[]>>({});
   const dateKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
@@ -293,6 +306,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger }: Readonly<TripCalend
             onAddStopClick={() => setSelectedDate(date)} 
             stops={stops[dateKey(date)] ?? []} 
             onStopClick={(stop) => setViewingStop({ stop, date })}
+            highlightedStopId={highlightedStopId}
           />
         ))}
       </div>
