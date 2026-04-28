@@ -25,6 +25,8 @@ export default function LocationMap({
   const markerInstancesRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const userInteractingRef = useRef(false);
+  const boundsFittedRef = useRef(false);
 
   // load google maps script
   useEffect(() => {
@@ -50,18 +52,22 @@ export default function LocationMap({
         cameraControl: false,
         mapTypeControl: false,
       });
+      mapInstanceRef.current.addListener("dragstart", () => { userInteractingRef.current = true; });
+      mapInstanceRef.current.addListener("zoom_changed", () => { userInteractingRef.current = true; });
+      mapInstanceRef.current.addListener("click", () => { userInteractingRef.current = true; });
     } catch {
       setError("Failed to initialize Google Maps.");
     }
-  }, [isLoaded]);
 
-  // update center/zoom when props change
-  useEffect(() => {
-    const map = mapInstanceRef.current;
-    if (!map) return;
-    map.setCenter(center);
-    map.setZoom(zoom);
-  }, [center, zoom]);
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (mapRef.current && !mapRef.current.contains(e.target as Node)) {
+        userInteractingRef.current = false;
+        boundsFittedRef.current = false;
+      }
+    };
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
+  }, [isLoaded]);
 
   // Sync markers
   useEffect(() => {
@@ -91,15 +97,17 @@ export default function LocationMap({
 
     // adjust map to fit all markers
     if (markers.length === 0) return;
-    if (markers.length === 1) {
-      map.setCenter(markers[0].position);
-      map.setZoom(13);
-    } else {
-      const bounds = new window.google.maps.LatLngBounds();
-      markers.forEach(({ position }) => bounds.extend(position));
-      map.fitBounds(bounds);
+    if (!userInteractingRef.current && !boundsFittedRef.current) {
+      if (markers.length === 1) {
+        map.setCenter(markers[0].position);
+        map.setZoom(13);
+      } else {
+        const bounds = new window.google.maps.LatLngBounds();
+        markers.forEach(({ position }) => bounds.extend(position));
+        map.fitBounds(bounds);
+      }
+      boundsFittedRef.current = true;
     }
-
   }, [markers, isLoaded]);
   if (error) return <div style={style}>Map failed to load.</div>;
 
