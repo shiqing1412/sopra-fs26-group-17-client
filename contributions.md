@@ -120,8 +120,8 @@ reason).
 | **@yarablaser** | 28 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/1e5501bebebe22cbcfff910f85ff9983722f02ad | added map to itinerary | will be able to visually show locations of stops |
 |                    | 28 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/631148efd3825f7f2252d87572a204e5498ccef1 | stop markers | user can see where on the map the stops take place |
 |                    | 28 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/d3cb36836651efee457ec4a4503678f9c3db8750 | highlight stops when clicking on a pin | user can see which event was planned for a specific location |
-| **@dsgji4g4** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@dsgji4g4** | 28 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/c7ec4125155f2a6ace50274f4316621dd9bab9f1 | Track member last seen timestamp for trip presence | Start to implement presence indicator |
+|                    | 28 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/f5c70915c9ccf5e702ad7e2ed8bd611446372858 | Update EventService| To track members' presence, need to do modifications for membership-based validation and fix related failures |
 
 ---
 
