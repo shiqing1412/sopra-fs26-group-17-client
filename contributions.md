@@ -117,8 +117,9 @@ reason).
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@Raminminn** | 27 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/d8d0e66a19e0505b91e172efc79353731b958763 | added left panel in trip/id page | needed to add a map overview and list of members later on |
 |                    | 28 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/efbb82f109345a07fea8f59995844587335cce3c | display list of members that are part of the trip | to get an overview of all the people that are in the trip and not only the ones that are online |
-| **@yarablaser** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@yarablaser** | 28 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/1e5501bebebe22cbcfff910f85ff9983722f02ad | added map to itinerary | will be able to visually show locations of stops |
+|                    | 28 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/631148efd3825f7f2252d87572a204e5498ccef1 | stop markers | user can see where on the map the stops take place |
+|                    | 28 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/d3cb36836651efee457ec4a4503678f9c3db8750 | highlight stops when clicking on a pin | user can see which event was planned for a specific location |
 | **@dsgji4g4** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 
