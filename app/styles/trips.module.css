@@ -565,3 +565,8 @@
   background-color: #faf8f5;
   border-bottom: 1px solid #e8e4df;
 }
+
+.tripMap {
+  height: 350px;
+  width: 100%;
+}

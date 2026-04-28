@@ -1,19 +1,22 @@
-import React from 'react';
 import styles from '@/styles/trips.module.css';
+import LocationMap from '@/components/LocationMap';
 
 interface TripLeftProps {
-  readonly mapComponent?: React.ReactNode;
   readonly membersComponent?: React.ReactNode;
 }
 
-export default function TripLeft({ mapComponent, membersComponent }: TripLeftProps) {
+export default function TripLeft({membersComponent}: TripLeftProps) {
   return (
     <div className={styles.tripLeft}>
 
       {/* Map */}
       <div className={styles.tripLabels}>Map</div>
       <div className={styles.tripMap}>
-        {mapComponent ?? null}
+        <LocationMap
+            center={{ lat: 47.36667, lng: 8.55 }}
+            zoom={13}
+            style={{ height: '100%', width: '100%' }}
+          />
       </div>
 
       {/* Members */}
