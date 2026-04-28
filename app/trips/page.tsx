@@ -11,7 +11,7 @@ import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
 import Logout from "@/components/Logout";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
-import { getAvatarColor } from "@/utils/avatarColors";
+import { getAvatarColor, getAvatarInitial } from "@/utils/avatarColors";
 
 const ILLUSTRATIONS = ["🌍", "🗺️", "✈️", "🏖️", "🏔️", "🌴", "🗽", "🎡"];
 
@@ -117,7 +117,7 @@ const Dashboard: React.FC = () => {
             <div
               className={styles.navAvatar}
               style={{ backgroundColor: getAvatarColor(user?.username ?? null) }}>
-              {user?.username?.[0]?.toUpperCase() ?? "?"}
+              {getAvatarInitial(user?.username)}
             </div>
             <span className={styles.navUsername}>{user?.username ?? "Guest"}</span>
           </div>
