@@ -115,8 +115,8 @@ reason).
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@julituchi** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
-| **@Raminminn** | 27 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/pull/135/changes/d8d0e66a19e0505b91e172efc79353731b958763 | added left panel in trip/id page | needed to add a map overview and list of members later on |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@Raminminn** | 27 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/d8d0e66a19e0505b91e172efc79353731b958763 | added left panel in trip/id page | needed to add a map overview and list of members later on |
+|                    | 28 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/efbb82f109345a07fea8f59995844587335cce3c | display list of members that are part of the trip | to get an overview of all the people that are in the trip and not only the ones that are online |
 | **@yarablaser** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@dsgji4g4** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
