@@ -169,12 +169,11 @@ const Profile: React.FC = () => {
       <div className={styles.tripBody}>
         {/* left side */}
         <TripLeft 
+          tripId={trip?.tripId}
           stops={stops} 
           highlightedStopId={highlightedStopId} 
           setHighlightedStopId={setHighlightedStopId} 
-          membersComponent={undefined}
-          />
-        <TripLeft tripId={trip?.tripId}/>
+        />
 
         {/* trip calendar */}
         {trip && (
