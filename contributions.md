@@ -137,7 +137,7 @@ reason).
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@yarablaser** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
-| **@dsgji4g4** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@dsgji4g4** | 29 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/5bd946f6d3806781a51c4b7e4c4c61eb0c4386d0 | Finalize trip-level presence tracking | Key feature. Enables users to view recent active members  |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 
 ---
