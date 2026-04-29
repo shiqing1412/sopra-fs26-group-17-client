@@ -117,12 +117,22 @@ const StopModal: React.FC<StopModalProps> = ({
           />
         </Form.Item>
         <Form.Item label="TIME" style={{ marginBottom: 12 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <Form.Item name="startTime" noStyle>
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+            <Form.Item 
+              name="startTime" 
+              rules={[{ required: true, message: "Please select a start time" }]}
+              style = {{ marginBottom: 0 }}
+            >
               <TimePicker format="HH:mm" placeholder="From" style={{ flex: 1 }} needConfirm={false} />
             </Form.Item>
-            <span style={{ color: "#c0392b" }}>→</span>
-            <Form.Item name="endTime" noStyle>
+            <div style={{ paddingTop: 6 }}>
+              <span style={{ color: "#c0392b" }}>→</span>
+            </div>
+            <Form.Item 
+              name="endTime" 
+              rules={[{ required: true, message: "Please select an end time" }]}
+              style = {{ marginBottom: 0 }}
+            >
               <TimePicker 
                 format="HH:mm" 
                 placeholder="To" 

@@ -17,6 +17,7 @@ interface EventGetDTO {
   eventTitle: string;
   date: string;
   time: string;
+  endTime: string;
   notes: string;
   placeName: string;
   placeId: string | null;
@@ -135,6 +136,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
         eventTitle: values.title,
         date: key,
         time: values.startTime?.format("HH:mm:ss") ?? null,
+        endTime: values.endTime?.format("HH:mm:ss") ?? null,
         notes: values.notes ?? "",
         placeId: selectedPlace?.id ?? null,
         placeName: selectedPlace?.displayName ?? values.location,
@@ -188,7 +190,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
             lat: event.lat ?? null,
             lng: event.lng ?? null,
             startTime: event.time ? dayjs(event.time, "HH:mm:ss") : null,
-            endTime: null,
+            endTime: event.endTime ? dayjs(event.endTime, "HH:mm:ss") : null,
             notes: event.notes ?? "",
             createdBy: { username: event.createdBy } as User,
           }));
@@ -240,6 +242,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
         eventTitle: values.title,
         date: newKey,
         time: values.startTime?.format("HH:mm:ss") ?? null,
+        endTime: values.endTime?.format("HH:mm:ss") ?? null,
         notes: values.notes ?? "",
         placeId: selectedPlace?.id ?? editingStop.stop.placeId ?? null,
         placeName: selectedPlace?.displayName ?? values.location,
