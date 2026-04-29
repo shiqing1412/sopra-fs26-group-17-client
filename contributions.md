@@ -111,8 +111,8 @@ reason).
 
 | **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
 | ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
-| **@shiqing1412** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@shiqing1412** | 20 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/33b02736a801e2e585f90bc1850d361f6f6b15d5 | Add TripServiceIntegrationTest | improve test coverage for M3|
+|                    | 20 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/5674ed4f2dd8e941900ace3bfc5dd0ae401bca09 | Add TripControllerTest | improve test coverage for M3 |
 | **@julituchi** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@Raminminn** | 27 April   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/d8d0e66a19e0505b91e172efc79353731b958763 | added left panel in trip/id page | needed to add a map overview and list of members later on |
