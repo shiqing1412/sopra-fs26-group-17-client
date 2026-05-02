@@ -17,13 +17,16 @@ interface EventGetDTO {
   eventTitle: string;
   date: string;
   time: string;
-  endTime: string;
+  endTime: string | null;
   notes: string;
   placeName: string;
   placeId: string | null;
   lat: number;
   lng: number;
   createdBy: string;
+  members: { userId: number; username: string }[];
+  userStatus: "JOINED" | "DISMISSED" | "OPTED OUT" | "NONE";
+  hasConflict: boolean
 }
 
 interface DayDTO {
