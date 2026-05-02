@@ -5,7 +5,7 @@ export interface Event {
   id: number | null;
   title: string | null;
   date: Date | null;
-  startTime: string | null;
+  time: string | null;
   endTime: string | null; // "HH:mm" format
   notes: string | null;
   creator: User | null;
