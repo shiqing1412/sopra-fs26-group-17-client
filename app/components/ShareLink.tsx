@@ -24,7 +24,13 @@ const ShareLink: React.FC<ShareLinkProps> = ({ open, onClose, trip }) => {
   };
 
   return (
-    <Modal title="Share Link" open={open} onCancel={onClose} footer={null} zIndex={1001}>
+    <Modal 
+      title={<div style={{ color: "#000" }}>Share Link</div>} 
+      open={open} 
+      onCancel={onClose} 
+      footer={null} 
+      zIndex={1001}
+    >
       <div className={styles.shareLinkModal}>
         <p>Copy this link to invite others:</p>
         <div className={styles.shareLinkRow}>
