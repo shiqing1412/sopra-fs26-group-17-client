@@ -18,6 +18,7 @@ import MemberOnlineStatus from "@/components/MemberOnlineStatus";
 import { getAvatarColor, getAvatarInitial } from "@/utils/avatarColors";
 import { useParams } from "next/navigation";
 import TripLeft from "@/components/TripLeft";
+import DeleteTrip from "@/components/DeleteTrip";
 
 const Profile: React.FC = () => {
   const { isLoading } = useProtectedRoute();
@@ -26,6 +27,7 @@ const Profile: React.FC = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [shareLinkOpen, setShareLinkOpen] = useState(false);
   const [LeaveTripOpen, setLeaveTripOpen] = useState(false);
+  const [deleteTripOpen, setDeleteTripOpen] = useState(false);
   const [allMembers, setAllMembers] = useState<string[]>([]);
   const [onlineMembers, setOnlineMembers] = useState<string[]>([]);
   const [trip, setTrip] = useState<Trip | null>(null);
@@ -147,6 +149,11 @@ const Profile: React.FC = () => {
             <Button type="primary" onClick={() => setLeaveTripOpen(true)}>
               Leave Trip
             </Button>
+            { trip?.owner?.id === user?.id && (
+              <Button type="primary" onClick={() => setDeleteTripOpen(true)}>
+                Delete Trip
+              </Button>
+            )}
           </div>
         </Form.Item>
 
@@ -163,6 +170,13 @@ const Profile: React.FC = () => {
       <LeaveTrip
         open={LeaveTripOpen}
         onClose={() => setLeaveTripOpen(false)}
+        trip={trip}
+      />
+
+      {/* Delete Trip */}
+      <DeleteTrip
+        open={deleteTripOpen}
+        onClose={() => setDeleteTripOpen(false)}
         trip={trip}
       />
 
