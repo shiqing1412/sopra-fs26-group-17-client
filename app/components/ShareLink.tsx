@@ -4,6 +4,7 @@ import { Modal } from "antd";
 import { CopyFilled, CheckOutlined } from "@ant-design/icons";
 import { Trip } from "@/types/trip";
 import styles from "@/styles/trips.module.css";
+import { Color } from "antd/es/color-picker";
 
 interface ShareLinkProps {
   open: boolean;
@@ -24,7 +25,13 @@ const ShareLink: React.FC<ShareLinkProps> = ({ open, onClose, trip }) => {
   };
 
   return (
-    <Modal title="Share Link" open={open} onCancel={onClose} footer={null} zIndex={1001}>
+    <Modal 
+      title={<div style={{ color: "#000" }}>Share Link</div>} 
+      open={open} 
+      onCancel={onClose} 
+      footer={null} 
+      zIndex={1001}
+    >
       <div className={styles.shareLinkModal}>
         <p>Copy this link to invite others:</p>
         <div className={styles.shareLinkRow}>
