@@ -4,7 +4,6 @@ import { Modal } from "antd";
 import { CopyFilled, CheckOutlined } from "@ant-design/icons";
 import { Trip } from "@/types/trip";
 import styles from "@/styles/trips.module.css";
-import { Color } from "antd/es/color-picker";
 
 interface ShareLinkProps {
   open: boolean;
