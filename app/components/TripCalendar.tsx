@@ -12,6 +12,11 @@ const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Frid
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"];
 
+interface EventMemberDTO {
+  userId: number;
+  username: string;
+}
+
 interface EventGetDTO {
   eventId: number;
   eventTitle: string;
@@ -24,7 +29,7 @@ interface EventGetDTO {
   lat: number;
   lng: number;
   createdBy: string;
-  members: { userId: number; username: string }[];
+  members: EventMemberDTO[];
   userStatus: "JOINED" | "DISMISSED" | "OPTED OUT" | "NONE";
   hasConflict: boolean
 }
@@ -55,6 +60,8 @@ export interface NewStopValues {
   endTime: Dayjs | null;
   notes: string;
   createdBy: User | null;
+  members: { userId: number; username: string }[];
+  hasConflict: boolean;
 }
 
 function getDaysBetween(start: string, end: string): Date[] {
@@ -68,6 +75,25 @@ function getDaysBetween(start: string, end: string): Date[] {
     current.setDate(current.getDate() + 1);
   }
   return days;
+}
+
+function EventMemberAvatars({ members }: Readonly<{ members: { userId: number; username: string }[] }>) {
+  if (!members || members.length === 0) return null;
+ 
+  return (
+    <div className={styles.eventMember}>
+      {members.map((member) => (
+        <div
+          key={member.userId}
+          className={styles.eventMemberAvatar}
+          style={{ backgroundColor: getAvatarColor(member.username) }}
+          title={member.username}
+        >
+          {member.username?.[0]?.toUpperCase() ?? "?"}
+        </div>
+      ))}
+    </div>
+  );
 }
  
 function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops, highlightedStopId }: Readonly<{ 
@@ -112,6 +138,7 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops, highli
             <div className={styles.calendarStopTitle}>{stop.title}</div>
             <div className={styles.calendarStopLocation}>📍{stop.location}</div>
             <div className={styles.calendarStopNotes}>{stop.notes}</div>
+            <EventMemberAvatars members={stop.members}/>
           </button>
         ))}
         <button className={styles.calendarAddStopBtn} onClick={onAddStopClick}>
@@ -160,6 +187,8 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
         endTime: values.endTime ?? null,
         notes: response.notes ?? "",
         createdBy: currentUser,
+        members: response.members ?? [],
+        hasConflict: response.hasConflict ?? false,
       };
 
       setStops(prev => ({ ...prev, [key]: [...(prev[key] ?? []), newStop] }));
@@ -196,6 +225,8 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
             endTime: event.endTime ? dayjs(event.endTime, "HH:mm:ss") : null,
             notes: event.notes ?? "",
             createdBy: { username: event.createdBy } as User,
+            members: event.members ?? [],
+            hasConflict: event.hasConflict ?? false,
           }));
         }
         setStops(fetched);
@@ -205,7 +236,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
     };
 
     fetchEvents();
-  }, [trip.tripId, refetchTrigger]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [trip.tripId, refetchTrigger]);
 
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
   const [viewingStop, setViewingStop] = useState<{ stop: NewStopValues; date: Date } | null>(null);
@@ -266,6 +297,8 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
         lat: selectedPlace?.location?.lat() ?? editingStop.stop.lat ?? null,
         lng: selectedPlace?.location?.lng() ?? editingStop.stop.lng ?? null,
         createdBy: editingStop.stop.createdBy,
+        members: editingStop.stop.members,
+        hasConflict: editingStop.stop.hasConflict,
       };
 
       setStops(prev => {
@@ -365,6 +398,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
                 <div className={styles.calendarStopTitle}>{viewingStop?.stop.title}</div>
                 <div className={styles.calendarStopLocation}>📍{viewingStop?.stop.location}</div>
                 <div className={styles.calendarStopNotes}>{viewingStop?.stop.notes}</div>
+                <EventMemberAvatars members={viewingStop?.stop.members ?? []}/>
               </button>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <Button danger onClick={() => setConfirmingDelete(true)}>Delete</Button>
