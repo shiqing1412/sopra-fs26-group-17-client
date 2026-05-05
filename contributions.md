@@ -129,8 +129,13 @@ reason).
 
 | **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
 | ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
-| **@shiqing1412** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@shiqing1412** | 5 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/14a9f25281e94c3b9ee0a51f65fcc00590cf7367 | added display trip name and date range when joining a trip | feedback from bata testing |
+|                    | 5 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/9ceaf66e5bc0aef0f6ded1af94a3ac65feb9e4e8 | correctly handle emojis in the username | feedback from bata testing |
+|                    | 5 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/bf54e5c43cf574d1adb65bab3d9535ea57beecec |moving buttons(share link, delete trip, leave trip) from setting to nav bar | feedback from bata testing |
+|                    | 5 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/404a1f19721157f62975f45314f53f181c1dbbec | show a confirmation after successful copy the share link| feedback from bata testing |
+|                    | 5 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/eba5490e3d2a4a7ee90828619d2df474e7d3965f | added error message for users | feedback from bata testing |
+|                    | 5 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/96c913221360a2fae622a14d5a9de6bee591e8d2 | add shared error-display utility | feedback from bata testing |
+|                    | 5 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/56c5be47a4831b0638381e6309070d878248e498 | apply showError utility across all error handling | feedback from bata testing |
 | **@julituchi** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@Raminminn** | 4 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/181826f10b596306d4d12f08c702c9ca8fe32693 | display avatars of members who are taking part in an event | to see who is taking part in an event, especially helpful for conflicting events |
