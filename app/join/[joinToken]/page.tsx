@@ -1,11 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button, Modal } from "antd";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import styles from "./join.module.css";
+
+interface TripPreview {
+  tripId: number;
+  tripTitle: string;
+  startDate: string;
+  endDate: string;
+}
 
 interface TripJoinResponse {
   tripId: number;
@@ -21,6 +28,13 @@ const JoinTripPage: React.FC = () => {
 
   const [joining, setJoining] = useState(false);
   const [alreadyMember, setAlreadyMember] = useState(false);
+  const [preview, setPreview] = useState<TripPreview | null>(null);
+
+  useEffect(() => {
+    apiService.get<TripPreview>(`/trips/join/${joinToken}/preview`)
+      .then(setPreview)
+      .catch(() => {});
+  }, [joinToken]);
 
   const handleConfirm = async () => {
     if (!token) {
@@ -81,9 +95,18 @@ const JoinTripPage: React.FC = () => {
           <div className={styles.content}>
             <div className={styles.icon}>✈️</div>
             <h2 className={styles.title}>You&apos;ve Been Invited!</h2>
-            <p className={styles.subtitle}>
-              Join this trip and start planning together with your group.
-            </p>
+            {preview ? (
+              <div className={styles.tripInfo}>
+                <p className={styles.tripTitle}>{preview.tripTitle}</p>
+                <p className={styles.tripDates}>
+                  {new Date(preview.startDate).toLocaleDateString()} – {new Date(preview.endDate).toLocaleDateString()}
+                </p>
+              </div>
+            ) : (
+              <p className={styles.subtitle}>
+                Join this trip and start planning together with your group.
+              </p>
+            )}
             <div className={styles.actions}>
               <Button onClick={handleCancel} className={styles.cancelBtn}>
                 Cancel
