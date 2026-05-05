@@ -243,6 +243,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [editingStop, setEditingStop] = useState<{ stop: NewStopValues; date: Date } | null>(null);
+  const [optOutLoading, setOptOutLoading] = useState(false);
 
   const handleDeleteStop = async () => {
     if (!viewingStop) return;
@@ -263,6 +264,32 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
       setDeleteLoading(false);
     }
   };
+
+  const handleOptOut = async () => {
+  if (!viewingStop || !currentUser) return;
+  const key = dateKey(viewingStop.date);
+  console.log("opt out key:", key);
+  setOptOutLoading(true);
+  try {
+    const api = new ApiService();
+    /* todo: check api with backend when implemented */
+    await api.put<void>(`/trips/${trip.tripId}/events/${viewingStop.stop.id}/optout`, {});
+    const updatedMembers = viewingStop.stop.members.filter(m => m.username !== currentUser.username);
+    const updatedStop = { ...viewingStop.stop, members: updatedMembers };
+    setStops(prev => {
+      console.log("available keys:", Object.keys(prev));
+      return {
+        ...prev,
+        [key]: prev[key].map(s => s.id === viewingStop.stop.id ? updatedStop : s),
+      };
+    });
+    setViewingStop(null);
+  } catch {
+    message.error("Failed to opt out. Please try again.");
+  } finally {
+    setOptOutLoading(false);
+  }
+};
 
   const handleEditStop = async (values: NewStopValues) => {
     if (!editingStop) return;
@@ -391,24 +418,29 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
           footer={null}
         >
           <div className={styles.calendarDayStops}>
-              <button className={styles.calendarStopCard}>
-                <div className={styles.calendarStopTime}>
-                    {viewingStop?.stop.startTime?.format("HH:mm")} {viewingStop?.stop.endTime ? `→ ${viewingStop?.stop.endTime.format("HH:mm")}` : ""}
-                </div>
-                <div className={styles.calendarStopTitle}>{viewingStop?.stop.title}</div>
-                <div className={styles.calendarStopLocation}>📍{viewingStop?.stop.location}</div>
-                <div className={styles.calendarStopNotes}>{viewingStop?.stop.notes}</div>
-                <EventMemberAvatars members={viewingStop?.stop.members ?? []}/>
-              </button>
+            <button className={styles.calendarStopCard}>
+              <div className={styles.calendarStopTime}>
+                  {viewingStop?.stop.startTime?.format("HH:mm")} {viewingStop?.stop.endTime ? `→ ${viewingStop?.stop.endTime.format("HH:mm")}` : ""}
+              </div>
+              <div className={styles.calendarStopTitle}>{viewingStop?.stop.title}</div>
+              <div className={styles.calendarStopLocation}>📍{viewingStop?.stop.location}</div>
+              <div className={styles.calendarStopNotes}>{viewingStop?.stop.notes}</div>
+              <EventMemberAvatars members={viewingStop?.stop.members ?? []}/>
+            </button>
+
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <Button danger onClick={() => setConfirmingDelete(true)}>Delete</Button>
+              <Button
+                onClick={handleOptOut}
+                loading={optOutLoading}
+                disabled={!viewingStop?.stop.members.some(m => m.username === currentUser?.username)}>Opt out</Button>
               <Button type="primary" onClick={() => {
                 if (viewingStop) form.setFieldsValue({
                   ...viewingStop.stop,
                   startTime: viewingStop.stop.startTime ? dayjs(viewingStop.stop.startTime) : null,
                   endTime: viewingStop.stop.endTime ? dayjs(viewingStop.stop.endTime) : null,
                 });
-                setEditingStop(viewingStop); 
+                setEditingStop(viewingStop);
                 setViewingStop(null)}}>
                   Edit
                 </Button>
