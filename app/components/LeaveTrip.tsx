@@ -2,6 +2,10 @@ import React from "react";
 import { Button, Form, Modal } from "antd";
 import dayjs from "dayjs";
 import { Trip } from "@/types/trip";
+import { useApi } from "@/hooks/useApi";
+import { User } from "@/types/user";
+import useLocalStorage from "@/hooks/useLocalStorage";
+import { useRouter } from "next/navigation";
 
 const ILLUSTRATIONS = ["🌍", "🗺️", "✈️", "🏖️", "🏔️", "🌴", "🗽", "🎡"];
 
@@ -18,10 +22,22 @@ interface LeaveTripProps {
 }
 
 const LeaveTrip: React.FC<LeaveTripProps> = ({ open, onClose, trip }) => {
-
+  const apiService = useApi();
+  const router = useRouter();
+  const [isLeaving, setIsLeaving] = React.useState(false);
+  const { value: user } = useLocalStorage<User | null>("user", null);
+  
   const handleLeaveTrip = async (): Promise<void> => {
-    // TODO: implement leave trip functionality
-    onClose();
+    setIsLeaving(true);
+    try {
+      await apiService.delete(`/trips/${trip?.tripId}/members/${user?.id}`);
+      onClose();
+      router.push("/trips");
+    } catch (error) {
+      console.error("Failed to leave trip:", error);
+    } finally {
+      setIsLeaving(false);
+    }
   };
 
   return (
@@ -38,7 +54,15 @@ const LeaveTrip: React.FC<LeaveTripProps> = ({ open, onClose, trip }) => {
         <Form.Item key="leave-trip" style={{ marginBottom: 0, marginTop: 8 }}>
           <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
             <Button onClick={onClose} style={{ flex: 2 }}>Stay</Button>
-            <Button type="primary" onClick={handleLeaveTrip} style={{ flex: 3 }}>Leave</Button>
+            <Button 
+              type="primary" 
+              onClick={handleLeaveTrip} 
+              loading={isLeaving}
+              disabled={isLeaving}
+              style={{ flex: 3 }}
+            >
+              Leave
+            </Button>
           </div>
         </Form.Item>
       ]}

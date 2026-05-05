@@ -55,7 +55,7 @@ const Dashboard: React.FC = () => {
     if (modalOpen) {
       form.resetFields();
     }
-  }, [modalOpen]);
+  }, [modalOpen, form]);
 
   const { value: user } = useLocalStorage<User | null>("user", null);
   const { set: setStoredTrip } = useLocalStorage<Trip | null>("trip", null);

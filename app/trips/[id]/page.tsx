@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { Trip } from "@/types/trip";
 import { User } from "@/types/user";
@@ -37,16 +37,18 @@ const Profile: React.FC = () => {
 
   const { value: user } = useLocalStorage<User | null>("user", null);
   const { value: storedTrip } = useLocalStorage<Trip | null>("trip", null);
+  const storedTripRef = useRef(storedTrip);
 
   const apiService = useApi();
+  const apiServiceRef = useRef(apiService);
 
   const { handleLogout } = Logout();
 
   useEffect(() => {
-    if (storedTrip && String(storedTrip.tripId) === id) {
-      setTrip(storedTrip);
+    if (storedTripRef.current && String(storedTripRef.current.tripId) === id) {
+      setTrip(storedTripRef.current);
     } else {
-      apiService.get<Trip>(`/trips/${id}`)
+      apiServiceRef.current.get<Trip>(`/trips/${id}`)
         .then(setTrip)
         .catch((err) => console.error("Failed to fetch trip", err));
     }
@@ -124,7 +126,6 @@ const Profile: React.FC = () => {
           
           {/* Online indicator for trip members */}
           <MemberOnlineStatus
-            trip={trip}
             currentUser={user}
             allMembers={allMembers}
             onlineUsernames={onlineMembers}
