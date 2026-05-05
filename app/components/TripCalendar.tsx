@@ -2,10 +2,11 @@ import type { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
 import { useState, useEffect } from "react";
-import { Button, ConfigProvider, Form, message, Modal } from "antd";
+import { Button, ConfigProvider, Form, Modal } from "antd";
+import { showError } from "@/utils/showError";
 import { ApiService } from "@/api/apiService";
 import dayjs, { Dayjs } from "dayjs";
-import { getAvatarColor } from "@/utils/avatarColors";
+import { getAvatarColor, getAvatarInitial } from "@/utils/avatarColors";
 import StopModal, { StopFormValues } from "./StopModal";
 
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -89,7 +90,7 @@ function EventMemberAvatars({ members }: Readonly<{ members: { userId: number; u
           style={{ backgroundColor: getAvatarColor(member.username) }}
           title={member.username}
         >
-          {member.username?.[0]?.toUpperCase() ?? "?"}
+          {getAvatarInitial(member.username)}
         </div>
       ))}
     </div>
@@ -133,7 +134,7 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops, highli
               title={stop.createdBy?.username ?? ""}
               style={{ backgroundColor: getAvatarColor(stop.createdBy?.username ?? null) }}
             >
-              {stop.createdBy?.username?.[0]?.toUpperCase() ?? "?"}
+              {getAvatarInitial(stop.createdBy?.username)}
             </div>
             <div className={styles.calendarStopTitle}>{stop.title}</div>
             <div className={styles.calendarStopLocation}>📍{stop.location}</div>
@@ -194,9 +195,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
       setStops(prev => ({ ...prev, [key]: [...(prev[key] ?? []), newStop] }));
       setSelectedPlace(null);
     } catch (error) {
-      const msg = error instanceof Error ? error.message : "Unknown error";
-      message.error(`Failed to add stop: ${msg}`);
-      console.error(error);
+      showError(error, "Failed to add stop.");
     }
   };
 
@@ -231,7 +230,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
         }
         setStops(fetched);
       } catch (error) {
-        console.error("Failed to fetch events", error);
+        showError(error, "Failed to load events.");
       }
     };
 
@@ -258,8 +257,8 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
       }));
       setConfirmingDelete(false);
       setViewingStop(null);
-    } catch {
-      alert("Failed to delete the stop. Please try again.");
+    } catch (error) {
+      showError(error, "Failed to delete the stop. Please try again.");
     } finally {
       setDeleteLoading(false);
     }
@@ -337,8 +336,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
       setEditingStop(null);
 
     } catch (error) {
-      const msg = error instanceof Error ? error.message : "Unknown error";
-      alert(`Failed to edit stop: ${msg}`);
+      showError(error, "Failed to edit stop.");
     }
   };
 
@@ -357,7 +355,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
         setSelectedDate(null);
       }
     } catch (error) {
-      console.error("Failed to save stop:", error);
+      showError(error, "Failed to save stop.");
     }
   };
 

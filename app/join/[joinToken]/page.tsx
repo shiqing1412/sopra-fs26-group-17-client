@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button, Modal } from "antd";
+import { showError } from "@/utils/showError";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import styles from "./join.module.css";
@@ -33,7 +34,7 @@ const JoinTripPage: React.FC = () => {
   useEffect(() => {
     apiService.get<TripPreview>(`/trips/join/${joinToken}/preview`)
       .then(setPreview)
-      .catch(() => {});
+      .catch((error) => showError(error, "Could not load trip preview."));
   }, [joinToken]);
 
   const handleConfirm = async () => {
@@ -58,7 +59,7 @@ const JoinTripPage: React.FC = () => {
         router.push("/login");
         return;
       }
-      alert(message);
+      showError(error);
     } finally {
       setJoining(false);
     }

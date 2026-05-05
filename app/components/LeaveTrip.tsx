@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Form, Modal } from "antd";
+import { showError } from "@/utils/showError";
 import dayjs from "dayjs";
 import { Trip } from "@/types/trip";
 import { useApi } from "@/hooks/useApi";
@@ -34,7 +35,7 @@ const LeaveTrip: React.FC<LeaveTripProps> = ({ open, onClose, trip }) => {
       onClose();
       router.push("/trips");
     } catch (error) {
-      console.error("Failed to leave trip:", error);
+      showError(error, "Failed to leave trip. Please try again.");
     } finally {
       setIsLeaving(false);
     }

@@ -1,4 +1,5 @@
 import styles from '@/styles/trips.module.css';
+import { showError } from "@/utils/showError";
 import LocationMap from '@/components/LocationMap';
 import { NewStopValues } from '@/components/TripCalendar';
 import React, { useEffect, useRef, useState } from 'react';
@@ -35,7 +36,7 @@ export default function TripLeft({tripId, stops = {}, setHighlightedStopId}: Tri
         const fetched = await apiServiceRef.current.get<Member[]>(`/trips/${tripId}/members`);
         setMembers(fetched.filter((m) => m.username !== user?.username));
       } catch (error) {
-        console.error("Failed to fetch members:", error);
+        showError(error, "Failed to load trip members.");
       }
     };
 

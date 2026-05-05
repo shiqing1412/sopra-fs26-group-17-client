@@ -12,6 +12,7 @@ import styles from "@/styles/trips.module.css";
 import Logout from "@/components/Logout";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
 import { getAvatarColor, getAvatarInitial } from "@/utils/avatarColors";
+import { showError } from "@/utils/showError";
 
 const ILLUSTRATIONS = ["🌍", "🗺️", "✈️", "🏖️", "🏔️", "🌴", "🗽", "🎡"];
 
@@ -79,6 +80,8 @@ const Dashboard: React.FC = () => {
     } catch (error) {
       if (error instanceof Error) {
         form.setFields([{ name: "title", errors: [error.message] }]);
+      } else {
+        showError(error);
       }
     } finally {
       setCreating(false);
@@ -93,11 +96,7 @@ const Dashboard: React.FC = () => {
         const fetchedTrips = await apiService.get<Trip[]>(`/trips`);
         setTrips(fetchedTrips ?? []);
       } catch (error) {
-        if (error instanceof Error) {
-          alert(`Failed to fetch trips:\n${error.message}`);
-        } else {
-          console.error("An unknown error occurred while fetching trips.");
-        }
+        showError(error, "Failed to load trips.");
       }
     };
 

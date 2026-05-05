@@ -7,5 +7,10 @@ export function getAvatarColor(username: string | null): string {
 }
 
 export function getAvatarInitial(username: string | null | undefined): string {
-  return username?.[0]?.toUpperCase() ?? "?";
+  if (!username) return "?";
+  return Array.from(username)[0]?.toUpperCase() ?? "?";
+}
+
+export function isEmojiChar(char: string): boolean {
+  return /^\p{Extended_Pictographic}/u.test(char);
 }

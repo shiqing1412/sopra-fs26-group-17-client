@@ -3,7 +3,7 @@
 import React from "react";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
-import { getAvatarColor } from "@/utils/avatarColors";
+import { getAvatarColor, getAvatarInitial } from "@/utils/avatarColors";
 
 interface OnlineStatusProps {
   currentUser?: User | null;
@@ -47,7 +47,7 @@ const MemberOnlineStatus: React.FC<OnlineStatusProps> = ({
               style={{ background: getAvatarColor(username ?? null) }}
               title={username}
             >
-              {username?.[0]?.toUpperCase() ?? "?"}
+              {getAvatarInitial(username)}
             </div>
           );
         })}

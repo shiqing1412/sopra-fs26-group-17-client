@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Modal } from "antd";
+import { Modal, message } from "antd";
 import { CopyFilled, CheckOutlined } from "@ant-design/icons";
 import { Trip } from "@/types/trip";
 import styles from "@/styles/trips.module.css";
@@ -20,6 +20,7 @@ const ShareLink: React.FC<ShareLinkProps> = ({ open, onClose, trip }) => {
   const handleCopy = async () => {
     await navigator.clipboard.writeText(shareUrl);
     setCopied(true);
+    message.success("Link copied! Share it with your friends :)");
     setTimeout(() => setCopied(false), 2000);
   };
 
