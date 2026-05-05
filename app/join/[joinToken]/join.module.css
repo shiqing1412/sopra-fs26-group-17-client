@@ -47,6 +47,23 @@
   max-width: 320px;
 }
 
+.tripInfo {
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.tripTitle {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1A1612;
+  margin-bottom: 4px;
+}
+
+.tripDates {
+  font-size: 14px;
+  color: #6b6560;
+}
+
 .actions {
   display: flex;
   gap: 12px;
