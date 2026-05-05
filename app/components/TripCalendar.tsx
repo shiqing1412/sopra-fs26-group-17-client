@@ -283,8 +283,8 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
       };
     });
     setViewingStop(null);
-  } catch {
-    message.error("Failed to opt out. Please try again.");
+  } catch (error) {
+    showError(error, "Failed to opt out. Please try again.");
   } finally {
     setOptOutLoading(false);
   }
