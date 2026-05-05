@@ -207,10 +207,10 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
       try {
         
         const api = new ApiService();
-        const days = await api.get<DayDTO[]>(`/trips/${trip.tripId}/events`);
+        const res = await api.get<{days: DayDTO[]}>(`/trips/${trip.tripId}/events`);
 
         const fetched: Record<string, (NewStopValues & { id: string })[]> = {};
-        for (const day of days) {
+        for (const day of res.days) {
           const date = new Date(day.date + "T00:00:00");
           date.setHours(0, 0, 0, 0);
           const key = day.date;
@@ -236,7 +236,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
     };
 
     fetchEvents();
-  }, [trip.tripId, refetchTrigger]);
+  }, [trip.tripId, refetchTrigger, setStops]);
 
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null);
   const [viewingStop, setViewingStop] = useState<{ stop: NewStopValues; date: Date } | null>(null);
@@ -258,7 +258,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
       setConfirmingDelete(false);
       setViewingStop(null);
     } catch {
-      message.error("Failed to delete the stop. Please try again.");
+      alert("Failed to delete the stop. Please try again.");
     } finally {
       setDeleteLoading(false);
     }

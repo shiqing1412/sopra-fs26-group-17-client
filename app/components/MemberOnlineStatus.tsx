@@ -1,25 +1,20 @@
 "use client";
 
 import React from "react";
-import { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
 import { getAvatarColor } from "@/utils/avatarColors";
 
 interface OnlineStatusProps {
-  trip: Trip | null;
   currentUser?: User | null;
   onlineUsernames?: string[]; 
   allMembers: string[];
-  maxAvatars?: number; 
 }
 
 const MemberOnlineStatus: React.FC<OnlineStatusProps> = ({ 
-  trip, 
   currentUser,
   onlineUsernames = [], 
   allMembers,
-  maxAvatars 
 }) => {
   const displayMax = 5;
   // online members excluding current user

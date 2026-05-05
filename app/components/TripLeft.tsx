@@ -25,13 +25,14 @@ export default function TripLeft({tripId, stops = {}, setHighlightedStopId}: Tri
   const [members, setMembers] = useState<Member[]>([]);
   const apiService = useApi();
   const { value: user } = useLocalStorage<User | null>("user", null);
+  const apiServiceRef = useRef(apiService);
 
   useEffect(() => {
     if (!tripId) return;
 
     const fetchMembers = async () => {
       try {
-        const fetched = await apiService.get<Member[]>(`/trips/${tripId}/members`);
+        const fetched = await apiServiceRef.current.get<Member[]>(`/trips/${tripId}/members`);
         setMembers(fetched.filter((m) => m.username !== user?.username));
       } catch (error) {
         console.error("Failed to fetch members:", error);
@@ -39,7 +40,7 @@ export default function TripLeft({tripId, stops = {}, setHighlightedStopId}: Tri
     };
 
     fetchMembers();
-  }, [tripId]);
+  }, [tripId, user?.username]);
 
 
   // remove highlighted stop when clicking outside the map

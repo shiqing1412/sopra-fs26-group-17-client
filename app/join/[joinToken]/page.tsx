@@ -20,7 +20,6 @@ const JoinTripPage: React.FC = () => {
   const { value: token } = useLocalStorage<string>("token", "");
 
   const [joining, setJoining] = useState(false);
-  const [modalOpen, setModalOpen] = useState(true);
   const [alreadyMember, setAlreadyMember] = useState(false);
 
   const handleConfirm = async () => {
@@ -62,7 +61,7 @@ const JoinTripPage: React.FC = () => {
       </div>
 
       <Modal
-        open={modalOpen}
+        open={true}
         onCancel={handleCancel}
         footer={null}
         centered
