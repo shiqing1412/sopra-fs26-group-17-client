@@ -8,7 +8,6 @@ import styles from "@/styles/trips.module.css";
 import Logout from "@/components/Logout";
 import TripCalendar, { NewStopValues } from "@/components/TripCalendar";
 import dayjs from "dayjs";
-import { Form, Button, Modal } from "antd";
 import Link from "next/link";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
 import { useApi } from "@/hooks/useApi";
@@ -24,7 +23,6 @@ const Profile: React.FC = () => {
   const { isLoading } = useProtectedRoute();
   const { id } = useParams<{ id: string }>();
 
-  const [settingsOpen, setSettingsOpen] = useState(false);
   const [shareLinkOpen, setShareLinkOpen] = useState(false);
   const [LeaveTripOpen, setLeaveTripOpen] = useState(false);
   const [deleteTripOpen, setDeleteTripOpen] = useState(false);
@@ -131,34 +129,19 @@ const Profile: React.FC = () => {
             onlineUsernames={onlineMembers}
           />
           
-          <button className={styles.settingsBtn} onClick={() => setSettingsOpen(true)}>
-            ⚙︎ Settings
+          <button className={styles.shareLinkBtn} onClick={() => setShareLinkOpen(true)}>
+            Share Link
           </button>
+          <button className={styles.shareLinkBtn} onClick={() => setLeaveTripOpen(true)}>
+            Leave Trip
+          </button>
+          {trip?.owner?.id === user?.id && (
+            <button className={styles.settingsBtn} onClick={() => setDeleteTripOpen(true)}>
+              Delete Trip
+            </button>
+          )}
         </div>
       </nav>
-      <Modal
-        title={<span style={{ color: "black" }}>Trip Settings</span>}
-        open={settingsOpen}
-        onCancel={() => setSettingsOpen(false)}
-        footer={null}
-      >
-        <Form.Item>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "8px 0" }}>
-            <Button type="primary" onClick={() => setShareLinkOpen(true)}>
-              Share Link
-            </Button>
-            <Button type="primary" onClick={() => setLeaveTripOpen(true)}>
-              Leave Trip
-            </Button>
-            { trip?.owner?.id === user?.id && (
-              <Button type="primary" onClick={() => setDeleteTripOpen(true)}>
-                Delete Trip
-              </Button>
-            )}
-          </div>
-        </Form.Item>
-
-      </Modal>
 
       {/* Share Link */}
       <ShareLink

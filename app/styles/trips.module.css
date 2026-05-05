@@ -104,6 +104,23 @@
   transition: background 0.15s, color 0.15s;
 }
 
+.shareLinkBtn {
+  padding: 6px 16px;
+  border-radius: 8px;
+  border: 1.5px solid #c0392b;
+  background: #fff;
+  color: #c0392b;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+
+.shareLinkBtn:hover {
+  background: #fdecea;
+}
+
 /* Share link */
 .shareLinkModal {
   display: flex;
