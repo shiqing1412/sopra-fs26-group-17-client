@@ -232,6 +232,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
         setStops(fetched);
       } catch (error) {
         console.error("Failed to fetch events", error);
+        message.error("Failed to load events.");
       }
     };
 
@@ -329,8 +330,8 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
         await handleAddStop(values);
         setSelectedDate(null);
       }
-    } catch (error) {
-      console.error("Failed to save stop:", error);
+    } catch {
+      message.error("Failed to save stop.");
     }
   };
 

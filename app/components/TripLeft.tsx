@@ -1,3 +1,4 @@
+import { message } from "antd";
 import styles from '@/styles/trips.module.css';
 import LocationMap from '@/components/LocationMap';
 import { NewStopValues } from '@/components/TripCalendar';
@@ -36,6 +37,7 @@ export default function TripLeft({tripId, stops = {}, setHighlightedStopId}: Tri
         setMembers(fetched.filter((m) => m.username !== user?.username));
       } catch (error) {
         console.error("Failed to fetch members:", error);
+        message.error("Failed to load trip members.");
       }
     };
 

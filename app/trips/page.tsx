@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Modal, Form, Input, DatePicker, Button } from "antd";
+import { Modal, Form, Input, DatePicker, Button, message } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
@@ -79,6 +79,8 @@ const Dashboard: React.FC = () => {
     } catch (error) {
       if (error instanceof Error) {
         form.setFields([{ name: "title", errors: [error.message] }]);
+      } else {
+        message.error("Failed to create trip.");
       }
     } finally {
       setCreating(false);
@@ -96,7 +98,7 @@ const Dashboard: React.FC = () => {
         if (error instanceof Error) {
           alert(`Failed to fetch trips:\n${error.message}`);
         } else {
-          console.error("An unknown error occurred while fetching trips.");
+          message.error("Failed to load trips.");
         }
       }
     };
