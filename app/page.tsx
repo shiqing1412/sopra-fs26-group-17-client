@@ -99,7 +99,7 @@ export default function Home() {
               fontWeight: 300,
             }}
           >
-            Log in
+            Sign in
           </Button>
           <Button
             size="middle"
@@ -112,7 +112,7 @@ export default function Home() {
               fontWeight: 500,
             }}
           >
-            Register
+            Sign up
           </Button>
         </div>
       </nav>
@@ -183,9 +183,9 @@ export default function Home() {
             size="large"
             onClick={() => router.push("/login")}
             style={{
-              backgroundColor: "#C2603A",
-              border: "none",
-              color: "#f6f4f2",
+              backgroundColor: "transparent",
+              border: "1.5px solid #4A4340",
+              color: "#c8bfb8",
               fontFamily: "'DM Sans', sans-serif",
               fontWeight: 500,
               padding: "0 36px",
@@ -193,15 +193,15 @@ export default function Home() {
               fontSize: 15,
             }}
           >
-            Start Planning
+            My Trips
           </Button>
           <Button
             size="large"
             onClick={() => router.push("/register")}
             style={{
-              backgroundColor: "transparent",
-              border: "1.5px solid #4A4340",
-              color: "#c8bfb8",
+              backgroundColor: "#C2603A",
+              border: "1.5px solid #C2603A",
+              color: "#f6f4f2",
               fontFamily: "'DM Sans', sans-serif",
               fontWeight: 300,
               padding: "0 36px",
@@ -209,7 +209,7 @@ export default function Home() {
               fontSize: 15,
             }}
           >
-            Create an Account
+            Join WanderSync
           </Button>
         </div>
       </div>
