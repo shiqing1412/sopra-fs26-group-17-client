@@ -134,7 +134,7 @@ reason).
 | **@julituchi** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@Raminminn** | 4 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/181826f10b596306d4d12f08c702c9ca8fe32693 | display avatars of members who are taking part in an event | to see who is taking part in an event, especially helpful for conflicting events |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+|                    | 5 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/14840ba518a738bc00a6fc79216b98c7231d668a | added opt out button for events | if a user doesn't want to take part in an activity, they can opt out of it |
 | **@yarablaser** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@dsgji4g4** | 29 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/5bd946f6d3806781a51c4b7e4c4c61eb0c4386d0 | Finalize trip-level presence tracking | Key feature. Enables users to view recent active members  |
