@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { Button, ConfigProvider, Form, message, Modal } from "antd";
 import { ApiService } from "@/api/apiService";
 import dayjs, { Dayjs } from "dayjs";
-import { getAvatarColor } from "@/utils/avatarColors";
+import { getAvatarColor, getAvatarInitial } from "@/utils/avatarColors";
 import StopModal, { StopFormValues } from "./StopModal";
 
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -89,7 +89,7 @@ function EventMemberAvatars({ members }: Readonly<{ members: { userId: number; u
           style={{ backgroundColor: getAvatarColor(member.username) }}
           title={member.username}
         >
-          {member.username?.[0]?.toUpperCase() ?? "?"}
+          {getAvatarInitial(member.username)}
         </div>
       ))}
     </div>
@@ -133,7 +133,7 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops, highli
               title={stop.createdBy?.username ?? ""}
               style={{ backgroundColor: getAvatarColor(stop.createdBy?.username ?? null) }}
             >
-              {stop.createdBy?.username?.[0]?.toUpperCase() ?? "?"}
+              {getAvatarInitial(stop.createdBy?.username)}
             </div>
             <div className={styles.calendarStopTitle}>{stop.title}</div>
             <div className={styles.calendarStopLocation}>📍{stop.location}</div>
