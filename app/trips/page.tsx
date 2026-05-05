@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Modal, Form, Input, DatePicker, Button, message } from "antd";
+import { Modal, Form, Input, DatePicker, Button } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
@@ -12,6 +12,7 @@ import styles from "@/styles/trips.module.css";
 import Logout from "@/components/Logout";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
 import { getAvatarColor, getAvatarInitial } from "@/utils/avatarColors";
+import { showError } from "@/utils/showError";
 
 const ILLUSTRATIONS = ["🌍", "🗺️", "✈️", "🏖️", "🏔️", "🌴", "🗽", "🎡"];
 
@@ -80,7 +81,7 @@ const Dashboard: React.FC = () => {
       if (error instanceof Error) {
         form.setFields([{ name: "title", errors: [error.message] }]);
       } else {
-        message.error("Failed to create trip.");
+        showError(error);
       }
     } finally {
       setCreating(false);
@@ -95,11 +96,7 @@ const Dashboard: React.FC = () => {
         const fetchedTrips = await apiService.get<Trip[]>(`/trips`);
         setTrips(fetchedTrips ?? []);
       } catch (error) {
-        if (error instanceof Error) {
-          alert(`Failed to fetch trips:\n${error.message}`);
-        } else {
-          message.error("Failed to load trips.");
-        }
+        showError(error, "Failed to load trips.");
       }
     };
 

@@ -1,4 +1,5 @@
 import { useApi } from "@/hooks/useApi";
+import { showError } from "@/utils/showError";
 import { useRouter } from "next/navigation";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { User } from "@/types/user";
@@ -15,8 +16,7 @@ export default function Logout() {
             await apiService.post<User>("/logout", {});
         }
         } catch (error) {
-            const message = error instanceof Error ? error.message : String(error);
-            alert(`Something went wrong during the logout:\n${message}`);
+            showError(error, "Something went wrong during logout.");
         }  finally {
         clearToken();
         clearUser();

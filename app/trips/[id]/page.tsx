@@ -16,7 +16,7 @@ import LeaveTrip from "@/components/LeaveTrip";
 import MemberOnlineStatus from "@/components/MemberOnlineStatus";
 import { getAvatarColor, getAvatarInitial } from "@/utils/avatarColors";
 import { useParams } from "next/navigation";
-import { message } from "antd";
+import { showError } from "@/utils/showError";
 import TripLeft from "@/components/TripLeft";
 import DeleteTrip from "@/components/DeleteTrip";
 
@@ -49,10 +49,7 @@ const Profile: React.FC = () => {
     } else {
       apiServiceRef.current.get<Trip>(`/trips/${id}`)
         .then(setTrip)
-        .catch((err) => {
-          console.error("Failed to fetch trip", err);
-          message.error("Failed to load trip.");
-        });
+        .catch((err) => showError(err, "Failed to load trip."));
     }
   }, [id]);
 

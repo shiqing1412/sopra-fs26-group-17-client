@@ -2,7 +2,8 @@ import type { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
 import { useState, useEffect } from "react";
-import { Button, ConfigProvider, Form, message, Modal } from "antd";
+import { Button, ConfigProvider, Form, Modal } from "antd";
+import { showError } from "@/utils/showError";
 import { ApiService } from "@/api/apiService";
 import dayjs, { Dayjs } from "dayjs";
 import { getAvatarColor, getAvatarInitial } from "@/utils/avatarColors";
@@ -194,9 +195,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
       setStops(prev => ({ ...prev, [key]: [...(prev[key] ?? []), newStop] }));
       setSelectedPlace(null);
     } catch (error) {
-      const msg = error instanceof Error ? error.message : "Unknown error";
-      message.error(`Failed to add stop: ${msg}`);
-      console.error(error);
+      showError(error, "Failed to add stop.");
     }
   };
 
@@ -231,8 +230,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
         }
         setStops(fetched);
       } catch (error) {
-        console.error("Failed to fetch events", error);
-        message.error("Failed to load events.");
+        showError(error, "Failed to load events.");
       }
     };
 
@@ -258,8 +256,8 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
       }));
       setConfirmingDelete(false);
       setViewingStop(null);
-    } catch {
-      alert("Failed to delete the stop. Please try again.");
+    } catch (error) {
+      showError(error, "Failed to delete the stop. Please try again.");
     } finally {
       setDeleteLoading(false);
     }
@@ -311,8 +309,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
       setEditingStop(null);
 
     } catch (error) {
-      const msg = error instanceof Error ? error.message : "Unknown error";
-      alert(`Failed to edit stop: ${msg}`);
+      showError(error, "Failed to edit stop.");
     }
   };
 
@@ -330,8 +327,8 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
         await handleAddStop(values);
         setSelectedDate(null);
       }
-    } catch {
-      message.error("Failed to save stop.");
+    } catch (error) {
+      showError(error, "Failed to save stop.");
     }
   };
 

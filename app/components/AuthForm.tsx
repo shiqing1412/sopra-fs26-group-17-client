@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { User } from "@/types/user";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
+import { showError } from "@/utils/showError";
 
 interface AuthFormProps {
   readonly mode: "login" | "register";
@@ -46,7 +47,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
         } else if (message.includes("The password is incorrect!")) {
           form.setFields([{ name: "password", errors: ["Password is incorrect. Please try again."] }]);
         } else {
-          alert(`Something went wrong:\n${message}`);
+          showError(error);
         }
       }
   };
@@ -62,7 +63,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
     try{
       const response = await apiService.post<User>("/users", values);  
       if (!response.token) {
-        alert("Registration failed. Please try again.");
+        message.error("Registration failed. Please try again.");
         return;
       }
 
@@ -89,7 +90,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
       } else if(message.includes("Passwords do not match.")) {
         form.setFields([{ name: "passwordConfirm", errors: ["Passwords do not match."] }]);
       } else {
-        alert(`Something went wrong:\n${message}`);
+        showError(error);
       }
     }
   };
