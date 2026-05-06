@@ -143,7 +143,7 @@ const Dashboard: React.FC = () => {
             const status = getStatus(trip.startDate, trip.endDate);
             const members = trip.collaborators
               ? trip.collaborators.split(",").filter(Boolean)
-              : [trip.owner ?? ""].filter(Boolean);              
+              : [typeof trip.owner === "object" ? trip.owner?.username : trip.owner ?? ""].filter(Boolean)         
             const badgeClass = status === "active"
               ? styles.badgeActive
               : status === "upcoming"
@@ -173,9 +173,9 @@ const Dashboard: React.FC = () => {
                           key={m}
                           className={styles.avatar}
                           style={{ background: getAvatarColor(m ?? null) }}
-                          title={m}
+                          title={m ?? undefined}
                         >
-                          {m[0]?.toUpperCase()}
+                          {m?.[0]?.toUpperCase()}
                         </div>
                       ))}
                     </div>
