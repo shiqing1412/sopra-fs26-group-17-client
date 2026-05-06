@@ -1,9 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { Modal, message } from "antd";
+import { Modal } from "antd";
 import { CopyFilled, CheckOutlined } from "@ant-design/icons";
 import { Trip } from "@/types/trip";
 import styles from "@/styles/trips.module.css";
+import { App } from "antd";
 
 interface ShareLinkProps {
   open: boolean;
@@ -12,6 +13,8 @@ interface ShareLinkProps {
 }
 
 const ShareLink: React.FC<ShareLinkProps> = ({ open, onClose, trip }) => {
+  const { message } = App.useApp();
+  
   // copied is false by default 
   const [copied, setCopied] = useState(false);
 
