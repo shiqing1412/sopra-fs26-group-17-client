@@ -136,7 +136,7 @@ const Profile: React.FC = () => {
           <button className={styles.shareLinkBtn} onClick={() => setLeaveTripOpen(true)}>
             Leave Trip
           </button>
-          {trip?.owner?.id === user?.id && (
+          {trip?.owner === user?.username && (
             <button className={styles.settingsBtn} onClick={() => setDeleteTripOpen(true)}>
               Delete Trip
             </button>

@@ -11,13 +11,13 @@ function getIllustration(id: string | null): string {
   return ILLUSTRATIONS[Math.abs(idx)];
 }
 
-interface LeaveTripProps {
+interface DeleteTripProps {
   open: boolean;
   onClose: () => void;
   trip: Trip | null;
 }
 
-const DeleteTrip: React.FC<LeaveTripProps> = ({ open, onClose, trip }) => {
+const DeleteTrip: React.FC<DeleteTripProps> = ({ open, onClose, trip }) => {
 
   const handleDeleteTrip = async (): Promise<void> => {
     // TODO: implement delete trip functionality
