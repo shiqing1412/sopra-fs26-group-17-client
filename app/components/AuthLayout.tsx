@@ -12,7 +12,7 @@ export default function AuthLayout({ title, subtitle, children, leftFooterText }
     <div className="login-container">
       <div className="login-left">
         <div style={{ display: "flex" }}>
-          <h1 style={{ marginTop: 70, marginLeft: 60, fontFamily: "'DM Serif Display', serif" }}>Wander</h1>
+          <h1 style={{ marginTop: 70, marginLeft: 60, fontFamily: "'DM Serif Display', serif", color: "#ffffff" }}>Wander</h1>
           <h1 style={{ marginTop: 70, fontFamily: "'DM Serif Display', serif", color: "#da8360" }}>Sync</h1>
         </div>
         <p style={{ marginTop: "auto", marginLeft: 60, marginRight: 60, marginBottom: 100, color: "#8A7A6A", fontWeight: 300, lineHeight: 1.6, fontSize: 16 }}>
