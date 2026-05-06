@@ -53,6 +53,14 @@ const Profile: React.FC = () => {
     return `${dayjs(startDate).format("MMM D")} – ${dayjs(endDate).format("MMM D, YYYY")}`;
   }
 
+  function getMembers(trip: Trip | null): string[] {
+    if (!trip) return [];
+    if (trip.collaborators) {
+      return trip.collaborators.split(",").filter(Boolean);
+    }
+    return [];
+  }
+
   const { handleLogout } = Logout();
 
   useEffect(() => {
@@ -145,9 +153,11 @@ const Profile: React.FC = () => {
           <button className={styles.shareLinkBtn} onClick={() => setShareLinkOpen(true)}>
             Share Link
           </button>
+          {getMembers(trip).length > 1 && (
           <button className={styles.shareLinkBtn} onClick={() => setLeaveTripOpen(true)}>
             Leave Trip
           </button>
+          )}
           {trip?.owner === user?.username && (
             <button className={styles.settingsBtn} onClick={() => setDeleteTripOpen(true)}>
               Delete Trip
