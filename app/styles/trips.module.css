@@ -639,6 +639,13 @@
   white-space: nowrap;
 }
 
+.memberItem span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
 /* event members ------------------------------------------------------------- */
 
 .eventMember {
