@@ -41,6 +41,18 @@ const Profile: React.FC = () => {
   const apiService = useApi();
   const apiServiceRef = useRef(apiService);
 
+  function formatDateRange(startDate: string | null, endDate: string | null): string {
+    if (!startDate && !endDate) return "No dates set";
+    if (!startDate) return `Until ${dayjs(endDate).format("MMM D, YYYY")}`;
+    if (!endDate) return `From ${dayjs(startDate).format("MMM D, YYYY")}`;
+  
+    if (dayjs(startDate).year() !== dayjs(endDate).year()) {
+      return `${dayjs(startDate).format("MMM D, YYYY")} – ${dayjs(endDate).format("MMM D, YYYY")}`;
+    }
+  
+    return `${dayjs(startDate).format("MMM D")} – ${dayjs(endDate).format("MMM D, YYYY")}`;
+  }
+
   const { handleLogout } = Logout();
 
   useEffect(() => {
@@ -119,7 +131,7 @@ const Profile: React.FC = () => {
         <div className={styles.subHeader}>
           <Link href="/trips" style={{ color: "#444", fontWeight: 300 }}>← Trips</Link>
           <span className={styles.tripTitle}>{trip?.tripTitle}</span>
-          <span className={styles.dateRange}>{dayjs(trip?.startDate).format("MMM D")} – {dayjs(trip?.endDate).format("MMM D, YYYY")} · {allMembers.length} members</span>
+          <span className={styles.dateRange}>{formatDateRange(trip?.startDate ?? null, trip?.endDate ?? null)} · {allMembers.length} members</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
           
