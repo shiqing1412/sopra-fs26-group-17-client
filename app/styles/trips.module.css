@@ -45,6 +45,7 @@
   justify-content: center;
   font-size: 13px;
   font-weight: 700;
+  flex-shrink: 0;
 }
 
 .navUsername {
