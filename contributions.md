@@ -144,7 +144,7 @@ reason).
 |                    | 4 May  | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/56dba30e26f8b9db9fbc926f90153d7b762452c7 | delete trip option | owner can delete a trip for the whole group |
 |                    | 5 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/d8fe08c0d6545646ac7110013c8f9eea35ef9652 | handle leave trip | send request to remove member from trip |
 | **@dsgji4g4** | 29 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/5bd946f6d3806781a51c4b7e4c4c61eb0c4386d0 | Finalize trip-level presence tracking | Key feature. Enables users to view recent active members  |
-|                    | 4 May  | [ https://github.com/shiqing1412/sopra-fs26-group-17-server/pull/209/changes/9f89926791d6f6063a4a87b899cd23f9d5fdf52d | Add trip preview endpoint for join flow |  |Enhancement request from Frontend. User can find an overview before joining the trip |
+|                    | 4 May  | https://github.com/shiqing1412/sopra-fs26-group-17-server/pull/209/changes/9f89926791d6f6063a4a87b899cd23f9d5fdf52d | Add trip preview endpoint for join flow | Enhancement request from Frontend. User can find an overview before joining the trip |
 
 ---
 
@@ -160,5 +160,5 @@ reason).
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@yarablaser** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
-| **@dsgji4g4** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@dsgji4g4** | 6 May | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/0ce321a96e3be3808deb264008a4ec1a72fc79c2 | Implemented @RestControllerAdvice to standardize backend error responses | Structurize global exception handling into organized response  |
+|                    | 6 May  | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/cb7026535314cf830494daacf1e757724481711c | Add backend validation for long text input  | M3 Feedback: long input causes 500 raw error |
