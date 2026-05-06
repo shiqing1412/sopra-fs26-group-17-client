@@ -144,7 +144,7 @@ reason).
 |                    | 4 May  | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/56dba30e26f8b9db9fbc926f90153d7b762452c7 | delete trip option | owner can delete a trip for the whole group |
 |                    | 5 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/d8fe08c0d6545646ac7110013c8f9eea35ef9652 | handle leave trip | send request to remove member from trip |
 | **@dsgji4g4** | 29 April   | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/5bd946f6d3806781a51c4b7e4c4c61eb0c4386d0 | Finalize trip-level presence tracking | Key feature. Enables users to view recent active members  |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+|                    | 4 May  | [ https://github.com/shiqing1412/sopra-fs26-group-17-server/pull/209/changes/9f89926791d6f6063a4a87b899cd23f9d5fdf52d | Add trip preview endpoint for join flow |  |Enhancement request from Frontend. User can find an overview before joining the trip |
 
 ---
 
