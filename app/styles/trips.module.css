@@ -634,6 +634,9 @@
   color: #333;
   padding: 6px 0;
   border-bottom: 1px solid #f0ece6;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* event members ------------------------------------------------------------- */
