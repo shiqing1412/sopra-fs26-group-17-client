@@ -143,7 +143,7 @@ const Dashboard: React.FC = () => {
             const status = getStatus(trip.startDate, trip.endDate);
             const members = trip.collaborators
               ? trip.collaborators.split(",").filter(Boolean)
-              : [user?.username ?? ""].filter(Boolean);              
+              : [trip.owner ?? ""].filter(Boolean);              
             const badgeClass = status === "active"
               ? styles.badgeActive
               : status === "upcoming"
