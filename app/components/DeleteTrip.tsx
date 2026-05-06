@@ -17,6 +17,19 @@ interface DeleteTripProps {
   trip: Trip | null;
 }
 
+function formatDateRange(startDate: string | null, endDate: string | null): string {
+    if (!startDate && !endDate) return "No dates set";
+    if (!startDate) return `Until ${dayjs(endDate).format("MMM D, YYYY")}`;
+    if (!endDate) return `From ${dayjs(startDate).format("MMM D, YYYY")}`;
+  
+    if (dayjs(startDate).year() !== dayjs(endDate).year()) {
+      return `${dayjs(startDate).format("MMM D, YYYY")} – ${dayjs(endDate).format("MMM D, YYYY")}`;
+    }
+  
+    return `${dayjs(startDate).format("MMM D")} – ${dayjs(endDate).format("MMM D, YYYY")}`;
+  }
+
+
 const DeleteTrip: React.FC<DeleteTripProps> = ({ open, onClose, trip }) => {
 
   const handleDeleteTrip = async (): Promise<void> => {
@@ -50,7 +63,7 @@ const DeleteTrip: React.FC<DeleteTripProps> = ({ open, onClose, trip }) => {
         <div>
           <div style={{ fontWeight: 600, color: "#111", fontSize: 16 }}>{trip?.tripTitle}</div>
           <div style={{ color: "#888", fontSize: 13 }}>
-            {dayjs(trip?.startDate).format("MMM D")} – {dayjs(trip?.endDate).format("MMM D, YYYY")}
+            {formatDateRange(trip?.startDate ?? null, trip?.endDate ?? null)}
           </div>
         </div>
       </div>
