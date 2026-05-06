@@ -1,7 +1,7 @@
 import type { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button, ConfigProvider, Form, Modal } from "antd";
 import { showError } from "@/utils/showError";
 import { ApiService } from "@/api/apiService";
@@ -9,9 +9,93 @@ import dayjs, { Dayjs } from "dayjs";
 import { getAvatarColor, getAvatarInitial } from "@/utils/avatarColors";
 import StopModal, { StopFormValues } from "./StopModal";
 
+const HOUR_HEIGHT = 56; // px per hour
+const TIME_LABEL_WIDTH = 44; // px for hour labels column
+const COLUMN_WIDTH = 264; // total day column width
+const CONTENT_WIDTH = COLUMN_WIDTH - TIME_LABEL_WIDTH; // 220px for events
+const MIN_EVENT_HEIGHT = 22; // px minimum card height
+const STACK_GAP_MIN = 30; // events closer than this are shown side-by-side, not stacked
+
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"];
+
+function timeInMinutes(t: Dayjs | null): number {
+  if (!t) return 0;
+  return t.hour() * 60 + t.minute();
+}
+
+interface PositionedStop {
+  stop: NewStopValues & { id: string };
+  column: number;
+  totalColumns: number;
+  depth: number; // how many earlier events in the same column overlap this one (for visual indent)
+}
+
+type StopWithId = NewStopValues & { id: string };
+
+function endMinutes(stop: StopWithId): number {
+  const start = timeInMinutes(stop.startTime);
+  return stop.endTime ? timeInMinutes(stop.endTime) : start + 30;
+}
+
+// Pure time overlap — no buffer
+function overlaps(a: StopWithId, b: StopWithId): boolean {
+  return timeInMinutes(a.startTime) < endMinutes(b) && endMinutes(a) > timeInMinutes(b.startTime);
+}
+
+function buildClusters(sorted: StopWithId[]): StopWithId[][] {
+  const clusters: StopWithId[][] = [];
+  for (const stop of sorted) {
+    const matching = clusters.filter(c => c.some(e => overlaps(stop, e)));
+    if (matching.length === 0) {
+      clusters.push([stop]);
+    } else {
+      const merged: StopWithId[] = [stop, ...matching.flat()];
+      for (const c of matching) clusters.splice(clusters.indexOf(c), 1);
+      clusters.push(merged);
+    }
+  }
+  return clusters;
+}
+
+function assignColumns(cluster: StopWithId[]): PositionedStop[] {
+  const sorted = [...cluster].sort((a, b) => timeInMinutes(a.startTime) - timeInMinutes(b.startTime));
+  // Each entry is the list of events assigned to that column
+  const columns: StopWithId[][] = [];
+  const colMap = new Map<string, number>();
+
+  for (const stop of sorted) {
+    const stopStart = timeInMinutes(stop.startTime);
+    // Find the first column with no side-by-side conflict.
+    // Conflict = this stop overlaps an existing event AND their start times are < STACK_GAP_MIN apart.
+    let foundCol = columns.findIndex(col =>
+      !col.some(e => overlaps(stop, e) && stopStart - timeInMinutes(e.startTime) < STACK_GAP_MIN)
+    );
+    if (foundCol === -1) foundCol = columns.length;
+    if (!columns[foundCol]) columns[foundCol] = [];
+    columns[foundCol].push(stop);
+    colMap.set(stop.id, foundCol);
+  }
+
+  const totalColumns = columns.length;
+  return cluster.map(stop => {
+    const col = colMap.get(stop.id) ?? 0;
+    const stopStart = timeInMinutes(stop.startTime);
+    // Depth = number of earlier events in the same column that this one overlaps (for visual indent)
+    const depth = columns[col].filter(
+      e => e.id !== stop.id && timeInMinutes(e.startTime) < stopStart && overlaps(e, stop)
+    ).length;
+    return { stop, column: col, totalColumns, depth };
+  });
+}
+
+function computeEventLayouts(stops: StopWithId[]): PositionedStop[] {
+  const timed = stops.filter(s => s.startTime !== null);
+  if (timed.length === 0) return [];
+  const sorted = [...timed].sort((a, b) => timeInMinutes(a.startTime) - timeInMinutes(b.startTime));
+  return buildClusters(sorted).flatMap(assignColumns);
+}
 
 interface EventMemberDTO {
   userId: number;
@@ -97,21 +181,17 @@ function EventMemberAvatars({ members }: Readonly<{ members: { userId: number; u
   );
 }
  
-function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops, highlightedStopId }: Readonly<{ 
-  date: Date; 
-  dayNumber: number; 
-  onAddStopClick: () => void; 
-  onStopClick: (stop: NewStopValues & { id: string }) => void; 
-  stops: (NewStopValues & { id: string })[];
+function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops, highlightedStopId }: Readonly<{
+  date: Date;
+  dayNumber: number;
+  onAddStopClick: () => void;
+  onStopClick: (stop: StopWithId) => void;
+  stops: StopWithId[];
   highlightedStopId: string | null;
-  }>) {
-  const sortedStops = [...stops].sort((a, b) => {
-    const timeA = a.startTime?.valueOf() ?? 0;
-    const timeB = b.startTime?.valueOf() ?? 0;
-    return timeA - timeB;
-  });
+}>) {
+  const untimedStops = stops.filter(s => !s.startTime);
+  const layouts = computeEventLayouts(stops);
 
-  
   return (
     <div className={styles.calendarDayColumn}>
       <div className={styles.calendarDayHeader}>
@@ -119,33 +199,71 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops, highli
         <span className={styles.calendarDayNumber}>{date.getDate()}</span>
         <span className={styles.calendarDayName}>{DAY_NAMES[date.getDay()]}, {MONTH_NAMES[date.getMonth()]}</span>
       </div>
-      <div className={styles.calendarDayStops}>
-        {sortedStops.map(stop => (
-          <button 
-            key={stop.id} 
-            className={`${styles.calendarStopCard} ${highlightedStopId === stop.id ? styles.calendarStopCardHighlighted : ""}`}
-            onClick={() => onStopClick(stop)}
-          >
-            <div className={styles.calendarStopTime}>
-              {stop.startTime?.format("HH:mm")} {stop.endTime ? `→ ${stop.endTime.format("HH:mm")}` : ""}
-            </div>
-            <div 
-              className={styles.calendarStopAvatars} 
-              title={stop.createdBy?.username ?? ""}
-              style={{ backgroundColor: getAvatarColor(stop.createdBy?.username ?? null) }}
-            >
-              {getAvatarInitial(stop.createdBy?.username)}
-            </div>
-            <div className={styles.calendarStopTitle}>{stop.title}</div>
-            <div className={styles.calendarStopLocation}>📍{stop.location}</div>
-            <div className={styles.calendarStopNotes}>{stop.notes}</div>
-            <EventMemberAvatars members={stop.members}/>
-          </button>
+
+      {untimedStops.length > 0 && (
+        <div className={styles.calendarUntimedStops}>
+          {untimedStops.map(stop => (
+            <button key={stop.id} className={styles.calendarStopCard} onClick={() => onStopClick(stop)}>
+              <div className={styles.calendarStopTitle}>{stop.title}</div>
+              {stop.location && <div className={styles.calendarStopLocation}>📍{stop.location}</div>}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <div className={styles.calendarTimeline}>
+        {Array.from({ length: 24 }, (_, h) => (
+          <div key={h} className={styles.calendarHourRow} style={{ top: h * HOUR_HEIGHT }}>
+            <span className={styles.calendarHourLabel}>{String(h).padStart(2, "0")}:00</span>
+            <div className={styles.calendarHourLine} />
+          </div>
         ))}
-        <button className={styles.calendarAddStopBtn} onClick={onAddStopClick}>
-          + Add stop
-        </button>
+
+        {layouts.map(({ stop, column, totalColumns, depth }) => {
+          const startMin = timeInMinutes(stop.startTime);
+          const durationMin = Math.max(endMinutes(stop) - startMin, MIN_EVENT_HEIGHT * (60 / HOUR_HEIGHT));
+          const top = (startMin / 60) * HOUR_HEIGHT;
+          const height = Math.max((durationMin / 60) * HOUR_HEIGHT, MIN_EVENT_HEIGHT);
+          const creatorColor = getAvatarColor(stop.createdBy?.username ?? null);
+          const colWidth = Math.floor(CONTENT_WIDTH / totalColumns);
+          const indent = depth * 10; // stacked events indent right so both are visible
+          const left = TIME_LABEL_WIDTH + column * colWidth + indent;
+          return (
+            <button
+              key={stop.id}
+              className={`${styles.calendarTimelineEvent} ${highlightedStopId === stop.id ? styles.calendarTimelineEventHighlighted : ""}`}
+              style={{
+                top: `${top}px`,
+                height: `${height}px`,
+                left: `${left}px`,
+                width: `${colWidth - 2 - indent}px`,
+                backgroundColor: `${creatorColor}28`,
+                borderLeftColor: creatorColor,
+              }}
+              onClick={() => onStopClick(stop)}
+            >
+              <div
+                className={styles.calendarEventCreator}
+                title={stop.createdBy?.username ?? ""}
+                style={{ backgroundColor: creatorColor }}
+              >
+                {getAvatarInitial(stop.createdBy?.username)}
+              </div>
+              <div className={styles.calendarEventTime}>
+                {stop.startTime?.format("HH:mm")}{stop.endTime ? `–${stop.endTime.format("HH:mm")}` : ""}
+              </div>
+              <div className={styles.calendarEventTitle}>{stop.title}</div>
+              {height > 52 && stop.location && (
+                <div className={styles.calendarEventLocation}>📍{stop.location}</div>
+              )}
+            </button>
+          );
+        })}
       </div>
+
+      <button className={styles.calendarAddStopBtn} onClick={onAddStopClick}>
+        + Add stop
+      </button>
     </div>
   );
 }
@@ -154,6 +272,13 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const days = getDaysBetween(trip.startDate ?? "", trip.endDate ?? "");
   const [form] = Form.useForm<StopFormValues>();
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (wrapperRef.current) {
+      wrapperRef.current.scrollTop = 8 * HOUR_HEIGHT; // scroll to 8 AM on mount
+    }
+  }, []);
   const dateKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
@@ -360,7 +485,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
   };
 
   return (
-    <div className={styles.calendarScrollWrapper}>
+    <div className={styles.calendarScrollWrapper} ref={wrapperRef}>
       <div className={styles.calendarGrid}>
         {days.map((date, i) => (
           <DayColumn 

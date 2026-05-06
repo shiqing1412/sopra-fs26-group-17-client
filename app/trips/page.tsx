@@ -141,8 +141,8 @@ const Dashboard: React.FC = () => {
           {/* Trip Cards */}
           {trips?.map((trip) => {
             const status = getStatus(trip.startDate, trip.endDate);
-            const members = trip.collaborators
-              ? trip.collaborators.split(",").filter(Boolean)
+            const members = trip.members
+              ? trip.members.split(",").filter(Boolean)
               : [typeof trip.owner === "object" ? trip.owner?.username : trip.owner ?? ""].filter(Boolean)         
             const badgeClass = status === "active"
               ? styles.badgeActive

@@ -9,7 +9,7 @@ export interface Trip {
   endDate: string | null;
   shareCode: string | null;
   status: string | null;
-  collaborators: string | null;
+  members: string | null;
   illustration: string | null;
   owner: User | null;
   events: Event[] | null;
