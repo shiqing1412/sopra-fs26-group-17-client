@@ -53,7 +53,7 @@ const Profile: React.FC = () => {
     return `${dayjs(startDate).format("MMM D")} – ${dayjs(endDate).format("MMM D, YYYY")}`;
   }
 
-  function getMembers(trip: Trip | null): string[] {
+  function getMembers(trip: Trip | null): string[] { // owner excluded
     if (!trip) return [];
     if (trip.collaborators) {
       return trip.collaborators.split(",").filter(Boolean);
@@ -153,7 +153,7 @@ const Profile: React.FC = () => {
           <button className={styles.shareLinkBtn} onClick={() => setShareLinkOpen(true)}>
             Share Link
           </button>
-          {getMembers(trip).length > 1 && (
+          {getMembers(trip).length > 0 && (
           <button className={styles.shareLinkBtn} onClick={() => setLeaveTripOpen(true)}>
             Leave Trip
           </button>
