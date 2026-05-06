@@ -82,8 +82,8 @@ const DeleteTrip: React.FC<DeleteTripProps> = ({ open, onClose, trip }) => {
         <div style={{ width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 25 }}>
           {trip?.illustration ?? getIllustration(trip?.tripId ?? null)}
         </div>
-        <div>
-          <div style={{ fontWeight: 600, color: "#111", fontSize: 16 }}>{trip?.tripTitle}</div>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ fontWeight: 600, color: "#111", fontSize: 16, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{trip?.tripTitle}</div>
           <div style={{ color: "#888", fontSize: 13 }}>
             {formatDateRange(trip?.startDate ?? null, trip?.endDate ?? null)}
           </div>

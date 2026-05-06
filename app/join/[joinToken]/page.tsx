@@ -97,7 +97,7 @@ const JoinTripPage: React.FC = () => {
             <div className={styles.icon}>✈️</div>
             <h2 className={styles.title}>You&apos;ve Been Invited!</h2>
             {preview ? (
-              <div className={styles.tripInfo}>
+              <div className={styles.tripInfo} style={{ minWidth: 0 }}>
                 <p className={styles.tripTitle}>{preview.tripTitle}</p>
                 <p className={styles.tripDates}>
                   {new Date(preview.startDate).toLocaleDateString()} – {new Date(preview.endDate).toLocaleDateString()}

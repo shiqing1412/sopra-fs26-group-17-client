@@ -57,6 +57,9 @@
   font-weight: 600;
   color: #1A1612;
   margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tripDates {
