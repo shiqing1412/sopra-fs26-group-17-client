@@ -22,18 +22,21 @@ function getIllustration(id: string | null): string {
   return ILLUSTRATIONS[Math.abs(idx)];
 }
 
-function getStatus(startDate: string | null, endDate: string | null): "active" | "upcoming" | "planning" {
-  if (!startDate || !endDate) return "planning";
+function getStatus(startDate: string | null, endDate: string | null): "active" | "upcoming" {
   const now = dayjs();
-  if (now.isAfter(dayjs(startDate)) && now.isBefore(dayjs(endDate))) return "active";
   if (now.isBefore(dayjs(startDate))) return "upcoming";
-  return "planning";
+  return "active";
 }
 
 function formatDateRange(startDate: string | null, endDate: string | null): string {
   if (!startDate && !endDate) return "No dates set";
-  if (!startDate) return `Until ${endDate}`;
-  if (!endDate) return `From ${startDate}`;
+  if (!startDate) return `Until ${dayjs(endDate).format("MMM D, YYYY")}`;
+  if (!endDate) return `From ${dayjs(startDate).format("MMM D, YYYY")}`;
+
+  if (dayjs(startDate).year() !== dayjs(endDate).year()) {
+    return `${dayjs(startDate).format("MMM D, YYYY")} – ${dayjs(endDate).format("MMM D, YYYY")}`;
+  }
+
   return `${dayjs(startDate).format("MMM D")} – ${dayjs(endDate).format("MMM D, YYYY")}`;
 }
 
