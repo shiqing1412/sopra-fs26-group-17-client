@@ -2,6 +2,9 @@ import React from "react";
 import { Button, Form, Modal } from "antd";
 import dayjs from "dayjs";
 import { Trip } from "@/types/trip";
+import { useApi } from "@/hooks/useApi";
+import { useRouter } from "next/navigation";
+import { showError } from "@/utils/showError";
 
 const ILLUSTRATIONS = ["🌍", "🗺️", "✈️", "🏖️", "🏔️", "🌴", "🗽", "🎡"];
 
@@ -31,10 +34,21 @@ function formatDateRange(startDate: string | null, endDate: string | null): stri
 
 
 const DeleteTrip: React.FC<DeleteTripProps> = ({ open, onClose, trip }) => {
+  const apiService = useApi();
+  const router = useRouter();
+  const [isDeleting, setIsDeleting] = React.useState(false);
 
   const handleDeleteTrip = async (): Promise<void> => {
-    // TODO: implement delete trip functionality
-    onClose();
+    setIsDeleting(true);
+    try {
+      await apiService.delete(`/trips/${trip?.tripId}`);
+      onClose();
+      router.push("/trips");
+    } catch (error) {
+      showError(error, "Failed to delete trip. Please try again.");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -51,7 +65,15 @@ const DeleteTrip: React.FC<DeleteTripProps> = ({ open, onClose, trip }) => {
         <Form.Item key="delete-trip" style={{ marginBottom: 0, marginTop: 8 }}>
           <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
             <Button onClick={onClose} style={{ flex: 2 }}>Cancel</Button>
-            <Button type="primary" onClick={handleDeleteTrip} style={{ flex: 3 }}>Delete</Button>
+            <Button 
+              type="primary" 
+              onClick={handleDeleteTrip} 
+              style={{ flex: 3 }}
+              loading={isDeleting}
+              disabled={isDeleting}
+            >
+              Delete
+            </Button>
           </div>
         </Form.Item>
       ]}
