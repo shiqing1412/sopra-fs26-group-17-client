@@ -157,7 +157,7 @@ reason).
 | **@julituchi** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@Raminminn** | 6 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/3bd42d889cdea4e6f0141cdc4294528c51ef4ab5 | handles text overflow | otherwise breaks UI |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+|                    | 8 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/pull/179/changes/b563cf17b2968130efc076e9eb4edaeaa846c806 | added joinEvent and leaveEvent methods in apiservice | centralizes calls, makes it easier to update endpoint |
 | **@yarablaser** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@dsgji4g4** | 6 May | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/0ce321a96e3be3808deb264008a4ec1a72fc79c2 | Implemented @RestControllerAdvice to standardize backend error responses | Structurize global exception handling into organized response  |
