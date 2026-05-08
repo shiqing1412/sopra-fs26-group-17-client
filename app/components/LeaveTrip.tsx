@@ -36,7 +36,8 @@ function formatDateRange(startDate: string | null, endDate: string | null): stri
 
 function getMembers(trip: Trip | null): string[] {
   if (!trip) return [];
-  if (trip.members) {
+  if (Array.isArray(trip.members)) return trip.members;
+  if (typeof trip.members === "string" && trip.members) {
     return trip.members.split(",").filter(Boolean);
   }
   return [];

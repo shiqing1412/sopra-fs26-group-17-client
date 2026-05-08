@@ -469,9 +469,9 @@
 /* Timeline grid */
 .calendarTimeline {
   position: relative;
-  height: 1344px; /* 24 * 56px */
   border-top: 1px solid #ebe8e4;
   margin-bottom: 10px;
+  overflow: hidden;
 }
 
 .calendarHourRow {
