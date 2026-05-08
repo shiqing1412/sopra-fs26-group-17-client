@@ -55,8 +55,8 @@ const Profile: React.FC = () => {
 
   function getMembers(trip: Trip | null): string[] { // owner excluded
     if (!trip) return [];
-    if (trip.collaborators) {
-      return trip.collaborators.split(",").filter(Boolean);
+    if (trip.members) {
+      return trip.members.split(",").filter(Boolean);
     }
     return [];
   }
