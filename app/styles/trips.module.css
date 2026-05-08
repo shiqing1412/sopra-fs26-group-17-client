@@ -423,10 +423,15 @@
 }
 
 .calendarDayHeader {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f5f1ec;
+  padding-top: 16px;
+  padding-bottom: 10px;
   display: flex;
   flex-direction: column;
   gap: 1px;
-  margin-bottom: 10px;
 }
 
 .calendarDayLabel {
@@ -469,9 +474,9 @@
 /* Timeline grid */
 .calendarTimeline {
   position: relative;
-  height: 1344px; /* 24 * 56px */
   border-top: 1px solid #ebe8e4;
   margin-bottom: 10px;
+  overflow: hidden;
 }
 
 .calendarHourRow {

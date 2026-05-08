@@ -19,24 +19,26 @@ interface StopModalProps {
   selectedDate: Date | null;
   tripStartDate: string | null;
   tripEndDate: string | null;
-  form: FormInstance<StopFormValues>; 
+  form: FormInstance<StopFormValues>;
   setSelectedPlace: (place: google.maps.places.Place | null) => void;
+  prefillTimes?: { startTime: dayjs.Dayjs; endTime: dayjs.Dayjs } | null;
 }
 
-const StopModal: React.FC<StopModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  onFinish, 
-  initialData, 
-  selectedDate, 
+const StopModal: React.FC<StopModalProps> = ({
+  isOpen,
+  onClose,
+  onFinish,
+  initialData,
+  selectedDate,
   tripStartDate,
   tripEndDate,
-  form, 
-  setSelectedPlace 
+  form,
+  setSelectedPlace,
+  prefillTimes,
 }) => {
   const isEditMode = !!initialData;
 
-  // load data if in edit mode
+  // load data if in edit mode, or pre-fill times from drag
   useEffect(() => {
     if (isOpen) {
       if (isEditMode && initialData.stop) {
@@ -50,9 +52,12 @@ const StopModal: React.FC<StopModalProps> = ({
         });
       } else {
         form.resetFields();
+        if (prefillTimes) {
+          form.setFieldsValue({ startTime: prefillTimes.startTime, endTime: prefillTimes.endTime });
+        }
       }
     }
-  }, [isOpen, isEditMode, initialData, form]);
+  }, [isOpen, isEditMode, initialData, prefillTimes, form]);
 
   const displayDate = isEditMode ? initialData?.date : selectedDate;
 

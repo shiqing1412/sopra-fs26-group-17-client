@@ -1,7 +1,7 @@
 import type { Trip } from "@/types/trip";
 import { User } from "@/types/user";
 import styles from "@/styles/trips.module.css";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { Button, ConfigProvider, Form, Modal } from "antd";
 import { showError } from "@/utils/showError";
 import { ApiService } from "@/api/apiService";
@@ -23,6 +23,12 @@ const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
 function timeInMinutes(t: Dayjs | null): number {
   if (!t) return 0;
   return t.hour() * 60 + t.minute();
+}
+
+function yToTime(y: number, startHour: number): Dayjs {
+  const raw = (y / HOUR_HEIGHT) * 60 + startHour * 60;
+  const snapped = Math.max(0, Math.min(Math.round(raw / 15) * 15, 23 * 60 + 45));
+  return dayjs().hour(Math.floor(snapped / 60)).minute(snapped % 60).second(0);
 }
 
 interface PositionedStop {
@@ -181,16 +187,77 @@ function EventMemberAvatars({ members }: Readonly<{ members: { userId: number; u
   );
 }
  
-function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops, highlightedStopId }: Readonly<{
+function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops, highlightedStopId, earlyHoursExpanded }: Readonly<{
   date: Date;
   dayNumber: number;
-  onAddStopClick: () => void;
+  onAddStopClick: (times?: { startTime: Dayjs; endTime: Dayjs }) => void;
   onStopClick: (stop: StopWithId) => void;
   stops: StopWithId[];
   highlightedStopId: string | null;
+  earlyHoursExpanded: boolean;
 }>) {
   const untimedStops = stops.filter(s => !s.startTime);
   const layouts = computeEventLayouts(stops);
+
+  const startHour = earlyHoursExpanded ? 0 : 6;
+  const visibleHours = 24 - startHour;
+  const hourOffset = startHour * HOUR_HEIGHT;
+
+  // Drag-to-create state
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const dragActiveRef = useRef(false);
+  const dragStartYRef = useRef(0);
+  const startHourRef = useRef(startHour);
+  startHourRef.current = startHour;
+  const onAddStopClickRef = useRef(onAddStopClick);
+  onAddStopClickRef.current = onAddStopClick;
+  const [dragBox, setDragBox] = useState<{ top: number; height: number } | null>(null);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!dragActiveRef.current) return;
+      const rect = timelineRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const currentY = Math.max(0, Math.min(e.clientY - rect.top, rect.height));
+      const top = Math.min(dragStartYRef.current, currentY);
+      const height = Math.abs(currentY - dragStartYRef.current);
+      setDragBox({ top, height });
+    };
+
+    const handleMouseUp = (e: MouseEvent) => {
+      if (!dragActiveRef.current) return;
+      dragActiveRef.current = false;
+      const rect = timelineRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const currentY = Math.max(0, Math.min(e.clientY - rect.top, rect.height));
+      const topY = Math.min(dragStartYRef.current, currentY);
+      const bottomY = Math.max(dragStartYRef.current, currentY);
+      setDragBox(null);
+      if (bottomY - topY > 10) {
+        const startTime = yToTime(topY, startHourRef.current);
+        const endTime = yToTime(bottomY, startHourRef.current);
+        onAddStopClickRef.current({ startTime, endTime });
+      }
+    };
+
+    globalThis.addEventListener("mousemove", handleMouseMove);
+    globalThis.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      globalThis.removeEventListener("mousemove", handleMouseMove);
+      globalThis.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, []);
+
+  const handleTimelineMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest("button")) return;
+    e.preventDefault();
+    const rect = timelineRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const y = Math.max(0, e.clientY - rect.top);
+    dragActiveRef.current = true;
+    dragStartYRef.current = y;
+    setDragBox({ top: y, height: 0 });
+  };
 
   return (
     <div className={styles.calendarDayColumn}>
@@ -211,22 +278,30 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops, highli
         </div>
       )}
 
-      <div className={styles.calendarTimeline}>
-        {Array.from({ length: 24 }, (_, h) => (
-          <div key={h} className={styles.calendarHourRow} style={{ top: h * HOUR_HEIGHT }}>
-            <span className={styles.calendarHourLabel}>{String(h).padStart(2, "0")}:00</span>
-            <div className={styles.calendarHourLine} />
-          </div>
-        ))}
+      <div
+        ref={timelineRef}
+        className={styles.calendarTimeline}
+        style={{ height: visibleHours * HOUR_HEIGHT, cursor: "crosshair" }}
+        onMouseDown={handleTimelineMouseDown}
+      >
+        {Array.from({ length: visibleHours }, (_, i) => {
+          const h = startHour + i;
+          return (
+            <div key={h} className={styles.calendarHourRow} style={{ top: i * HOUR_HEIGHT }}>
+              <span className={styles.calendarHourLabel}>{String(h).padStart(2, "0")}:00</span>
+              <div className={styles.calendarHourLine} />
+            </div>
+          );
+        })}
 
         {layouts.map(({ stop, column, totalColumns, depth }) => {
           const startMin = timeInMinutes(stop.startTime);
           const durationMin = Math.max(endMinutes(stop) - startMin, MIN_EVENT_HEIGHT * (60 / HOUR_HEIGHT));
-          const top = (startMin / 60) * HOUR_HEIGHT;
+          const top = (startMin / 60) * HOUR_HEIGHT - hourOffset;
           const height = Math.max((durationMin / 60) * HOUR_HEIGHT, MIN_EVENT_HEIGHT);
           const creatorColor = getAvatarColor(stop.createdBy?.username ?? null);
           const colWidth = Math.floor(CONTENT_WIDTH / totalColumns);
-          const indent = depth * 10; // stacked events indent right so both are visible
+          const indent = depth * 10;
           const left = TIME_LABEL_WIDTH + column * colWidth + indent;
           return (
             <button
@@ -259,9 +334,26 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops, highli
             </button>
           );
         })}
+
+        {dragBox && dragBox.height > 0 && (
+          <div
+            style={{
+              position: "absolute",
+              left: TIME_LABEL_WIDTH,
+              width: CONTENT_WIDTH - 2,
+              top: dragBox.top,
+              height: dragBox.height,
+              backgroundColor: "rgba(192, 57, 43, 0.12)",
+              border: "1.5px dashed #c0392b",
+              borderRadius: 4,
+              pointerEvents: "none",
+              zIndex: 10,
+            }}
+          />
+        )}
       </div>
 
-      <button className={styles.calendarAddStopBtn} onClick={onAddStopClick}>
+      <button className={styles.calendarAddStopBtn} onClick={() => onAddStopClick()}>
         + Add stop
       </button>
     </div>
@@ -270,15 +362,33 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops, highli
  
 function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, highlightedStopId  }: Readonly<TripCalendarValues>) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [dragTimes, setDragTimes] = useState<{ startTime: Dayjs; endTime: Dayjs } | null>(null);
   const days = getDaysBetween(trip.startDate ?? "", trip.endDate ?? "");
   const [form] = Form.useForm<StopFormValues>();
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const [earlyHoursExpanded, setEarlyHoursExpanded] = useState(false);
+  const prevExpandedRef = useRef(false);
 
-  useEffect(() => {
-    if (wrapperRef.current) {
-      wrapperRef.current.scrollTop = 8 * HOUR_HEIGHT; // scroll to 8 AM on mount
+  // After expanding early hours, scroll so 6am stays at the same visual position
+  useLayoutEffect(() => {
+    if (earlyHoursExpanded && !prevExpandedRef.current && wrapperRef.current) {
+      wrapperRef.current.scrollTop = 6 * HOUR_HEIGHT;
     }
-  }, []);
+    prevExpandedRef.current = earlyHoursExpanded;
+  }, [earlyHoursExpanded]);
+
+  // Expand early hours when user scrolls up past the top of the timeline
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    const handleWheel = (e: WheelEvent) => {
+      if (e.deltaY < 0 && el.scrollTop <= 0 && !earlyHoursExpanded) {
+        setEarlyHoursExpanded(true);
+      }
+    };
+    el.addEventListener("wheel", handleWheel, { passive: true });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, [earlyHoursExpanded]);
   const dateKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
@@ -488,14 +598,15 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
     <div className={styles.calendarScrollWrapper} ref={wrapperRef}>
       <div className={styles.calendarGrid}>
         {days.map((date, i) => (
-          <DayColumn 
-            key={dateKey(date)} 
-            date={date} 
-            dayNumber={i + 1} 
-            onAddStopClick={() => setSelectedDate(date)} 
-            stops={stops[dateKey(date)] ?? []} 
+          <DayColumn
+            key={dateKey(date)}
+            date={date}
+            dayNumber={i + 1}
+            onAddStopClick={(times) => { setSelectedDate(date); setDragTimes(times ?? null); }}
+            stops={stops[dateKey(date)] ?? []}
             onStopClick={(stop) => setViewingStop({ stop, date })}
             highlightedStopId={highlightedStopId}
+            earlyHoursExpanded={earlyHoursExpanded}
           />
         ))}
       </div>
@@ -512,19 +623,21 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
       }}>
 
         {/* Add/Edit Stop Modal */}
-        <StopModal 
+        <StopModal
           isOpen={selectedDate !== null || !!editingStop}
           onClose={() => {
             setSelectedDate(null);
             setEditingStop(null);
+            setDragTimes(null);
           }}
           onFinish={handleFinish}
-          initialData={editingStop} 
+          initialData={editingStop}
           selectedDate={selectedDate}
           tripStartDate={trip.startDate}
           tripEndDate={trip.endDate}
           form={form}
           setSelectedPlace={setSelectedPlace}
+          prefillTimes={dragTimes}
         />
 
         {/* View Stop Modal */}

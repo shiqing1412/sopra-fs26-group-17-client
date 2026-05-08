@@ -55,7 +55,8 @@ const Profile: React.FC = () => {
 
   function getMembers(trip: Trip | null): string[] { // owner excluded
     if (!trip) return [];
-    if (trip.members) {
+    if (Array.isArray(trip.members)) return trip.members;
+    if (typeof trip.members === "string" && trip.members) {
       return trip.members.split(",").filter(Boolean);
     }
     return [];
