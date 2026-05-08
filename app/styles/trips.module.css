@@ -423,10 +423,15 @@
 }
 
 .calendarDayHeader {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f5f1ec;
+  padding-top: 16px;
+  padding-bottom: 10px;
   display: flex;
   flex-direction: column;
   gap: 1px;
-  margin-bottom: 10px;
 }
 
 .calendarDayLabel {
