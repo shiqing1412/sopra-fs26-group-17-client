@@ -36,11 +36,7 @@ function formatDateRange(startDate: string | null, endDate: string | null): stri
 
 function getMembers(trip: Trip | null): string[] {
   if (!trip) return [];
-  if (Array.isArray(trip.members)) return trip.members;
-  if (typeof trip.members === "string" && trip.members) {
-    return trip.members.split(",").filter(Boolean);
-  }
-  return [];
+  return trip?.members?.map((m) => m.username) || [];
 }
 
 const LeaveTrip: React.FC<LeaveTripProps> = ({ open, onClose, trip }) => {
@@ -79,7 +75,7 @@ const LeaveTrip: React.FC<LeaveTripProps> = ({ open, onClose, trip }) => {
   };
 
   const handleLeaveTripClick = () => {
-    if (trip?.owner?.username === user?.username) {
+    if (trip?.owner === user?.username) {
       setIsTransfering(true);
     } else {
       handleLeaveTrip();
