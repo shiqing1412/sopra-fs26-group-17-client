@@ -503,7 +503,6 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
   const handleOptOut = async () => {
     if (!viewingStop || !currentUser) return;
     const key = dateKey(viewingStop.date);
-    console.log("opt out key:", key);
     setOptOutLoading(true);
     try {
       const api = new ApiService();
