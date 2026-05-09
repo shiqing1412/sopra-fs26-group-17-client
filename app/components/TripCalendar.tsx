@@ -478,6 +478,7 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [editingStop, setEditingStop] = useState<{ stop: NewStopValues; date: Date } | null>(null);
   const [optOutLoading, setOptOutLoading] = useState(false);
+  const [joinLoading, setJoinLoading] = useState(false);
 
   const handleDeleteStop = async () => {
     if (!viewingStop) return;
@@ -500,28 +501,46 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
   };
 
   const handleOptOut = async () => {
+    if (!viewingStop || !currentUser) return;
+    const key = dateKey(viewingStop.date);
+    console.log("opt out key:", key);
+    setOptOutLoading(true);
+    try {
+      const api = new ApiService();
+      const result = await api.delete<EventGetDTO>(`/trips/${trip.tripId}/events/${viewingStop.stop.id}/join`);
+      const updatedStop = { ...viewingStop.stop, members: result.members ?? [] };
+      setStops(prev => {
+        console.log("available keys:", Object.keys(prev));
+        return {
+          ...prev,
+          [key]: prev[key].map(s => s.id === viewingStop.stop.id ? updatedStop : s),
+        };
+      });
+      setViewingStop(null);
+    } catch (error) {
+      showError(error, "Failed to opt out. Please try again.");
+    } finally {
+      setOptOutLoading(false);
+    }
+  };
+
+const handleJoin = async () => {
   if (!viewingStop || !currentUser) return;
   const key = dateKey(viewingStop.date);
-  console.log("opt out key:", key);
-  setOptOutLoading(true);
+  setJoinLoading(true);
   try {
     const api = new ApiService();
-    /* todo: check api with backend when implemented */
-    await api.put<void>(`/trips/${trip.tripId}/events/${viewingStop.stop.id}/optout`, {});
-    const updatedMembers = viewingStop.stop.members.filter(m => m.username !== currentUser.username);
-    const updatedStop = { ...viewingStop.stop, members: updatedMembers };
-    setStops(prev => {
-      console.log("available keys:", Object.keys(prev));
-      return {
-        ...prev,
-        [key]: prev[key].map(s => s.id === viewingStop.stop.id ? updatedStop : s),
-      };
-    });
+    const result = await api.post<EventGetDTO>(`/trips/${trip.tripId}/events/${viewingStop.stop.id}/join`, {});
+    const updatedStop = { ...viewingStop.stop, members: result.members ?? [] };
+    setStops(prev => ({
+      ...prev,
+      [key]: prev[key].map(s => s.id === viewingStop.stop.id ? updatedStop : s),
+    }));
     setViewingStop(null);
   } catch (error) {
-    showError(error, "Failed to opt out. Please try again.");
+    showError(error, "Failed to join event. Please try again.");
   } finally {
-    setOptOutLoading(false);
+    setJoinLoading(false);
   }
 };
 
@@ -666,6 +685,11 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
 
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <Button danger onClick={() => setConfirmingDelete(true)}>Delete</Button>
+              <Button
+                type="default"
+                onClick={handleJoin}
+                loading={joinLoading}
+                disabled={viewingStop?.stop.members.some(m => m.username === currentUser?.username)}>Join</Button>
               <Button
                 onClick={handleOptOut}
                 loading={optOutLoading}
