@@ -150,7 +150,7 @@ const Profile: React.FC = () => {
           <button className={styles.shareLinkBtn} onClick={() => setShareLinkOpen(true)}>
             Share Link
           </button>
-          {getMembers(trip).length > 0 && (
+          {getMembers(trip).length > 1 && (
           <button className={styles.shareLinkBtn} onClick={() => setLeaveTripOpen(true)}>
             Leave Trip
           </button>
