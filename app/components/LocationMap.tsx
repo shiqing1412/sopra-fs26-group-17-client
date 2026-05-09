@@ -78,8 +78,23 @@ export default function LocationMap({
     markerInstancesRef.current.forEach((m) => m.map = null);
     markerInstancesRef.current = [];
 
+    // Count how many markers share the same position
+    const positionCount = new Map<string, number>();
+
     // Add new markers
     markers.forEach(({ id, position, title }) => {
+      const key = `${position.lat},${position.lng}`;
+      const count = positionCount.get(key) ?? 0;
+      positionCount.set(key, count + 1);
+
+      // Offset each duplicate by a small amount
+      const angle = count * (Math.PI * 0.7);
+      const radius = count === 0 ? 0 : 0.001 * Math.ceil(count / 6);
+      const offsetPosition = {
+        lat: position.lat + radius * Math.cos(angle),
+        lng: position.lng + radius * Math.sin(angle),
+      };
+
       const pin = document.createElement("div");
       pin.textContent = "📍";
       pin.style.fontSize = "2rem";
@@ -87,7 +102,7 @@ export default function LocationMap({
       pin.addEventListener("click", () => { onMarkerClick?.(id); });
 
       const marker = new globalThis.window.google.maps.marker.AdvancedMarkerElement({
-        position,
+        position: offsetPosition,
         map,
         title,
         content: pin,
@@ -108,7 +123,7 @@ export default function LocationMap({
       }
       boundsFittedRef.current = true;
     }
-  }, [markers, isLoaded]);
+  }, [markers, isLoaded, onMarkerClick]);
   if (error) return <div style={style}>Map failed to load.</div>;
 
   return (
