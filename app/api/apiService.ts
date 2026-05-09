@@ -140,4 +140,14 @@ export class ApiService {
       "An error occurred while deleting the data.\n",
     );
   }
+
+  /* POST: join event */
+  public async joinEvent(tripId: number, eventId: string): Promise<void> {
+    await this.post<void>(`/trips/${tripId}/events/${eventId}/join`, {});
+  }
+
+  /* DELETE: leave event */
+  public async leaveEvent(tripId: number, eventId: string): Promise<void> {
+    await this.delete<void>(`/trips/${tripId}/events/${eventId}/join`);
+  }
 }
