@@ -53,13 +53,9 @@ const Profile: React.FC = () => {
     return `${dayjs(startDate).format("MMM D")} – ${dayjs(endDate).format("MMM D, YYYY")}`;
   }
 
-  function getMembers(trip: Trip | null): string[] { // owner excluded
+  function getMembers(trip: Trip | null): string[] {
     if (!trip) return [];
-    if (Array.isArray(trip.members)) return trip.members;
-    if (typeof trip.members === "string" && trip.members) {
-      return trip.members.split(",").filter(Boolean);
-    }
-    return [];
+    return trip?.members?.map((m) => m.username) || [];
   }
 
   const { handleLogout } = Logout();
