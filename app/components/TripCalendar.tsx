@@ -306,6 +306,7 @@ function DayColumn({ onAddStopClick, onStopClick, stops, highlightedStopId, earl
                 width: `${colWidth - 2 - indent}px`,
                 backgroundColor: `${creatorColor}28`,
                 borderLeftColor: creatorColor,
+                zIndex: Math.round(100000 / Math.max(height, 1)),
               }}
               onClick={() => onStopClick(stop)}
             >
