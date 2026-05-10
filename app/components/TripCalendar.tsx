@@ -187,9 +187,7 @@ function EventMemberAvatars({ members }: Readonly<{ members: { userId: number; u
   );
 }
  
-function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops, highlightedStopId, earlyHoursExpanded }: Readonly<{
-  date: Date;
-  dayNumber: number;
+function DayColumn({ onAddStopClick, onStopClick, stops, highlightedStopId, earlyHoursExpanded }: Readonly<{
   onAddStopClick: (times?: { startTime: Dayjs; endTime: Dayjs }) => void;
   onStopClick: (stop: StopWithId) => void;
   stops: StopWithId[];
@@ -261,12 +259,6 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops, highli
 
   return (
     <div className={styles.calendarDayColumn}>
-      <div className={styles.calendarDayHeader}>
-        <span className={styles.calendarDayLabel}>DAY {dayNumber}</span>
-        <span className={styles.calendarDayNumber}>{date.getDate()}</span>
-        <span className={styles.calendarDayName}>{DAY_NAMES[date.getDay()]}, {MONTH_NAMES[date.getMonth()]}</span>
-      </div>
-
       {untimedStops.length > 0 && (
         <div className={styles.calendarUntimedStops}>
           {untimedStops.map(stop => (
@@ -314,6 +306,7 @@ function DayColumn({ date, dayNumber, onAddStopClick, onStopClick, stops, highli
                 width: `${colWidth - 2 - indent}px`,
                 backgroundColor: `${creatorColor}28`,
                 borderLeftColor: creatorColor,
+                zIndex: Math.round(100000 / Math.max(height, 1)),
               }}
               onClick={() => onStopClick(stop)}
             >
@@ -366,13 +359,31 @@ function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, high
   const days = getDaysBetween(trip.startDate ?? "", trip.endDate ?? "");
   const [form] = Form.useForm<StopFormValues>();
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const stickyHeaderRef = useRef<HTMLDivElement>(null);
   const [earlyHoursExpanded, setEarlyHoursExpanded] = useState(false);
   const prevExpandedRef = useRef(false);
+
+  // JS-based sticky: counteract vertical scroll so the header stays pinned at y=0
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    const handleScroll = () => {
+      if (stickyHeaderRef.current) {
+        stickyHeaderRef.current.style.transform = `translateY(${el.scrollTop}px)`;
+      }
+    };
+    el.addEventListener("scroll", handleScroll, { passive: true });
+    return () => el.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // After expanding early hours, scroll so 6am stays at the same visual position
   useLayoutEffect(() => {
     if (earlyHoursExpanded && !prevExpandedRef.current && wrapperRef.current) {
-      wrapperRef.current.scrollTop = 6 * HOUR_HEIGHT;
+      const newScrollTop = 6 * HOUR_HEIGHT;
+      wrapperRef.current.scrollTop = newScrollTop;
+      if (stickyHeaderRef.current) {
+        stickyHeaderRef.current.style.transform = `translateY(${newScrollTop}px)`;
+      }
     }
     prevExpandedRef.current = earlyHoursExpanded;
   }, [earlyHoursExpanded]);
@@ -614,12 +625,19 @@ const handleJoin = async () => {
 
   return (
     <div className={styles.calendarScrollWrapper} ref={wrapperRef}>
-      <div className={styles.calendarGrid}>
+      <div className={styles.calendarStickyHeaderRow} ref={stickyHeaderRef}>
         {days.map((date, i) => (
+          <div key={dateKey(date)} className={styles.calendarDayHeader}>
+            <span className={styles.calendarDayLabel}>DAY {i + 1}</span>
+            <span className={styles.calendarDayNumber}>{date.getDate()}</span>
+            <span className={styles.calendarDayName}>{DAY_NAMES[date.getDay()]}, {MONTH_NAMES[date.getMonth()]}</span>
+          </div>
+        ))}
+      </div>
+      <div className={styles.calendarGrid}>
+        {days.map((date) => (
           <DayColumn
             key={dateKey(date)}
-            date={date}
-            dayNumber={i + 1}
             onAddStopClick={(times) => { setSelectedDate(date); setDragTimes(times ?? null); }}
             stops={stops[dateKey(date)] ?? []}
             onStopClick={(stop) => setViewingStop({ stop, date })}
