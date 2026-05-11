@@ -152,8 +152,9 @@ reason).
 
 | **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
 | ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
-| **@shiqing1412** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@shiqing1412** | 6 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/84d38006e5b1501eb4846afca6e09b1510ccec9d |add parallel event display | addressing feedback from M3|
+|                    | 8 May  | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/61f823bab91b4a4ff7085f4c09012df52b870262 | timeline enhancements — 6am default start, drag-to-create events| feature enhancement due to display change |
+|                    | 10 May  | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/c2f5e666094216050f130100828c532ee534d56a | fix day row display error - timeline expands above the date| fix bug |
 | **@julituchi** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@Raminminn** | 6 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/3bd42d889cdea4e6f0141cdc4294528c51ef4ab5 | handles text overflow | otherwise breaks UI |
@@ -163,3 +164,18 @@ reason).
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@dsgji4g4** | 6 May | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/0ce321a96e3be3808deb264008a4ec1a72fc79c2 | Implemented @RestControllerAdvice to standardize backend error responses | Structurize global exception handling into organized response  |
 |                    | 6 May  | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/cb7026535314cf830494daacf1e757724481711c | Add backend validation for long text input  | M3 Feedback: long input causes 500 raw error |
+
+## Contributions Week 6 - [13 May] to [19 May]
+
+| **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
+| ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
+| **@shiqing1412** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
+|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@julituchi** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
+|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@Raminminn** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
+|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@yarablaser** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
+|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@dsgji4g4** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
+|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
