@@ -103,6 +103,7 @@ const Profile: React.FC = () => {
       } catch (error) {
         const appError = error as ApplicationError;
         if (appError.status === 404) {
+          localStorage.setItem("deletedTrip", trip?.tripTitle ?? "Trip");
           router.push(`/trips?deleted=${encodeURIComponent(trip?.tripTitle ?? "Trip")}`);
           return;
         }

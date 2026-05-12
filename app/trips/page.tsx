@@ -108,12 +108,22 @@ const Dashboard: React.FC = () => {
     fetchTrips();
   }, [apiService, user]);
 
+  // info message when a trip is deleted
   const searchParams = useSearchParams();
   useEffect(() => {
+    // online members: after polling
     const deleted = searchParams.get("deleted");
     if (deleted) {
       message.info(`"Trip ${deleted}" was deleted by the owner.`);
       router.replace("/trips");
+      return;
+    }
+
+    // offline members: after logging in
+    const deletedTrip = localStorage.getItem("deletedTrip");
+    if (deletedTrip) {
+      message.info(`"Trip ${deletedTrip}" was deleted by the owner.`);
+      localStorage.removeItem("deletedTrip");
     }
   }, [searchParams]);
 
