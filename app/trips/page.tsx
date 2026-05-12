@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Modal, Form, Input, DatePicker, Button } from "antd";
 import dayjs, { Dayjs } from "dayjs";
@@ -13,6 +13,7 @@ import Logout from "@/components/Logout";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
 import { getAvatarColor, getAvatarInitial } from "@/utils/avatarColors";
 import { showError } from "@/utils/showError";
+import DeletedTripNotifier from "@/components/DeletedTripNotifier";
 
 const ILLUSTRATIONS = ["🌍", "🗺️", "✈️", "🏖️", "🏔️", "🌴", "🗽", "🎡"];
 
@@ -110,6 +111,9 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className={styles.page}>
+      <Suspense fallback={null}>
+        <DeletedTripNotifier />
+      </Suspense>
       <nav className={styles.nav}>
         <div className={styles.logo}>
           Wander<span className={styles.logoAccent}>Sync</span>
