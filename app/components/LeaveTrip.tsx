@@ -36,7 +36,7 @@ function formatDateRange(startDate: string | null, endDate: string | null): stri
 
 function getMembers(trip: Trip | null): TripMember[] {
   if (!trip) return [];
-  return trip?.members || [];
+  return trip?.members?.filter((m) => m.role !== "OWNER") || [];
 }
 
 const LeaveTrip: React.FC<LeaveTripProps> = ({ open, onClose, trip }) => {
