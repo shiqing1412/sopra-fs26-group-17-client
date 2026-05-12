@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Form, Modal, Select } from "antd";
 import { showError } from "@/utils/showError";
 import dayjs from "dayjs";
-import { Trip } from "@/types/trip";
+import { Trip, TripMember } from "@/types/trip";
 import { useApi } from "@/hooks/useApi";
 import { User } from "@/types/user";
 import useLocalStorage from "@/hooks/useLocalStorage";
@@ -34,9 +34,9 @@ function formatDateRange(startDate: string | null, endDate: string | null): stri
   return `${dayjs(startDate).format("MMM D")} – ${dayjs(endDate).format("MMM D, YYYY")}`;
 }
 
-function getMembers(trip: Trip | null): string[] {
+function getMembers(trip: Trip | null): TripMember[] {
   if (!trip) return [];
-  return trip?.members?.map((m) => m.username) || [];
+  return trip?.members || [];
 }
 
 const LeaveTrip: React.FC<LeaveTripProps> = ({ open, onClose, trip }) => {
@@ -44,13 +44,13 @@ const LeaveTrip: React.FC<LeaveTripProps> = ({ open, onClose, trip }) => {
   const router = useRouter();
   const [isLeaving, setIsLeaving] = React.useState(false);
   const [isTransfering, setIsTransfering] = React.useState(false);
-  const [selectedNewOwner, setSelectedNewOwner] = React.useState<string | null>(null);
+  const [selectedNewOwner, setSelectedNewOwner] = React.useState<TripMember | null>(null);
   const { value: user } = useLocalStorage<User | null>("user", null);
   
   const handleLeaveTrip = async (): Promise<void> => {
     setIsLeaving(true);
     try {
-      await apiService.delete(`/trips/${trip?.tripId}/members/${user?.id}`);
+      await apiService.delete(`/trips/${trip?.tripId}/members/me`);
       onClose();
       router.push("/trips");
     } catch (error) {
@@ -65,8 +65,8 @@ const LeaveTrip: React.FC<LeaveTripProps> = ({ open, onClose, trip }) => {
       showError(null, "Please select a new owner before transferring.");
       return;
     }
-    try {
-      await apiService.put(`/trips/${trip?.tripId}/members/${user?.id}/owner`, { newOwner: selectedNewOwner });
+    try { 
+      await apiService.patch(`/trips/${trip?.tripId}/members/${selectedNewOwner?.userId}/owner`);
       await handleLeaveTrip();
       setIsTransfering(false);
     } catch (error) {
@@ -156,14 +156,17 @@ const LeaveTrip: React.FC<LeaveTripProps> = ({ open, onClose, trip }) => {
           <Select
             placeholder="Select new owner"
             style={{ width: '100%', marginTop: 12, marginBottom: 16, backgroundColor: "#ffffff" }}
-            onChange={(value) => setSelectedNewOwner(value)}
-            value={selectedNewOwner}
+            onChange={(value) => {
+              const newOwner = getMembers(trip).find((m) => m.userId === value) ?? null;
+              setSelectedNewOwner(newOwner); 
+            }}
+            value={selectedNewOwner?.userId}
           >
           {getMembers(trip)
-            .filter((member) => member !== user?.username)
+            .filter((member) => member.userId !== user?.id)
             .map((member) => (
-            <Select.Option key={member} value={member}>
-              {member}
+            <Select.Option key={member.userId} value={member.userId}>
+              {member.username}
             </Select.Option>
             )
           )}
