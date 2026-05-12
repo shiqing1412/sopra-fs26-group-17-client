@@ -125,6 +125,23 @@ export class ApiService {
   }
 
   /**
+   * PATCH request.
+   * @param endpoint - The API endpoint (e.g. "/users/123").
+   * @returns JSON data of type T.
+   */
+  public async patch<T>(endpoint: string): Promise<T> {
+    const url = `${this.baseURL}${endpoint}`;
+    const res = await fetch(url, {
+      method: "PATCH",
+      headers: this.getHeaders(),
+    });
+    return this.processResponse<T>(
+      res,
+      "An error occurred while partially updating the data.\n",
+    );
+  }
+
+  /**
    * DELETE request.
    * @param endpoint - The API endpoint (e.g. "/users/123").
    * @returns JSON data of type T.
