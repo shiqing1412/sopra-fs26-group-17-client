@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Modal, Form, Input, DatePicker, Button } from "antd";
 import dayjs, { Dayjs } from "dayjs";
@@ -13,8 +13,7 @@ import Logout from "@/components/Logout";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
 import { getAvatarColor, getAvatarInitial } from "@/utils/avatarColors";
 import { showError } from "@/utils/showError";
-import { useSearchParams } from "next/navigation";
-import { message } from "antd";
+import DeletedTripNotifier from "@/components/DeletedTripNotifier";
 
 const ILLUSTRATIONS = ["🌍", "🗺️", "✈️", "🏖️", "🏔️", "🌴", "🗽", "🎡"];
 
@@ -108,29 +107,13 @@ const Dashboard: React.FC = () => {
     fetchTrips();
   }, [apiService, user]);
 
-  // info message when a trip is deleted
-  const searchParams = useSearchParams();
-  useEffect(() => {
-    // online members: after polling
-    const deleted = searchParams.get("deleted");
-    if (deleted) {
-      message.info(`"Trip ${deleted}" was deleted by the owner.`);
-      router.replace("/trips");
-      return;
-    }
-
-    // offline members: after logging in
-    const deletedTrip = localStorage.getItem("deletedTrip");
-    if (deletedTrip) {
-      message.info(`"Trip ${deletedTrip}" was deleted by the owner.`);
-      localStorage.removeItem("deletedTrip");
-    }
-  }, [searchParams]);
-
   if (isLoading) return null;
 
   return (
     <div className={styles.page}>
+      <Suspense fallback={null}>
+        <DeletedTripNotifier />
+      </Suspense>
       <nav className={styles.nav}>
         <div className={styles.logo}>
           Wander<span className={styles.logoAccent}>Sync</span>
