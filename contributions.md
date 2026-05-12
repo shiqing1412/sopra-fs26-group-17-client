@@ -160,8 +160,11 @@ reason).
 | **@Raminminn** | 6 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/3bd42d889cdea4e6f0141cdc4294528c51ef4ab5 | handles text overflow | otherwise breaks UI |
 |                    | 8 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/pull/179/changes/b563cf17b2968130efc076e9eb4edaeaa846c806 | added joinEvent and leaveEvent methods in apiservice | centralizes calls, makes it easier to update endpoint |
 |                    | 9 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/pull/183/changes/c4cd85bd277c6c512dc9bd32ec666b3f0d446085 | added join button | to join events the user wants to take part in |
-| **@yarablaser** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@yarablaser** | 6 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/a2037261204ff77f42f89ae14aae707710ac7761 | transfer ownership | owner can transfer trip ownership before leaving a trip |
+|                    | 6 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/d29c6d6c8c9448265eb424a0097d5230c87b96f5 | delete trip function | request to delete trip and remove all members |
+|                    | 6 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/223c8cdca5162188df5e4dcb6f7944005b157c1f | leave trip button visibility | for 1-member trips, leaving a trip is unnecessary (can just delete trip) |
+ |                    | 9 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/80979424a46ef6cc9f781d8c4f644c5097dfe38e | fixed map pins | pin per stop not just per location |
+|                    | 12 May   | https://github.com/shiqing1412/sopra-fs26-group-17-client/commit/c18610567c9b2cef7d6d984b5bf0d7fb83d99071 | info messages for deleted trip | members excl. owner should get a clear message that a trip was deleted |
 | **@dsgji4g4** | 6 May | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/0ce321a96e3be3808deb264008a4ec1a72fc79c2 | Implemented @RestControllerAdvice to standardize backend error responses | Structurize global exception handling into organized response  |
 |                    | 6 May  | https://github.com/shiqing1412/sopra-fs26-group-17-server/commit/cb7026535314cf830494daacf1e757724481711c | Add backend validation for long text input  | M3 Feedback: long input causes 500 raw error |
 
