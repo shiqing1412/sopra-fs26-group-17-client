@@ -13,6 +13,8 @@ import Logout from "@/components/Logout";
 import { useProtectedRoute } from "@/components/ProtectedRoute";
 import { getAvatarColor, getAvatarInitial } from "@/utils/avatarColors";
 import { showError } from "@/utils/showError";
+import { useSearchParams } from "next/navigation";
+import { message } from "antd";
 
 const ILLUSTRATIONS = ["🌍", "🗺️", "✈️", "🏖️", "🏔️", "🌴", "🗽", "🎡"];
 
@@ -105,6 +107,15 @@ const Dashboard: React.FC = () => {
 
     fetchTrips();
   }, [apiService, user]);
+
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const deleted = searchParams.get("deleted");
+    if (deleted) {
+      message.info(`"Trip ${deleted}" was deleted by the owner.`);
+      router.replace("/trips");
+    }
+  }, [searchParams]);
 
   if (isLoading) return null;
 

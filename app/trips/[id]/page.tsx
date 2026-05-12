@@ -15,12 +15,14 @@ import ShareLink from "@/components/ShareLink";
 import LeaveTrip from "@/components/LeaveTrip";
 import MemberOnlineStatus from "@/components/MemberOnlineStatus";
 import { getAvatarColor, getAvatarInitial } from "@/utils/avatarColors";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { showError } from "@/utils/showError";
 import TripLeft from "@/components/TripLeft";
 import DeleteTrip from "@/components/DeleteTrip";
+import { ApplicationError } from "@/types/error";
 
 const Profile: React.FC = () => {
+  const router = useRouter();
   const { isLoading } = useProtectedRoute();
   const { id } = useParams<{ id: string }>();
 
@@ -99,6 +101,11 @@ const Profile: React.FC = () => {
         });
 
       } catch (error) {
+        const appError = error as ApplicationError;
+        if (appError.status === 404) {
+          router.push(`/trips?deleted=${encodeURIComponent(trip?.tripTitle ?? "Trip")}`);
+          return;
+        }
         console.error("Failed to poll", error);
       }
       setEventRefetchTrigger(prev => prev + 1);
