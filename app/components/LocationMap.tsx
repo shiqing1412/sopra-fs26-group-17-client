@@ -13,16 +13,19 @@ export default function LocationMap({
   style,
   markers = [],
   onMarkerClick,
+  highlightedMarkerId,
 }: {
   readonly center?: LatLng;
   readonly zoom?: number;
   readonly style?: React.CSSProperties;
   readonly markers?: ReadonlyArray<{ readonly id:string, readonly position: LatLng; readonly title?: string }>;
   readonly onMarkerClick?: (id: string) => void;
+  readonly highlightedMarkerId?: string | null;
 }) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<google.maps.Map | null>(null);
   const markerInstancesRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const markerMapRef = useRef<Map<string, { marker: google.maps.marker.AdvancedMarkerElement; position: LatLng }>>(new Map());
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const userInteractingRef = useRef(false);
@@ -77,6 +80,7 @@ export default function LocationMap({
     // Clear existing markers
     markerInstancesRef.current.forEach((m) => m.map = null);
     markerInstancesRef.current = [];
+    markerMapRef.current.clear();
 
     // Count how many markers share the same position
     const positionCount = new Map<string, number>();
@@ -108,6 +112,7 @@ export default function LocationMap({
         content: pin,
       });
       markerInstancesRef.current.push(marker);
+      markerMapRef.current.set(id, { marker, position: offsetPosition });
     });
 
     // adjust map to fit all markers
@@ -124,6 +129,26 @@ export default function LocationMap({
       boundsFittedRef.current = true;
     }
   }, [markers, isLoaded, onMarkerClick]);
+
+  // zoom into pin when stop is clicked
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map || !highlightedMarkerId) return;
+    const entry = markerMapRef.current.get(highlightedMarkerId);
+    if (!entry) return;
+
+    map.panTo(entry.position);
+    map.setZoom(15);
+
+    // scale up the pin
+    markerMapRef.current.forEach(({ marker }, id) => {
+      const pin = marker.content as HTMLElement;
+      pin.style.fontSize = id === highlightedMarkerId ? "2.8rem" : "2rem";
+      pin.style.filter = id === highlightedMarkerId ? "drop-shadow(0 0 6px rgba(0,0,0,0.4))" : "none";
+    });
+  }, [highlightedMarkerId]);
+
+
   if (error) return <div style={style}>Map failed to load.</div>;
 
   return (
