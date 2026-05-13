@@ -20,6 +20,7 @@ import { showError } from "@/utils/showError";
 import TripLeft from "@/components/TripLeft";
 import DeleteTrip from "@/components/DeleteTrip";
 import { ApplicationError } from "@/types/error";
+import { message } from "antd";
 
 const Profile: React.FC = () => {
   const router = useRouter();
@@ -116,7 +117,15 @@ const Profile: React.FC = () => {
     const intervalId = setInterval(fetchData, 5000); // polls every 5sec
 
     return () => clearInterval(intervalId);
-  }, [trip?.tripId]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [trip?.tripId]);
+
+  useEffect(() => {
+    if (!trip?.tripId) return;
+    const timer = setTimeout(() => {
+      message.info("Click and drag on the calendar to create stops", 5);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [trip?.tripId]);
 
   if (isLoading) return null;
 
