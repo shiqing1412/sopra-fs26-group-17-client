@@ -22,7 +22,7 @@ interface Member {
   role: string;
 }
 
-export default function TripLeft({tripId, stops = {}, setHighlightedStopId}: TripLeftProps) {
+export default function TripLeft({tripId, stops = {}, setHighlightedStopId, highlightedStopId}: TripLeftProps) {
   const [members, setMembers] = useState<Member[]>([]);
   const apiService = useApi();
   const { value: user } = useLocalStorage<User | null>("user", null);
@@ -72,6 +72,7 @@ export default function TripLeft({tripId, stops = {}, setHighlightedStopId}: Tri
             zoom={13}
             markers={markers}
             onMarkerClick={setHighlightedStopId}
+            highlightedMarkerId={highlightedStopId}
             style={{ height: '100%', width: '100%' }}
           />
       </div>

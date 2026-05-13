@@ -210,6 +210,7 @@ const Profile: React.FC = () => {
             currentUser={user} 
             refetchTrigger={eventRefetchTrigger} 
             highlightedStopId={highlightedStopId}
+            setHighlightedStopId={setHighlightedStopId}
             />
         )}
       </div>
