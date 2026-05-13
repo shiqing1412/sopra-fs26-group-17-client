@@ -137,6 +137,7 @@ interface TripCalendarValues {
   currentUser: User | null;
   refetchTrigger?: number;
   highlightedStopId: string | null;
+  setHighlightedStopId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export interface NewStopValues {
@@ -324,7 +325,7 @@ function DayColumn({ onAddStopClick, onStopClick, stops, highlightedStopId, earl
         <button className={styles.calendarAddStopBtn} onClick={() => onAddStopClick()}>
           + Add stop
         </button>
-        
+
         {dragBox && dragBox.height > 0 && (
           <div
             style={{
@@ -346,7 +347,7 @@ function DayColumn({ onAddStopClick, onStopClick, stops, highlightedStopId, earl
   );
 }
  
-function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, highlightedStopId  }: Readonly<TripCalendarValues>) {
+function TripCalendar({ trip, currentUser, refetchTrigger, stops, setStops, highlightedStopId, setHighlightedStopId  }: Readonly<TripCalendarValues>) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [dragTimes, setDragTimes] = useState<{ startTime: Dayjs; endTime: Dayjs } | null>(null);
   const days = getDaysBetween(trip.startDate ?? "", trip.endDate ?? "");
@@ -683,7 +684,7 @@ const handleJoin = async () => {
           footer={null}
         >
           <div className={styles.calendarDayStops}>
-            <button className={styles.calendarStopCard}>
+            <button className={styles.calendarStopCard} onClick={() => { setHighlightedStopId(viewingStop?.stop.id ?? null); setViewingStop(null); }}>
               <div className={styles.calendarStopTime}>
                   {viewingStop?.stop.startTime?.format("HH:mm")} {viewingStop?.stop.endTime ? `→ ${viewingStop?.stop.endTime.format("HH:mm")}` : ""}
               </div>
