@@ -34,7 +34,7 @@ export default function TripLeft({tripId, stops = {}, setHighlightedStopId}: Tri
     const fetchMembers = async () => {
       try {
         const fetched = await apiServiceRef.current.get<Member[]>(`/trips/${tripId}/members`);
-        setMembers(fetched.filter((m) => m.username !== user?.username));
+        setMembers(fetched);
       } catch (error) {
         showError(error, "Failed to load trip members.");
       }
