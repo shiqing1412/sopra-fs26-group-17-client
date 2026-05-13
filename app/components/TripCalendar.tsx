@@ -188,12 +188,13 @@ function EventMemberAvatars({ members }: Readonly<{ members: { userId: number; u
   );
 }
  
-function DayColumn({ onAddStopClick, onStopClick, stops, highlightedStopId, earlyHoursExpanded }: Readonly<{
+function DayColumn({ onAddStopClick, onStopClick, stops, highlightedStopId, earlyHoursExpanded, currentUser }: Readonly<{
   onAddStopClick: (times?: { startTime: Dayjs; endTime: Dayjs }) => void;
   onStopClick: (stop: StopWithId) => void;
   stops: StopWithId[];
   highlightedStopId: string | null;
   earlyHoursExpanded: boolean;
+  currentUser: User | null;
 }>) {
   const untimedStops = stops.filter(s => !s.startTime);
   const layouts = computeEventLayouts(stops);
@@ -296,6 +297,7 @@ function DayColumn({ onAddStopClick, onStopClick, stops, highlightedStopId, earl
           const colWidth = Math.floor(CONTENT_WIDTH / totalColumns);
           const indent = depth * 10;
           const left = TIME_LABEL_WIDTH + column * colWidth + indent;
+          const isOptedOut = !stop.members.some(m => m.username === currentUser?.username);
           return (
             <button
               key={stop.id}
@@ -305,19 +307,12 @@ function DayColumn({ onAddStopClick, onStopClick, stops, highlightedStopId, earl
                 height: `${height}px`,
                 left: `${left}px`,
                 width: `${colWidth - 2 - indent}px`,
-                backgroundColor: `${creatorColor}28`,
-                borderLeftColor: creatorColor,
-                zIndex: Math.round(100000 / Math.max(height, 1)),
+                backgroundColor: isOptedOut ? "#e0e0e028" : `${creatorColor}28`,
+                borderLeftColor: isOptedOut ? "#bbb" : creatorColor,
+                opacity: isOptedOut ? 0.5 : 1,
               }}
               onClick={() => onStopClick(stop)}
             >
-              <div
-                className={styles.calendarEventCreator}
-                title={stop.createdBy?.username ?? ""}
-                style={{ backgroundColor: creatorColor }}
-              >
-                {getAvatarInitial(stop.createdBy?.username)}
-              </div>
               <div className={styles.calendarEventTime}>
                 {stop.startTime?.format("HH:mm")}{stop.endTime ? `–${stop.endTime.format("HH:mm")}` : ""}
               </div>
@@ -325,6 +320,7 @@ function DayColumn({ onAddStopClick, onStopClick, stops, highlightedStopId, earl
               {height > 52 && stop.location && (
                 <div className={styles.calendarEventLocation}>📍{stop.location}</div>
               )}
+              <EventMemberAvatars members={stop.members} />
             </button>
           );
         })}
@@ -643,6 +639,7 @@ const handleJoin = async () => {
             onStopClick={(stop) => setViewingStop({ stop, date })}
             highlightedStopId={highlightedStopId}
             earlyHoursExpanded={earlyHoursExpanded}
+            currentUser={currentUser}
           />
         ))}
       </div>
@@ -697,7 +694,6 @@ const handleJoin = async () => {
               <div className={styles.calendarStopTitle}>{viewingStop?.stop.title}</div>
               <div className={styles.calendarStopLocation}>📍{viewingStop?.stop.location}</div>
               <div className={styles.calendarStopNotes}>{viewingStop?.stop.notes}</div>
-              <EventMemberAvatars members={viewingStop?.stop.members ?? []}/>
             </button>
 
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
