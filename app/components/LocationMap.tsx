@@ -25,11 +25,12 @@ export default function LocationMap({
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<google.maps.Map | null>(null);
   const markerInstancesRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
-  const markerMapRef = useRef<Map<string, { marker: google.maps.marker.AdvancedMarkerElement; position: LatLng }>>(new Map());
+  const markerMapRef = useRef<Map<string, { marker: google.maps.marker.AdvancedMarkerElement; position: LatLng; pin: HTMLElement }>>(new Map());
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const userInteractingRef = useRef(false);
   const boundsFittedRef = useRef(false);
+  const lastHighlightTimeRef = useRef<number>(0);
 
   // load google maps script
   useEffect(() => {
@@ -112,12 +113,14 @@ export default function LocationMap({
         content: pin,
       });
       markerInstancesRef.current.push(marker);
-      markerMapRef.current.set(id, { marker, position: offsetPosition });
+      markerMapRef.current.set(id, { marker, position: offsetPosition, pin });
     });
 
     // adjust map to fit all markers
     if (markers.length === 0) return;
     if (!userInteractingRef.current && !boundsFittedRef.current) {
+      const timeSinceHighlight = Date.now() - lastHighlightTimeRef.current;
+      if (timeSinceHighlight < 5000) return; // skip if highlighted in last 5 seconds
       if (markers.length === 1) {
         map.setCenter(markers[0].position);
         map.setZoom(13);
@@ -139,10 +142,10 @@ export default function LocationMap({
 
     map.panTo(entry.position);
     map.setZoom(15);
+    lastHighlightTimeRef.current = Date.now();
 
     // scale up the pin
-    markerMapRef.current.forEach(({ marker }, id) => {
-      const pin = marker.content as HTMLElement;
+    markerMapRef.current.forEach(({ pin }, id) => {
       pin.style.fontSize = id === highlightedMarkerId ? "2.8rem" : "2rem";
       pin.style.filter = id === highlightedMarkerId ? "drop-shadow(0 0 6px rgba(0,0,0,0.4))" : "none";
     });
