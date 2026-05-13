@@ -310,13 +310,6 @@ function DayColumn({ onAddStopClick, onStopClick, stops, highlightedStopId, earl
               }}
               onClick={() => onStopClick(stop)}
             >
-              <div
-                className={styles.calendarEventCreator}
-                title={stop.createdBy?.username ?? ""}
-                style={{ backgroundColor: creatorColor }}
-              >
-                {getAvatarInitial(stop.createdBy?.username)}
-              </div>
               <div className={styles.calendarEventTime}>
                 {stop.startTime?.format("HH:mm")}{stop.endTime ? `–${stop.endTime.format("HH:mm")}` : ""}
               </div>
@@ -324,6 +317,7 @@ function DayColumn({ onAddStopClick, onStopClick, stops, highlightedStopId, earl
               {height > 52 && stop.location && (
                 <div className={styles.calendarEventLocation}>📍{stop.location}</div>
               )}
+              <EventMemberAvatars members={stop.members} />
             </button>
           );
         })}
@@ -697,7 +691,6 @@ const handleJoin = async () => {
               <div className={styles.calendarStopTitle}>{viewingStop?.stop.title}</div>
               <div className={styles.calendarStopLocation}>📍{viewingStop?.stop.location}</div>
               <div className={styles.calendarStopNotes}>{viewingStop?.stop.notes}</div>
-              <EventMemberAvatars members={viewingStop?.stop.members ?? []}/>
             </button>
 
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
