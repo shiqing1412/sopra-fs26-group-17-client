@@ -321,7 +321,10 @@ function DayColumn({ onAddStopClick, onStopClick, stops, highlightedStopId, earl
             </button>
           );
         })}
-
+        <button className={styles.calendarAddStopBtn} onClick={() => onAddStopClick()}>
+          + Add stop
+        </button>
+        
         {dragBox && dragBox.height > 0 && (
           <div
             style={{
@@ -339,10 +342,6 @@ function DayColumn({ onAddStopClick, onStopClick, stops, highlightedStopId, earl
           />
         )}
       </div>
-
-      <button className={styles.calendarAddStopBtn} onClick={() => onAddStopClick()}>
-        + Add stop
-      </button>
     </div>
   );
 }
