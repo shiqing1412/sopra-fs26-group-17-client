@@ -144,7 +144,7 @@ const Profile: React.FC = () => {
         <div className={styles.subHeader}>
           <Link href="/trips" style={{ color: "#444", fontWeight: 300 }}>← Trips</Link>
           <span className={styles.tripTitle}>{trip?.tripTitle}</span>
-          <span className={styles.dateRange}>{formatDateRange(trip?.startDate ?? null, trip?.endDate ?? null)} · {allMembers.length} members</span>
+          <span className={styles.dateRange}>{formatDateRange(trip?.startDate ?? null, trip?.endDate ?? null)} · {allMembers.length} {allMembers.length === 1 ? "member" : "members"}</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
           
