@@ -19,7 +19,7 @@ const MemberOnlineStatus: React.FC<OnlineStatusProps> = ({
   const displayMax = 5;
   // online members excluding current user
   const onlineMembers = allMembers.filter(
-    (username) => onlineUsernames.includes(username) && username !== currentUser?.username
+    (username) => onlineUsernames.includes(username)
   );
   const onlineCount = onlineMembers.length;
   if (onlineCount === 0) return null;
