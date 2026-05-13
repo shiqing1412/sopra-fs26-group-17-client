@@ -687,7 +687,13 @@ const handleJoin = async () => {
           footer={null}
         >
           <div className={styles.calendarDayStops}>
-            <button className={styles.calendarStopCard} onClick={() => { setHighlightedStopId(viewingStop?.stop.id ?? null); setViewingStop(null); }}>
+            <button className={styles.calendarStopCard} 
+              onClick={() => { 
+                setHighlightedStopId(viewingStop?.stop.id ?? null); 
+                setViewingStop(null); 
+                setTimeout(() => setHighlightedStopId(null), 5000); 
+              }}
+            >
               <div className={styles.calendarStopTime}>
                   {viewingStop?.stop.startTime?.format("HH:mm")} {viewingStop?.stop.endTime ? `→ ${viewingStop?.stop.endTime.format("HH:mm")}` : ""}
               </div>
