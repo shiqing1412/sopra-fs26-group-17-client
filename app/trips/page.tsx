@@ -136,9 +136,6 @@ const Dashboard: React.FC = () => {
       <main className={styles.main}>
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>My Trips</h1>
-          <button className={styles.newTripBtn} onClick={handleNewTrip}>
-            + New Trip
-          </button>
         </div>
 
         <div className={styles.grid}>

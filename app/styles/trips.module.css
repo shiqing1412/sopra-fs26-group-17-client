@@ -204,20 +204,6 @@
   letter-spacing: -0.5px;
 }
 
-.newTripBtn {
-  padding: 9px 20px;
-  border-radius: 10px;
-  border: none;
-  background: #c0392b;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-  letter-spacing: 0.2px;
-  transition: background 0.15s, transform 0.1s;
-}
-
 .newTripBtn:hover {
   background: #a93226;
   transform: translateY(-1px);
