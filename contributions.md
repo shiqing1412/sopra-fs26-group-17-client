@@ -180,5 +180,5 @@ reason).
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@yarablaser** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
-| **@dsgji4g4** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@dsgji4g4** | 13 May | https://github.com/shiqing1412/sopra-fs26-group-17-server/pull/267/changes/50270ec034f27803fc8641ff69c8039a4db800c7 | Update EventServiceTest | To improve coverage and ensure date range validation works |
+|                    | 16 May   | https://github.com/shiqing1412/sopra-fs26-group-17-server/pull/274/changes/d17bc0014fc12d94a518abafd6457c8cff8a5269 | Add EventControllerTest | Improve backend coverage and validate core itinerary/event flows |
